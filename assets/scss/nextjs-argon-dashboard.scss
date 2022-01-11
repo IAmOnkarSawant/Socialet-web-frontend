@@ -67,16 +67,5 @@
 
 @import "argon-dashboard/custom/vendors";
 
-// Docs components
-
-@import "argon-dashboard/docs/variables";
-@import "argon-dashboard/docs/nav";
-@import "argon-dashboard/docs/clipboard-js";
-@import "argon-dashboard/docs/component-examples";
-@import "argon-dashboard/docs/prism";
-@import "argon-dashboard/docs/content";
-@import "argon-dashboard/docs/sidebar";
-@import "argon-dashboard/docs/footer";
-
 // React Differences
 @import "react/react-differences";
