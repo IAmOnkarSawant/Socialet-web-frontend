@@ -15,13 +15,13 @@ var routes = [
 		path: "/login",
 		name: "Login",
 		icon: "ni ni-key-25 text-info",
-		layout: "/auth",
+		layout: "/authPages",
 	},
 	{
 		path: "/register",
 		name: "Register",
 		icon: "ni ni-circle-08 text-pink",
-		layout: "/auth",
+		layout: "/authPages",
 	},
 ];
 export default routes;
