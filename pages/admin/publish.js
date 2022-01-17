@@ -52,7 +52,7 @@ function Publish() {
 		if (!["Enter", "Tab"].includes(e.key)) return;
 		if (["Enter", "Tab"].includes(e.key)) {
 			e.preventDefault();
-			const hashtag = "#" + tagValue;
+			const hashtag = "#" + tagValue.trim();
 			if (formik.values.hashtags.includes(hashtag)) {
 				console.log("hashtags", "Tag already added");
 				formik.setFieldError("hashtags", "Tag already added");
