@@ -5,7 +5,7 @@ import { Container, Row } from "reactstrap";
 // core components
 import AuthNavbar from "components/Navbars/AuthNavbar.js";
 
-function Auth(props) {
+function Auth({ children }) {
 	React.useEffect(() => {
 		document.body.classList.add("bg-default");
 		// Specify how to clean up after this effect:
@@ -37,7 +37,7 @@ function Auth(props) {
 				</div>
 				{/* Page content */}
 				<Container className="mt--8 pb-5">
-					<Row className="justify-content-center">{props.children}</Row>
+					<Row className="justify-content-center">{children}</Row>
 				</Container>
 			</div>
 		</>

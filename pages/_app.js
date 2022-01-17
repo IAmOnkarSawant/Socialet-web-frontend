@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import App from "next/app";
 import Head from "next/head";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
+import { SessionProvider, useSession } from "next-auth/react";
 
 import PageChange from "components/PageChange/PageChange.js";
+import { AuthGuard } from "../components/Auth/AuthGuard";
 
 import "assets/plugins/nucleo/css/nucleo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/scss/nextjs-argon-dashboard.scss";
+import router from "next/router";
 
 Router.events.on("routeChangeStart", (url) => {
 	console.log(`Loading: ${url}`);
@@ -27,41 +29,63 @@ Router.events.on("routeChangeError", () => {
 	document.body.classList.remove("body-page-transition");
 });
 
-export default class MyApp extends App {
-	componentDidMount() {
+export default function App({
+	Component,
+	pageProps: { session, ...pageProps },
+}) {
+	useEffect(() => {
 		let comment = document.createComment(
 			`Copyrights Included ${new Date().getFullYear()}`
 		);
 		document.insertBefore(comment, document.documentElement);
-	}
-	static async getInitialProps({ Component, router, ctx }) {
-		let pageProps = {};
+	}, []);
 
-		if (Component.getInitialProps) {
-			pageProps = await Component.getInitialProps(ctx);
-		}
+	const Layout = Component.layout || (({ children }) => <>{children}</>);
+	const router = useRouter();
+	const { route } = router;
+	console.log(route);
 
-		return { pageProps };
-	}
-
-	render() {
-		const { Component, pageProps } = this.props;
-		const Layout = Component.layout || (({ children }) => <>{children}</>);
-
-		return (
-			<React.Fragment>
-				<Head>
-					<meta
-						name="viewport"
-						content="width=device-width, initial-scale=1, shrink-to-fit=no"
-					/>
-					<title>NextJS Argon Dashboard by Creative Tim</title>
-					<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
-				</Head>
-				<Layout>
+	return (
+		<SessionProvider
+			options={{
+				staleTime: 0,
+				refetchInterval: 0,
+			}}
+			session={pageProps.session}
+		>
+			<Head>
+				<meta
+					name='viewport'
+					content='width=device-width, initial-scale=1, shrink-to-fit=no'
+				/>
+				<title>Social Media Workflow Tool</title>
+			</Head>
+			<Layout>
+				{Component.requireAuth ? (
+					<AuthGuard>
+						<Component {...pageProps} />
+					</AuthGuard>
+				) : Component.auth ? (
+					<Auth>
+						<Component {...pageProps} />
+					</Auth>
+				) : (
 					<Component {...pageProps} />
-				</Layout>
-			</React.Fragment>
-		);
-	}
+				)}
+			</Layout>
+		</SessionProvider>
+	);
+}
+
+function Auth({ children }) {
+	const { data: session, status } = useSession();
+	useEffect(() => {
+		if (session && status === "authenticated") {
+			router.replace("/admin/dashboard");
+		}
+	}, [session]);
+
+	if (!session && status === "unauthenticated") return children;
+
+	return null;
 }
