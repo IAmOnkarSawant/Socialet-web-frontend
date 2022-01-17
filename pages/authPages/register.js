@@ -27,7 +27,7 @@ import * as yup from "yup";
 const validationSchema = yup.object({
 	name: yup
 		.string("Enter your name")
-		.min(7, "Name should be of minimum 7 characters length")
+		.min(3, "Name should be of minimum 3 characters length")
 		.required("Email is required"),
 	email: yup
 		.string("Enter your email")
@@ -49,9 +49,9 @@ function Register() {
 
 	const formik = useFormik({
 		initialValues: {
-			name: "foo bar",
-			email: "foobar@example.com",
-			password: "foobar",
+			name: "",
+			email: "",
+			password: "",
 		},
 		validationSchema: validationSchema,
 		onSubmit: async (values) => {
@@ -88,7 +88,7 @@ function Register() {
 							<FormGroup>
 								<Input
 									name='name'
-									placeholder='Name'
+									placeholder='foo bar'
 									value={formik.values.name}
 									onChange={formik.handleChange}
 									invalid={formik.touched.name && Boolean(formik.errors.name)}
@@ -100,7 +100,7 @@ function Register() {
 							<FormGroup>
 								<Input
 									name='email'
-									placeholder='Email'
+									placeholder='foobar@example.com'
 									value={formik.values.email}
 									onChange={formik.handleChange}
 									invalid={formik.touched.email && Boolean(formik.errors.email)}
@@ -112,7 +112,7 @@ function Register() {
 							<FormGroup>
 								<Input
 									name='password'
-									placeholder='Password'
+									placeholder='foobar'
 									value={formik.values.password}
 									onChange={formik.handleChange}
 									invalid={

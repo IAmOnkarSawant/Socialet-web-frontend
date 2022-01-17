@@ -36,8 +36,8 @@ function Login() {
 
 	const formik = useFormik({
 		initialValues: {
-			email: "foobar@example.com",
-			password: "foobar",
+			email: "",
+			password: "",
 		},
 		validationSchema: validationSchema,
 		onSubmit: async (values) => {
@@ -66,7 +66,7 @@ function Login() {
 						<FormGroup className='mb-3'>
 							<Input
 								name='email'
-								placeholder='Email'
+								placeholder='foobar@example.com'
 								value={formik.values.email}
 								onChange={formik.handleChange}
 								invalid={formik.touched.email && Boolean(formik.errors.email)}
@@ -78,7 +78,7 @@ function Login() {
 						<FormGroup className='mb-3'>
 							<Input
 								name='password'
-								placeholder='Password'
+								placeholder='foobar'
 								value={formik.values.password}
 								onChange={formik.handleChange}
 								invalid={

@@ -59,7 +59,6 @@ export default function App({
 					content='width=device-width, initial-scale=1, shrink-to-fit=no'
 				/>
 				<title>Social Media Workflow Tool</title>
-				<script src='https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE'></script>
 			</Head>
 			<Layout>
 				{Component.requireAuth ? (

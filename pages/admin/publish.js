@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
 	Button,
 	Card,
@@ -8,9 +8,11 @@ import {
 	FormGroup,
 	Input,
 	InputGroup,
+	Label,
 	Navbar,
 	NavbarBrand,
 	Row,
+	Tooltip,
 } from "reactstrap";
 import { BsTwitter } from "react-icons/bs";
 import { AiFillInfoCircle } from "react-icons/ai";
@@ -19,6 +21,7 @@ import TwitterCard from "../../components/Post/TwitterCard";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Chips from "react-chips";
+import ReactTooltip from "react-tooltip";
 
 const validationSchema = Yup.object({
 	text: Yup.string().test(
@@ -28,21 +31,21 @@ const validationSchema = Yup.object({
 	),
 });
 
-function composePost() {
+function Publish() {
 	const formik = useFormik({
 		initialValues: {
 			text: "",
+			hashtags: [],
 		},
 		validationSchema: validationSchema,
 		onSubmit: (values) => {
+			// will do later as our application grows
 			console.log(JSON.stringify(values, null, 2));
 		},
 	});
-	const [chips, setChips] = useState([]);
-	const handleChipsChange = (chipss) => {
-		console.log(chipss);
-		setChips(chipss);
-	};
+	const handleChipsChange = (hashes) =>
+		formik.setFieldValue("hashtags", hashes);
+
 	return (
 		<React.Fragment>
 			<Navbar color='white' light expand='md'>
@@ -89,15 +92,25 @@ function composePost() {
 									{formik.touched.text && formik.errors.text}
 								</FormFeedback>
 							</FormGroup>
-							<Chips
-								value={chips}
-								onChange={handleChipsChange}
-								placeholder='Enter your hashtags here...'
-								suggestions={["travel", "picoftheday", "beach"]}
-								uniqueChips={true}
-								fromSuggestionsOnly={false}
-								createChipKeys={[13, 32]}
-							/>
+							<FormGroup>
+								<Label>
+									Hashtags{" "}
+									<AiFillInfoCircle
+										data-tip='Press Enter key or <br /> Tab key to add the hashtag'
+										size={15}
+										className='ml-2'
+									/>
+								</Label>
+								<Chips
+									value={formik.values.hashtags}
+									onChange={handleChipsChange}
+									placeholder='Enter your hashtags here...'
+									suggestions={["travel", "picoftheday", "beach"]}
+									uniqueChips={true}
+									fromSuggestionsOnly={false}
+									createChipKeys={[13, 32]}
+								/>
+							</FormGroup>
 							<div
 								style={{
 									display: "flex",
@@ -143,17 +156,32 @@ function composePost() {
 								marginLeft: "4%",
 							}}
 						>
-							{!formik.values.text ? (
-								<EmptyPost />
+							{formik.values.text ||
+							(formik.values.hashtags && formik.values.hashtags.length > 0) ? (
+								<TwitterCard
+									chips={formik.values.hashtags}
+									text={formik.values.text}
+								/>
 							) : (
-								<TwitterCard text={formik.values.text} />
+								<EmptyPost />
 							)}
 						</div>
 					</Col>
 				</Row>
 			</Container>
+			<ReactTooltip
+				place='top'
+				border={true}
+				backgroundColor='lightgray'
+				textColor='black'
+				type='info'
+				effect='solid'
+				multiline
+			/>
 		</React.Fragment>
 	);
 }
 
-export default composePost;
+Publish.requireAuth = true;
+
+export default Publish;

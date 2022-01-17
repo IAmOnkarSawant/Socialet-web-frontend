@@ -1,6 +1,7 @@
+import moment from "moment";
 import React from "react";
 
-function TwitterCard({ text }) {
+function TwitterCard({ text, chips }) {
 	return (
 		<div
 			style={{
@@ -66,7 +67,7 @@ function TwitterCard({ text }) {
 						className='font-weight-normal'
 						style={{ paddingLeft: "5px", color: "gray", fontSize: "13px" }}
 					>
-						Jan 16
+						{moment(new Date()).format("ll")}
 					</span>
 				</a>
 
@@ -80,6 +81,15 @@ function TwitterCard({ text }) {
 				>
 					{text}
 				</span>
+				<div style={{ display: "flex", flexWrap: "wrap", marginTop: "10px" }}>
+					{chips.map((chip, index) => {
+						return (
+							<span className='text-primary pr-2' key={index + "#" + chip}>
+								#{chip}
+							</span>
+						);
+					})}
+				</div>
 				<div style={{ display: "flex", marginTop: "10px" }}>
 					<svg
 						style={{ width: "20px", height: "20px" }}
