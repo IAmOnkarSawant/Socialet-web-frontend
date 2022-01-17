@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import {
 	Button,
 	Card,
@@ -12,11 +12,11 @@ import {
 	NavbarBrand,
 	Row,
 	Tooltip,
-	Badge
+	Badge,
 } from "reactstrap";
 import { BsTwitter } from "react-icons/bs";
 import { AiFillInfoCircle } from "react-icons/ai";
-import {IoCloseOutline} from "react-icons/io5";
+import { IoCloseOutline } from "react-icons/io5";
 import EmptyPost from "../../components/Post/EmptyPost";
 import TwitterCard from "../../components/Post/TwitterCard";
 import { useFormik } from "formik";
@@ -42,33 +42,43 @@ function Publish() {
 			console.log(JSON.stringify(values, null, 2));
 		},
 	});
-	const handleChipsChange = (hashes) =>
-		formik.setFieldValue("hashtags", hashes);
 
 	const [tooltipOpen, setTooltipOpen] = useState(false);
 	const toggleToolTip = () => setTooltipOpen(!tooltipOpen);
 
-
 	const [tagValue, setTagValue] = useState("");
 
 	const handleKeyDown = (e) => {
-		if (["Enter","Tab"].includes(e.key)) {
+		if (!["Enter", "Tab"].includes(e.key)) return;
+		if (["Enter", "Tab"].includes(e.key)) {
 			e.preventDefault();
-			if (formik.values.hashtags.includes(tagValue.trim())) {
-				setError("Tag already added");
-				setTagValue("");
+			const hashtag = "#" + tagValue;
+			if (formik.values.hashtags.includes(hashtag)) {
+				console.log("hashtags", "Tag already added");
+				formik.setFieldError("hashtags", "Tag already added");
 				return;
 			}
-
-			if (tagValue.trim()) {
-				const hashtag = "#"+tagValue;
-				formik.setFieldValue("hashtags",[...formik.values.hashtags, hashtag])
+			if (!formik.values.hashtags.includes(hashtag)) {
+				formik.setFieldValue(
+					"hashtags",
+					[...formik.values.hashtags, hashtag],
+					true
+				);
 				setTagValue("");
 			}
 		}
 	};
+
 	const handleDelete = (item) => {
-		formik.setFieldValue("hashtags",formik.values.hashtags.filter((tag) => tag !== item))
+		formik.setFieldValue(
+			"hashtags",
+			formik.values.hashtags.filter((tag) => tag !== item)
+		);
+	};
+
+	const handleTagChange = (e) => {
+		formik.setFieldTouched("hashtags");
+		setTagValue(e.target.value);
 	};
 
 	return (
@@ -124,41 +134,50 @@ function Publish() {
 										data-tip='Press Enter key or Tab key to add the hashtag'
 										size={15}
 										className='ml-1'
-										id="infoToolTip"
+										id='infoToolTip'
 									/>
 									<Tooltip
 										flip
-										placement="top"
+										placement='top'
 										isOpen={tooltipOpen}
-										target="infoToolTip"
+										target='infoToolTip'
 										toggle={toggleToolTip}
 									>
 										Press Enter or Tab key to add the hashtag
 									</Tooltip>
 								</Label>
-								<div className="mb-1">
-									{
-										formik.values.hashtags.map((tag, i) => (
-											<Badge key={i} className="badge-lg mb-1 mr-1" color="primary" pill>
-												{tag}
-												<IoCloseOutline
-													onClick={()=>{handleDelete(tag)}}
-													size={15}
-												/>
-											</Badge>
-										))
-									}
+								<div className='mb-1'>
+									{formik.values.hashtags.map((tag, i) => (
+										<Badge
+											key={i}
+											className='badge-md mb-1 mr-1 px-3 text-lowercase'
+											color='primary'
+											pill
+										>
+											{tag}
+											<IoCloseOutline
+												onClick={() => handleDelete(tag)}
+												size={15}
+												style={{ cursor: "pointer" }}
+											/>
+										</Badge>
+									))}
 								</div>
-								<Input 
+								<Input
 									onKeyDown={handleKeyDown}
 									value={tagValue}
-									onChange={(e) => {
-										setTagValue(e.target.value);
-									}}
-									placeholder="Enter Hashtag Here"
-								/>
+									name='hashtags'
+									invalid={
+										formik.touched.hashtags && Boolean(formik.errors.hashtags)
+									}
+									onChange={handleTagChange}
+									placeholder='Enter Hashtag Here'
+								></Input>
+								<FormFeedback>
+									{formik.touched.hashtags && formik.errors.hashtags}
+								</FormFeedback>
 							</FormGroup>
-							
+
 							<div
 								style={{
 									display: "flex",
