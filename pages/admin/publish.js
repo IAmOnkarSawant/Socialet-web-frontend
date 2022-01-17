@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import {
 	Button,
 	Card,
@@ -7,26 +7,25 @@ import {
 	FormFeedback,
 	FormGroup,
 	Input,
-	InputGroup,
 	Label,
 	Navbar,
 	NavbarBrand,
 	Row,
 	Tooltip,
+	Badge
 } from "reactstrap";
 import { BsTwitter } from "react-icons/bs";
 import { AiFillInfoCircle } from "react-icons/ai";
+import {IoCloseOutline} from "react-icons/io5";
 import EmptyPost from "../../components/Post/EmptyPost";
 import TwitterCard from "../../components/Post/TwitterCard";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import Chips from "react-chips";
-import ReactTooltip from "react-tooltip";
 
 const validationSchema = Yup.object({
 	text: Yup.string().test(
 		"len",
-		"tweet length should be leass than or equal to 280 chracters",
+		"Tweet length should be upto 280 characters",
 		(val) => val && val.toString().length <= 280
 	),
 });
@@ -45,6 +44,32 @@ function Publish() {
 	});
 	const handleChipsChange = (hashes) =>
 		formik.setFieldValue("hashtags", hashes);
+
+	const [tooltipOpen, setTooltipOpen] = useState(false);
+	const toggleToolTip = () => setTooltipOpen(!tooltipOpen);
+
+
+	const [tagValue, setTagValue] = useState("");
+
+	const handleKeyDown = (e) => {
+		if (["Enter","Tab"].includes(e.key)) {
+			e.preventDefault();
+			if (formik.values.hashtags.includes(tagValue.trim())) {
+				setError("Tag already added");
+				setTagValue("");
+				return;
+			}
+
+			if (tagValue.trim()) {
+				const hashtag = "#"+tagValue;
+				formik.setFieldValue("hashtags",[...formik.values.hashtags, hashtag])
+				setTagValue("");
+			}
+		}
+	};
+	const handleDelete = (item) => {
+		formik.setFieldValue("hashtags",formik.values.hashtags.filter((tag) => tag !== item))
+	};
 
 	return (
 		<React.Fragment>
@@ -94,23 +119,46 @@ function Publish() {
 							</FormGroup>
 							<FormGroup>
 								<Label>
-									Hashtags{" "}
+									Hashtags
 									<AiFillInfoCircle
-										data-tip='Press Enter key or <br /> Tab key to add the hashtag'
+										data-tip='Press Enter key or Tab key to add the hashtag'
 										size={15}
-										className='ml-2'
+										className='ml-1'
+										id="infoToolTip"
 									/>
+									<Tooltip
+										flip
+										placement="top"
+										isOpen={tooltipOpen}
+										target="infoToolTip"
+										toggle={toggleToolTip}
+									>
+										Press Enter or Tab key to add the hashtag
+									</Tooltip>
 								</Label>
-								<Chips
-									value={formik.values.hashtags}
-									onChange={handleChipsChange}
-									placeholder='Enter your hashtags here...'
-									suggestions={["travel", "picoftheday", "beach"]}
-									uniqueChips={true}
-									fromSuggestionsOnly={false}
-									createChipKeys={[13, 32]}
+								<div className="mb-1">
+									{
+										formik.values.hashtags.map((tag, i) => (
+											<Badge key={i} className="badge-lg mb-1 mr-1" color="primary" pill>
+												{tag}
+												<IoCloseOutline
+													onClick={()=>{handleDelete(tag)}}
+													size={15}
+												/>
+											</Badge>
+										))
+									}
+								</div>
+								<Input 
+									onKeyDown={handleKeyDown}
+									value={tagValue}
+									onChange={(e) => {
+										setTagValue(e.target.value);
+									}}
+									placeholder="Enter Hashtag Here"
 								/>
 							</FormGroup>
+							
 							<div
 								style={{
 									display: "flex",
@@ -159,7 +207,7 @@ function Publish() {
 							{formik.values.text ||
 							(formik.values.hashtags && formik.values.hashtags.length > 0) ? (
 								<TwitterCard
-									chips={formik.values.hashtags}
+									hashtags={formik.values.hashtags}
 									text={formik.values.text}
 								/>
 							) : (
@@ -169,15 +217,6 @@ function Publish() {
 					</Col>
 				</Row>
 			</Container>
-			<ReactTooltip
-				place='top'
-				border={true}
-				backgroundColor='lightgray'
-				textColor='black'
-				type='info'
-				effect='solid'
-				multiline
-			/>
 		</React.Fragment>
 	);
 }

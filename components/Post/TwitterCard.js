@@ -1,7 +1,7 @@
 import moment from "moment";
 import React from "react";
 
-function TwitterCard({ text, chips }) {
+function TwitterCard({ text, hashtags }) {
 	return (
 		<div
 			style={{
@@ -82,10 +82,10 @@ function TwitterCard({ text, chips }) {
 					{text}
 				</span>
 				<div style={{ display: "flex", flexWrap: "wrap", marginTop: "10px" }}>
-					{chips.map((chip, index) => {
+					{hashtags.map((hashtag, index) => {
 						return (
-							<span className='text-primary pr-2' key={index + "#" + chip}>
-								#{chip}
+							<span className='text-primary pr-2' key={index + hashtag}>
+								{hashtag}
 							</span>
 						);
 					})}
