@@ -21,6 +21,7 @@ import EmptyPost from "../../components/Post/EmptyPost";
 import TwitterCard from "../../components/Post/TwitterCard";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useRouter } from "next/router";
 
 const validationSchema = Yup.object({
 	text: Yup.string().test(
@@ -31,6 +32,7 @@ const validationSchema = Yup.object({
 });
 
 function Publish() {
+	const router = useRouter();
 	const formik = useFormik({
 		initialValues: {
 			text: "",
@@ -85,6 +87,16 @@ function Publish() {
 		<React.Fragment>
 			<Navbar color='white' light expand='md'>
 				<NavbarBrand className='pl-4 font-weight-bold'>New Post</NavbarBrand>
+				<Button
+					color='primary'
+					outline
+					style={{ marginLeft: "auto", marginRight: 15 }}
+					className='px-4'
+					size='sm'
+					onClick={() => router.back()}
+				>
+					Back
+				</Button>
 			</Navbar>
 			<Container fluid>
 				<Row>
