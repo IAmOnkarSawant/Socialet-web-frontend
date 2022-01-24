@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // node.js library that concatenates classes (strings)
 import classnames from "classnames";
 // javascipt plugin for creating charts
@@ -19,6 +19,7 @@ import {
 	Container,
 	Row,
 	Col,
+	Input,
 } from "reactstrap";
 // layout for this page
 import Admin from "layouts/Admin.js";
@@ -29,11 +30,12 @@ import {
 	chartExample1,
 	chartExample2,
 } from "variables/charts.js";
-import { useSession } from "next-auth/react";
-
 import Header from "components/Headers/Header.js";
+import ModalComponent from "../../components/Modal/Modal";
 
 const Dashboard = (props) => {
+	const [isOpen, setModal] = useState(true);
+	const handleClose = () => setModal(false);
 	const [activeNav, setActiveNav] = React.useState(1);
 	const [chartExample1Data, setChartExample1Data] = React.useState("data1");
 
@@ -46,8 +48,7 @@ const Dashboard = (props) => {
 		setActiveNav(index);
 		setChartExample1Data("data" + index);
 	};
-	const { data: session, status } = useSession();
-	console.log(session, status);
+
 	return (
 		<>
 			<Header />
@@ -317,6 +318,7 @@ const Dashboard = (props) => {
 						</Card>
 					</Col>
 				</Row>
+				<ModalComponent isOpen={isOpen} onClose={handleClose}/>
 			</Container>
 		</>
 	);
