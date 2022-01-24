@@ -4,3 +4,4 @@ package-lock.json
 /build
 /.next
 /.env.local
+/server
