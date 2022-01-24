@@ -339,11 +339,3 @@ Dashboard.layout = Admin;
 Dashboard.requireAuth = true;
 
 export default Dashboard;
-
-export async function getServerSideProps(_context) {
-	// just for testing
-
-	return {
-		props: {},
-	};
-}
