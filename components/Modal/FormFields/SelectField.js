@@ -18,7 +18,7 @@ function SelectField(props) {
 				onChange={field.onChange}
 				onBlur={field.onBlur}
 				color='primary'
-				size='sm'
+				bsSize='sm'
 			>
 				<option value=''>none</option>
 				{props.options.map((opt, index) => (

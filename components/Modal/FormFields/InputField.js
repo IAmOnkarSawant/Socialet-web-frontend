@@ -20,7 +20,7 @@ function InputField(props) {
 				onChange={field.onChange}
 				onBlur={field.onBlur}
 				color='primary'
-				size='sm'
+				bsSize='sm'
 			/>
 			<FormFeedback>{meta.touched && meta.error}</FormFeedback>
 		</FormGroup>
