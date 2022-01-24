@@ -21,7 +21,7 @@ function CheckBoxField(props) {
 				{props.label}
 			</Label>
 			<Card className='mt-1'>
-				{props.options.map((option) => (
+				{props.options.map((option,index) => (
 					<div style={{ paddingLeft: 32 }} className='border-bottom py-2'>
 						<Input
 							className='mt-2'
@@ -29,8 +29,9 @@ function CheckBoxField(props) {
 							name={option}
 							checked={meta.value.includes(option)}
 							onChange={handleChange}
+							id={option+"_"+index}
 						/>
-						<Label style={{ fontSize: "13px" }} className='mb-0 mt-1'>
+						<Label style={{ fontSize: "13px" }} className='mb-0 mt-1' for={option+"_"+index}>
 							{option}
 						</Label>
 					</div>

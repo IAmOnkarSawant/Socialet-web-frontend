@@ -318,8 +318,8 @@ const Dashboard = (props) => {
 						</Card>
 					</Col>
 				</Row>
+				<ModalComponent isOpen={isOpen} onClose={handleClose}/>
 			</Container>
-			<ModalComponent isOpen={isOpen} onClose={handleClose} />
 		</>
 	);
 };
