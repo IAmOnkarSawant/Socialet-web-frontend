@@ -327,7 +327,7 @@ function Publish() {
 						>
 							{formik.values.text ||
 							(formik.values.hashtags && formik.values.hashtags.length > 0) ||
-							formik.values.images ? (
+							(formik.values.images && formik.values.images.length > 0) ? (
 								<TwitterCard
 									hashtags={formik.values.hashtags}
 									text={formik.values.text}
