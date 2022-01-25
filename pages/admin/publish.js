@@ -15,13 +15,14 @@ import {
 	Badge,
 } from "reactstrap";
 import { BsTwitter } from "react-icons/bs";
-import { AiFillInfoCircle } from "react-icons/ai";
+import { AiFillInfoCircle, AiFillPlusCircle } from "react-icons/ai";
 import { IoCloseOutline } from "react-icons/io5";
 import EmptyPost from "../../components/Post/EmptyPost";
 import TwitterCard from "../../components/Post/TwitterCard";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
+import { useDropzone } from "react-dropzone";
 
 const validationSchema = Yup.object({
 	text: Yup.string().test(
@@ -37,6 +38,7 @@ function Publish() {
 		initialValues: {
 			text: "",
 			hashtags: [],
+			images: [],
 		},
 		validationSchema: validationSchema,
 		onSubmit: (values) => {
@@ -82,6 +84,21 @@ function Publish() {
 		formik.setFieldTouched("hashtags");
 		setTagValue(e.target.value);
 	};
+
+	const { getRootProps, getInputProps } = useDropzone({
+		accept: "image/jpeg, image/png, image/jpg",
+		onDrop: (files) => {
+			formik.setFieldValue("images", [
+				...formik.values.images,
+				...files.map((file) => ({
+					file,
+					preview: URL.createObjectURL(file),
+				})),
+			]);
+		},
+	});
+
+	console.log(formik.values.images);
 
 	return (
 		<React.Fragment>
@@ -190,6 +207,51 @@ function Publish() {
 								</FormFeedback>
 							</FormGroup>
 
+							<FormGroup>
+								<Label>Upload Images</Label>
+								<div className='border bg-white'>
+									<div className='d-flex flex-row flex-wrap px-2 pt-2'>
+										{formik.values.images.map(({ preview }, index) => (
+											<div
+												key={index}
+												style={{ width: "calc(20% - 8px)", height: "100px" }}
+												className='mr-2 pb-2'
+											>
+												<img
+													className='rounded-sm'
+													style={{
+														width: "100%",
+														height: "100%",
+													}}
+													src={preview}
+												/>
+											</div>
+										))}
+										<div
+											className='mr-2 mb-2 rounded-sm border border-light'
+											style={{
+												width: "calc(20% - 8px)",
+												height: !formik.values.images.length && "100px",
+												position: "relative",
+												backgroundColor: "rgb(222, 225, 225)",
+												cursor: "pointer",
+											}}
+											{...getRootProps()}
+										>
+											<input {...getInputProps()} />
+											<AiFillPlusCircle
+												size={25}
+												style={{
+													position: "absolute",
+													left: "50%",
+													top: "50%",
+													transform: "translate(-50%, -50%)",
+												}}
+											/>
+										</div>
+									</div>
+								</div>
+							</FormGroup>
 							<div
 								style={{
 									display: "flex",
