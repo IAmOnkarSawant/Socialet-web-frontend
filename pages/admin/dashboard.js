@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // node.js library that concatenates classes (strings)
 import classnames from "classnames";
 // javascipt plugin for creating charts
@@ -32,8 +32,19 @@ import {
 } from "variables/charts.js";
 import Header from "components/Headers/Header.js";
 import ModalComponent from "../../components/Modal/Modal";
+import axios from "axios";
 
-const Dashboard = (props) => {
+const Dashboard = () => {
+	useEffect(async () => {
+		try {
+			const res = await axios.get("http://localhost:5000/");
+			const data = res.data;
+			console.log(data);
+		} catch (err) {
+			console.log(err);
+		}
+	}, []);
+
 	const [isOpen, setModal] = useState(true);
 	const handleClose = () => setModal(false);
 	const [activeNav, setActiveNav] = React.useState(1);
