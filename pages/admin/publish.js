@@ -17,6 +17,7 @@ import {
 import { BsTwitter } from "react-icons/bs";
 import { AiFillInfoCircle, AiFillPlusCircle } from "react-icons/ai";
 import { IoCloseOutline } from "react-icons/io5";
+import { MdDelete } from "react-icons/md";
 import EmptyPost from "../../components/Post/EmptyPost";
 import TwitterCard from "../../components/Post/TwitterCard";
 import { useFormik } from "formik";
@@ -90,7 +91,8 @@ function Publish() {
 		onDrop: (files) => {
 			formik.setFieldValue("images", [
 				...formik.values.images,
-				...files.map((file) => ({
+				...files.map((file, index) => ({
+					id: file.size + Math.random() + index,
 					file,
 					preview: URL.createObjectURL(file),
 				})),
@@ -98,7 +100,12 @@ function Publish() {
 		},
 	});
 
-	console.log(formik.values.images);
+	const handleImageDelete = (imageId) => {
+		formik.setFieldValue(
+			"images",
+			formik.values.images.filter(({ id }) => id != imageId)
+		);
+	};
 
 	return (
 		<React.Fragment>
@@ -211,27 +218,48 @@ function Publish() {
 								<Label>Upload Images</Label>
 								<div className='border bg-white'>
 									<div className='d-flex flex-row flex-wrap px-2 pt-2'>
-										{formik.values.images.map(({ preview }, index) => (
-											<div
-												key={index}
-												style={{ width: "calc(20% - 8px)", height: "100px" }}
-												className='mr-2 pb-2'
-											>
-												<img
-													className='rounded-sm'
+										{formik.values.images.map(
+											({ preview, id: imageId }, index) => (
+												<div
+													key={imageId}
 													style={{
-														width: "100%",
-														height: "100%",
+														width: "calc(20% - 8px)",
+														height: "100px",
+														position: "relative",
 													}}
-													src={preview}
-												/>
-											</div>
-										))}
+													className='mr-2 pb-2'
+												>
+													<img
+														className='rounded-sm'
+														style={{
+															width: "100%",
+															height: "100%",
+														}}
+														src={preview}
+													/>
+													<MdDelete
+														onClick={() => handleImageDelete(imageId)}
+														style={{
+															position: "absolute",
+															right: "5px",
+															top: "5px",
+															color: "rgb(222, 225, 225)",
+															cursor: "pointer",
+															fontSize: 20,
+														}}
+													/>
+												</div>
+											)
+										)}
 										<div
 											className='mr-2 mb-2 rounded-sm border border-light'
 											style={{
 												width: "calc(20% - 8px)",
-												height: !formik.values.images.length && "100px",
+												height:
+													formik.values.images.length === 0 ||
+													formik.values.images.length % 5 === 0
+														? "100px"
+														: "auto",
 												position: "relative",
 												backgroundColor: "rgb(222, 225, 225)",
 												cursor: "pointer",
@@ -298,10 +326,12 @@ function Publish() {
 							}}
 						>
 							{formik.values.text ||
-							(formik.values.hashtags && formik.values.hashtags.length > 0) ? (
+							(formik.values.hashtags && formik.values.hashtags.length > 0) ||
+							formik.values.images ? (
 								<TwitterCard
 									hashtags={formik.values.hashtags}
 									text={formik.values.text}
+									images={formik.values.images}
 								/>
 							) : (
 								<EmptyPost />
