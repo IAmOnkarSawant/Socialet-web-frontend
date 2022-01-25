@@ -170,9 +170,6 @@ function Publish() {
 										{MAX_CAPTION_LENGTH - formik.values.text.length}
 									</span>
 								</div>
-								<FormFeedback>
-									{formik.touched.text && formik.errors.text}
-								</FormFeedback>
 							</FormGroup>
 							<FormGroup>
 								<Label>
