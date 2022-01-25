@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Button,
 	Card,
@@ -24,12 +24,15 @@ import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useDropzone } from "react-dropzone";
 
+const MAX_CAPTION_LENGTH = 280;
 const validationSchema = Yup.object({
-	text: Yup.string().test(
-		"len",
-		"Tweet length should be upto 280 characters",
-		(val) => val && val.toString().length <= 280
-	),
+	text: Yup.string()
+		.required("Caption is required field")
+		.test(
+			"len",
+			"Tweet length should be upto 280 characters",
+			(val) => val && val.toString().length <= 280
+		),
 });
 
 function Publish() {
@@ -142,16 +145,31 @@ function Publish() {
 						</Card>
 						<form onSubmit={formik.handleSubmit}>
 							<FormGroup>
-								<Input
-									aria-label='With textarea'
-									rows={6}
-									color='secondary'
-									type='textarea'
-									name='text'
-									invalid={formik.touched.text && Boolean(formik.errors.text)}
-									value={formik.values.text}
-									onChange={formik.handleChange}
-								></Input>
+								<div className='position-relative'>
+									<Input
+										aria-label='With textarea'
+										rows={6}
+										color='secondary'
+										type='textarea'
+										name='text'
+										invalid={formik.touched.text && Boolean(formik.errors.text)}
+										value={formik.values.text}
+										onChange={formik.handleChange}
+									></Input>
+									<span
+										style={{
+											position: "absolute",
+											right: 15,
+											bottom: 10,
+											color:
+												MAX_CAPTION_LENGTH - formik.values.text.length >= 0
+													? "gray"
+													: "red",
+										}}
+									>
+										{MAX_CAPTION_LENGTH - formik.values.text.length}
+									</span>
+								</div>
 								<FormFeedback>
 									{formik.touched.text && formik.errors.text}
 								</FormFeedback>
