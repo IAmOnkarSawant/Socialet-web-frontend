@@ -1,7 +1,7 @@
 import moment from "moment";
 import React from "react";
 
-function TwitterCard({ text, hashtags }) {
+function TwitterCard({ text, hashtags, images }) {
 	return (
 		<div
 			style={{
@@ -90,7 +90,26 @@ function TwitterCard({ text, hashtags }) {
 						);
 					})}
 				</div>
-				<div style={{ display: "flex", marginTop: "10px" }}>
+				<div className='d-flex flex-row flex-wrap py-1'>
+					{images.map(({ preview, id: imageId }) => (
+						<div
+							style={{
+								width: "100px",
+								height: "60px",
+								marginRight: 4,
+								marginBottom: 4,
+							}}
+						>
+							<img
+								style={{ width: "100%", height: "100%" }}
+								src={preview}
+								key={imageId}
+								className='rounded-sm'
+							/>
+						</div>
+					))}
+				</div>
+				<div style={{ display: "flex" }} className="pb-1 pt-2">
 					<svg
 						style={{ width: "20px", height: "20px" }}
 						fill='gray'
