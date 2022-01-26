@@ -40,7 +40,7 @@ function ModalComponent({ isOpen, onClose }) {
 	}
 
 	return (
-		<Modal fullscreen='true' fade isOpen={isOpen} backdrop='static'>
+		<Modal fullscreen='true' fade isOpen={isOpen} backdrop>
 			<ModalHeader className='pb-1 pl-4' toggle={onClose}>
 				Step - {activeStep + 1} {steps[activeStep]}
 			</ModalHeader>
