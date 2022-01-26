@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import {
 	Button,
 	Card,
@@ -17,14 +17,16 @@ import {
 import { BsTwitter } from "react-icons/bs";
 import { AiFillInfoCircle, AiFillPlusCircle } from "react-icons/ai";
 import { IoCloseOutline } from "react-icons/io5";
-import { MdDelete } from "react-icons/md";
+import { IoMdRemoveCircle } from "react-icons/io";
 import EmptyPost from "../../components/Post/EmptyPost";
 import TwitterCard from "../../components/Post/TwitterCard";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useDropzone } from "react-dropzone";
-import {recommendHashtags} from "../../_api/publish";
+import { recommendHashtags } from "../../_api/publish";
+
+const DUMMY_DASHTAGS = ["coolday", "beach"];
 
 const validationSchema = Yup.object({
 	text: Yup.string()
@@ -111,28 +113,20 @@ function Publish() {
 			formik.values.images.filter(({ id }) => id != imageId)
 		);
 	};
-	const fetchHashtags = (callback) =>{
+	const fetchHashtags = () => {
 		let formData = new FormData();
-		formik.values.images.map((file) => formData.append('files', file.file))
-		recommendHashtags(formData).then(({data})=>{
-			if(data){
-				const hashtags = [...formik.values.hashtags,...data.hashtags]
-				formik.setFieldValue("hashtags",[...new Set(hashtags)]);
-
-			}else{
-				console.log(data);
-			}
-		});
-		if(callback){
-			callback();
-		}
-	}
-
-	useEffect(()=>{
-		if(formik.values.images.length!==0){
-			fetchHashtags()
-		}
-	},[formik.values.images])
+		formik.values.images.map(({ file }) => formData.append("files", file));
+		recommendHashtags(formData)
+			.then(({ data }) => {
+				if (data) {
+					const hashtags = [...formik.values.hashtags, ...data.hashtags];
+					formik.setFieldValue("hashtags", [...new Set(hashtags)]);
+				}
+			})
+			.catch(() => {
+				formik.setFieldValue("hashtags", [...DUMMY_DASHTAGS]);
+			});
+	};
 
 	return (
 		<React.Fragment>
@@ -152,8 +146,11 @@ function Publish() {
 			<Container fluid>
 				<Row>
 					<Col
-						className='py-5 pl-4 bg-secondary position-relative'
-						style={{ height: "calc(100vh - 64px)", overflowY: "scroll" }}
+						className='py-3 pl-4 bg-secondary position-relative'
+						style={{
+							height: "calc(100vh - 64px)",
+							overflowY: "scroll",
+						}}
 					>
 						<Card className='mb-4 py-2 px-3 d-flex flex-row align-items-center border-light'>
 							<span
@@ -228,17 +225,18 @@ function Publish() {
 														style={{
 															width: "100%",
 															height: "100%",
+															filter: "brightness(.7)",
 														}}
 														src={preview}
 													/>
 
-													<MdDelete
+													<IoMdRemoveCircle
 														onClick={() => handleImageDelete(imageId)}
 														style={{
 															position: "absolute",
 															right: "5px",
 															top: "5px",
-															color: "rgb(222, 225, 225)",
+															color: "rgba(222, 225, 225,0.9)",
 															cursor: "pointer",
 															fontSize: 20,
 														}}
@@ -253,7 +251,7 @@ function Publish() {
 												height:
 													formik.values.images.length === 0 ||
 													formik.values.images.length % 5 === 0
-														? "100px"
+														? "85px"
 														: "auto",
 												position: "relative",
 												backgroundColor: "rgb(222, 225, 225)",
@@ -273,10 +271,22 @@ function Publish() {
 											/>
 										</div>
 									</div>
+									<hr className='my-1 mx-2' />
+									<div className='p-2'>
+										<Button
+											onClick={fetchHashtags}
+											disabled={formik.values.images.length === 0}
+											type='button'
+											color='primary'
+											size='sm'
+										>
+											Generate Hashtags
+										</Button>
+									</div>
 								</div>
 							</FormGroup>
 
-							<FormGroup>
+							<FormGroup style={{ marginBottom: "70px" }}>
 								<Label>
 									Hashtags
 									<AiFillInfoCircle
@@ -331,9 +341,9 @@ function Publish() {
 								style={{
 									display: "flex",
 									bottom: 0,
-									left: 0,
-									right: 0,
+									width: "100%",
 									padding: "15px",
+									marginRight: 15,
 								}}
 								className='position-fixed bg-white border-top'
 							>
@@ -343,6 +353,7 @@ function Publish() {
 									style={{
 										borderRadius: "0",
 										zIndex: 1000,
+										marginRight: 60,
 									}}
 									color='primary'
 								>
@@ -352,7 +363,7 @@ function Publish() {
 						</form>
 					</Col>
 					<Col
-						className='py-5 pr-4'
+						className='py-3 pr-4'
 						style={{ height: "calc(100vh - 64px)", backgroundColor: "#f3f4f4" }}
 					>
 						<p className='font-weight-bold text-dark'>Network Preview</p>
