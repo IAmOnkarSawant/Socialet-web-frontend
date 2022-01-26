@@ -24,7 +24,6 @@ import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useDropzone } from "react-dropzone";
 
-const MAX_CAPTION_LENGTH = 280;
 const validationSchema = Yup.object({
 	text: Yup.string()
 		.required("Caption is required field")
@@ -49,6 +48,8 @@ function Publish() {
 			console.log(JSON.stringify(values, null, 2));
 		},
 	});
+
+	const MAX_CAPTION_LENGTH = 280;
 
 	const [tooltipOpen, setTooltipOpen] = useState(false);
 	const toggleToolTip = () => setTooltipOpen(!tooltipOpen);
@@ -165,9 +166,10 @@ function Publish() {
 												MAX_CAPTION_LENGTH - formik.values.text.length >= 0
 													? "gray"
 													: "red",
+											fontSize:12
 										}}
 									>
-										{MAX_CAPTION_LENGTH - formik.values.text.length}
+										{MAX_CAPTION_LENGTH - formik.values.text.length}/{MAX_CAPTION_LENGTH}
 									</span>
 								</div>
 							</FormGroup>
