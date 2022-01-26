@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
 	Button,
 	Card,
@@ -24,6 +24,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useDropzone } from "react-dropzone";
+import {recommendHashtags} from "../../_api/publish";
 
 const validationSchema = Yup.object({
 	text: Yup.string()
@@ -110,6 +111,28 @@ function Publish() {
 			formik.values.images.filter(({ id }) => id != imageId)
 		);
 	};
+	const fetchHashtags = (callback) =>{
+		let formData = new FormData();
+		formik.values.images.map((file) => formData.append('files', file.file))
+		recommendHashtags(formData).then(({data})=>{
+			if(data){
+				const hashtags = [...formik.values.hashtags,...data.hashtags]
+				formik.setFieldValue("hashtags",[...new Set(hashtags)]);
+
+			}else{
+				console.log(data);
+			}
+		});
+		if(callback){
+			callback();
+		}
+	}
+
+	useEffect(()=>{
+		if(formik.values.images.length!==0){
+			fetchHashtags()
+		}
+	},[formik.values.images])
 
 	return (
 		<React.Fragment>
@@ -184,6 +207,75 @@ function Publish() {
 									{formik.touched.text && formik.errors.text}
 								</span>
 							</FormGroup>
+
+							<FormGroup>
+								<Label>Upload Images</Label>
+								<div className='border bg-white'>
+									<div className='d-flex flex-row flex-wrap px-2 pt-2'>
+										{formik.values.images.map(
+											({ preview, id: imageId }, index) => (
+												<div
+													key={imageId}
+													style={{
+														width: "calc(20% - 8px)",
+														height: "100px",
+														position: "relative",
+													}}
+													className='mr-2 pb-2'
+												>
+													<img
+														className='rounded-sm'
+														style={{
+															width: "100%",
+															height: "100%",
+														}}
+														src={preview}
+													/>
+
+													<MdDelete
+														onClick={() => handleImageDelete(imageId)}
+														style={{
+															position: "absolute",
+															right: "5px",
+															top: "5px",
+															color: "rgb(222, 225, 225)",
+															cursor: "pointer",
+															fontSize: 20,
+														}}
+													/>
+												</div>
+											)
+										)}
+										<div
+											className='mr-2 mb-2 rounded-sm border border-light'
+											style={{
+												width: "calc(20% - 8px)",
+												height:
+													formik.values.images.length === 0 ||
+													formik.values.images.length % 5 === 0
+														? "100px"
+														: "auto",
+												position: "relative",
+												backgroundColor: "rgb(222, 225, 225)",
+												cursor: "pointer",
+											}}
+											{...getRootProps()}
+										>
+											<input {...getInputProps()} />
+											<AiFillPlusCircle
+												size={25}
+												style={{
+													position: "absolute",
+													left: "50%",
+													top: "50%",
+													transform: "translate(-50%, -50%)",
+												}}
+											/>
+										</div>
+									</div>
+								</div>
+							</FormGroup>
+
 							<FormGroup>
 								<Label>
 									Hashtags
@@ -235,72 +327,6 @@ function Publish() {
 								</FormFeedback>
 							</FormGroup>
 
-							<FormGroup>
-								<Label>Upload Images</Label>
-								<div className='border bg-white'>
-									<div className='d-flex flex-row flex-wrap px-2 pt-2'>
-										{formik.values.images.map(
-											({ preview, id: imageId }, index) => (
-												<div
-													key={imageId}
-													style={{
-														width: "calc(20% - 8px)",
-														height: "100px",
-														position: "relative",
-													}}
-													className='mr-2 pb-2'
-												>
-													<img
-														className='rounded-sm'
-														style={{
-															width: "100%",
-															height: "100%",
-														}}
-														src={preview}
-													/>
-													<MdDelete
-														onClick={() => handleImageDelete(imageId)}
-														style={{
-															position: "absolute",
-															right: "5px",
-															top: "5px",
-															color: "rgb(222, 225, 225)",
-															cursor: "pointer",
-															fontSize: 20,
-														}}
-													/>
-												</div>
-											)
-										)}
-										<div
-											className='mr-2 mb-2 rounded-sm border border-light'
-											style={{
-												width: "calc(20% - 8px)",
-												height:
-													formik.values.images.length === 0 ||
-													formik.values.images.length % 5 === 0
-														? "100px"
-														: "auto",
-												position: "relative",
-												backgroundColor: "rgb(222, 225, 225)",
-												cursor: "pointer",
-											}}
-											{...getRootProps()}
-										>
-											<input {...getInputProps()} />
-											<AiFillPlusCircle
-												size={25}
-												style={{
-													position: "absolute",
-													left: "50%",
-													top: "50%",
-													transform: "translate(-50%, -50%)",
-												}}
-											/>
-										</div>
-									</div>
-								</div>
-							</FormGroup>
 							<div
 								style={{
 									display: "flex",
