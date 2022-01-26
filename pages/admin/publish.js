@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Button,
 	Card,
@@ -26,11 +26,13 @@ import { useRouter } from "next/router";
 import { useDropzone } from "react-dropzone";
 
 const validationSchema = Yup.object({
-	text: Yup.string().test(
-		"len",
-		"Tweet length should be upto 280 characters",
-		(val) => val && val.toString().length <= 280
-	),
+	text: Yup.string()
+		.required("Caption is required field")
+		.test(
+			"len",
+			"Tweet length should be upto 280 characters",
+			(val) => val && val.toString().length <= 280
+		),
 });
 
 function Publish() {
@@ -47,6 +49,8 @@ function Publish() {
 			console.log(JSON.stringify(values, null, 2));
 		},
 	});
+
+	const MAX_CAPTION_LENGTH = 280;
 
 	const [tooltipOpen, setTooltipOpen] = useState(false);
 	const toggleToolTip = () => setTooltipOpen(!tooltipOpen);
@@ -149,19 +153,32 @@ function Publish() {
 						</Card>
 						<form onSubmit={formik.handleSubmit}>
 							<FormGroup>
-								<Input
-									aria-label='With textarea'
-									rows={6}
-									color='secondary'
-									type='textarea'
-									name='text'
-									invalid={formik.touched.text && Boolean(formik.errors.text)}
-									value={formik.values.text}
-									onChange={formik.handleChange}
-								></Input>
-								<FormFeedback>
-									{formik.touched.text && formik.errors.text}
-								</FormFeedback>
+								<div className='position-relative'>
+									<Input
+										aria-label='With textarea'
+										rows={6}
+										color='secondary'
+										type='textarea'
+										name='text'
+										invalid={formik.touched.text && Boolean(formik.errors.text)}
+										value={formik.values.text}
+										onChange={formik.handleChange}
+									></Input>
+									<span
+										style={{
+											position: "absolute",
+											right: 15,
+											bottom: 10,
+											color:
+												MAX_CAPTION_LENGTH - formik.values.text.length >= 0
+													? "gray"
+													: "red",
+											fontSize:12
+										}}
+									>
+										{MAX_CAPTION_LENGTH - formik.values.text.length}/{MAX_CAPTION_LENGTH}
+									</span>
+								</div>
 							</FormGroup>
 							<FormGroup>
 								<Label>
