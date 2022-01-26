@@ -30,7 +30,7 @@ const validationSchema = Yup.object({
 		.required("Caption is required field")
 		.test(
 			"len",
-			"Tweet length should be upto 280 characters",
+			"you are exceeding the characters limit!",
 			(val) => val && val.toString().length <= 280
 		),
 });
@@ -173,12 +173,16 @@ function Publish() {
 												MAX_CAPTION_LENGTH - formik.values.text.length >= 0
 													? "gray"
 													: "red",
-											fontSize:12
+											fontSize: 12,
 										}}
 									>
-										{MAX_CAPTION_LENGTH - formik.values.text.length}/{MAX_CAPTION_LENGTH}
+										{MAX_CAPTION_LENGTH - formik.values.text.length}/
+										{MAX_CAPTION_LENGTH}
 									</span>
 								</div>
+								<span style={{ fontSize: 13, color: "red" }}>
+									{formik.touched.text && formik.errors.text}
+								</span>
 							</FormGroup>
 							<FormGroup>
 								<Label>
