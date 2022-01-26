@@ -4,9 +4,7 @@ export const HASHTAGS_RECOMMENDER = `${process.env.NEXT_PUBLIC_API_URL}/hashtags
 
 // POST REQUEST -> RESPONSE GIVES HASHTAGS
 export function recommendHashtags(formData) {
-    return axios.post(
-        `${HASHTAGS_RECOMMENDER}`,
-        formData,
-        {headers: { 'content-type': 'multipart/form-data' }}
-    );
+	return axios.post(`${HASHTAGS_RECOMMENDER}`, formData, {
+		headers: { "content-type": "multipart/form-data" },
+	});
 }

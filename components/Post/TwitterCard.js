@@ -93,6 +93,7 @@ function TwitterCard({ text, hashtags, images }) {
 				<div className='d-flex flex-row flex-wrap py-1'>
 					{images.map(({ preview, id: imageId }) => (
 						<div
+							key={imageId}
 							style={{
 								width: "100px",
 								height: "60px",
@@ -109,7 +110,7 @@ function TwitterCard({ text, hashtags, images }) {
 						</div>
 					))}
 				</div>
-				<div style={{ display: "flex" }} className="pb-1 pt-2">
+				<div style={{ display: "flex" }} className='pb-1 pt-2'>
 					<svg
 						style={{ width: "20px", height: "20px" }}
 						fill='gray'
