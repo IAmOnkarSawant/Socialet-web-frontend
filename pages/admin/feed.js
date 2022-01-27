@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { getTwitterFeed } from "../../_api/channels";
 
 function Feed() {
+	const router = useRouter();
 	
 	const [feed,setFeed] = useState([]);
 	const fetchTwitterFeed = () =>{
