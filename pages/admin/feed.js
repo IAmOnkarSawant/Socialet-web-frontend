@@ -42,17 +42,20 @@ function feed() {
 			</Navbar>
 			<Container className='py-3' fluid='sm'>
 				{DUMMY_FEED.map((tweet) => (
-					<section key={tweet.id} className='my-4 rounded bg-white shadow-lg'>
+					<section
+						key={tweet.id}
+						className='my-2 rounded border border-light bg-white'
+					>
 						<div className='d-flex flex-row align-items-center justify-content-between px-2 py-2'>
 							<div
 								className='d-flex flex-row align-items-center'
 								style={{ color: "rgb(54, 65, 65)" }}
 							>
 								<img
-									style={{ width: "35px", height: "35px" }}
-									className='rounded-circle mr-2'
+									style={{ width: "100px", height: "100px" }}
+									className='mr-2'
 									src={
-										"https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo=" ||
+										// "https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo=" ||
 										tweet.profile_image_url
 									}
 								/>
