@@ -12,6 +12,12 @@ var routes = [
 		layout: "/admin",
 	},
 	{
+		path:'/channels',
+		name:"Channels",
+		icon:"ni ni-single-02 text-yellow",
+		layout:"/admin"
+	},
+	{
 		path: "/publish",
 		name: "Publish Post",
 		icon: "ni ni-send text-primary",
