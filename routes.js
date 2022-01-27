@@ -18,6 +18,12 @@ var routes = [
 		layout:"/admin"
 	},
 	{
+		path:'/feed',
+		name:"Feed",
+		icon:"ni ni-collection text-green",
+		layout:"/admin"
+	},
+	{
 		path: "/publish",
 		name: "Publish Post",
 		icon: "ni ni-send text-primary",
