@@ -15,3 +15,8 @@ export function sendOAuthTokens(data){
         }
     });
 }
+
+// GET REQUEST -> TWITTER FEED
+export function getTwitterFeed(){
+	return axios.get(`${TWITTER_URL}/feed`);
+}
