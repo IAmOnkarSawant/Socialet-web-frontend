@@ -69,3 +69,15 @@
 
 // React Differences
 @import "react/react-differences";
+
+@keyframes redirect-animation {
+	from {
+		transform: rotate(360deg);
+	}
+	to {
+		transform: rotate(0deg);
+	}
+}
+.redirect-animation {
+	animation: redirect-animation 2s linear infinite;
+}
