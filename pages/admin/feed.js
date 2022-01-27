@@ -42,10 +42,7 @@ function feed() {
 			</Navbar>
 			<Container className='py-3' fluid='sm'>
 				{DUMMY_FEED.map((tweet) => (
-					<section
-						key={tweet.id}
-						className='my-2 rounded border border-light bg-white'
-					>
+					<section key={tweet.id} className='my-4 rounded bg-white shadow-lg'>
 						<div className='d-flex flex-row align-items-center justify-content-between px-2 py-2'>
 							<div
 								className='d-flex flex-row align-items-center'
