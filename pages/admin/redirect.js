@@ -1,33 +1,34 @@
-import React, { useEffect } from "react";
+import React, { useState,useEffect } from "react";
 import { Card, Container, CardBody, CardTitle, CardSubtitle } from "reactstrap";
 import { ImForward } from "react-icons/im";
 import { useRouter } from "next/router";
 import { sendOAuthTokens } from "../../_api/channels";
 
-const DUMMY_RESPONSE = {
-	user_id: "1",
-	name: "Pranav Mene",
-	description: "blah_blah",
-	screen_name: "blah_blah",
-	profile_image_url:
-		"https://vengreso.com/wp-content/uploads/2016/03/LinkedIn-Profile-Professional-Picture-Sample-Bernie-Borges.png",
-};
-
 function Redirect() {
 	const { query } = useRouter();
+	const router = useRouter();
+
+	const [profileData,setProfileData] = useState({
+		user_id: "",
+		name: "",
+		description: "",
+		screen_name: "",
+		profile_image_url:"",
+	})
 
 	const fetchOAuthTokens = () => {
 		const { oauth_token, oauth_verifier } = query;
 		sendOAuthTokens({ oauth_token, oauth_verifier }).then(({ data }) => {
-			console.log(data);
+			setProfileData(data)
+			router.push("/admin/dashboard");
 		});
 	};
 
-	// useEffect(() => {
-	// 	if (query) {
-	// 		fetchOAuthTokens();
-	// 	}
-	// }, [query]);
+	useEffect(() => {
+		if (query) {
+			fetchOAuthTokens();
+		}
+	}, [query]);
 
 	return (
 		<React.Fragment>
@@ -40,36 +41,15 @@ function Redirect() {
 					style={{ width: "600px" }}
 					className='py-3 shadow-lg position-relative'
 				>
-					{/* <div className='d-flex flex-column align-items-center justify-items-center'>
-						<span
-							style={{
-								color: "white",
-								height: "90px",
-								marginTop: "0.25rem",
-								minWidth: "90px",
-								borderRadius: "50%",
-							}}
-							className='d-flex flex-row align-items-center justify-content-center bg-primary mt-3'
-						>
-							<ImForward
-								className='redirect-animation'
-								style={{
-									width: "33px",
-									height: "33px",
-									display: "inline-block",
-								}}
-							/>
-						</span>
-					</div> */}
 					<CardBody>
 						<div className='d-flex flex-column justify-content-center align-items-center pb-3'>
 							<img
 								className='rounded-circle mr-3'
 								width='110px'
 								height='110px'
-								src={DUMMY_RESPONSE["profile_image_url"]}
+								src={profileData["profile_image_url"]}
 							/>
-							<h3 className='pt-3'>Welcome {DUMMY_RESPONSE["name"]} </h3>
+							<h3 className='pt-3'>Welcome {profileData["name"]} </h3>
 						</div>
 						<CardTitle tag='h2'>
 							Hang Tight !{" "}
@@ -83,8 +63,7 @@ function Redirect() {
 							/>
 						</CardTitle>
 						<CardSubtitle tag='h4' className='pb-5'>
-							You're being redirected to another page, <br /> it may takes upto
-							10 seconds
+							You're being redirected to another page, <br /> it may take a few seconds.
 						</CardSubtitle>
 					</CardBody>
 					<div
