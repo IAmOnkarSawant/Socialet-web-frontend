@@ -14,7 +14,7 @@ var routes = [
 	{
 		path:'/channels',
 		name:"Channels",
-		icon:"ni ni-single-02 text-yellow",
+		icon:"ni ni-world text-danger",
 		layout:"/admin"
 	},
 	{
