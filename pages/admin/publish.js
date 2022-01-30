@@ -13,6 +13,7 @@ import {
 	Row,
 	Tooltip,
 	Badge,
+	Spinner,
 } from "reactstrap";
 import { BsTwitter } from "react-icons/bs";
 import { AiFillInfoCircle, AiFillPlusCircle } from "react-icons/ai";
@@ -26,7 +27,7 @@ import { useRouter } from "next/router";
 import { useDropzone } from "react-dropzone";
 import { recommendHashtags } from "../../_api/publish";
 
-const DUMMY_DASHTAGS = ["coolday", "beach"];
+const DUMMY_DASHTAGS = ["#coolday", "#beach"];
 
 const validationSchema = Yup.object({
 	text: Yup.string()
@@ -45,6 +46,7 @@ function Publish() {
 			text: "",
 			hashtags: [],
 			images: [],
+			isHashtagGenerating: false,
 		},
 		validationSchema: validationSchema,
 		onSubmit: (values) => {
@@ -116,11 +118,13 @@ function Publish() {
 	const fetchHashtags = () => {
 		let formData = new FormData();
 		formik.values.images.map(({ file }) => formData.append("files", file));
+		formik.setFieldValue("isHashtagGenerating", true);
 		recommendHashtags(formData)
 			.then(({ data }) => {
 				if (data) {
 					const hashtags = [...formik.values.hashtags, ...data.hashtags];
 					formik.setFieldValue("hashtags", [...new Set(hashtags)]);
+					formik.setFieldValue("isHashtagGenerating", false);
 				}
 			})
 			.catch(() => {
@@ -272,16 +276,27 @@ function Publish() {
 										</div>
 									</div>
 									<hr className='my-1 mx-2' />
-									<div className='p-2'>
+									<div className='p-2 d-flex flex-row align-items-center'>
 										<Button
+											className='px-4'
 											onClick={fetchHashtags}
-											disabled={formik.values.images.length === 0}
+											disabled={
+												formik.values.images.length === 0 ||
+												formik.values.isHashtagGenerating
+											}
 											type='button'
 											color='primary'
 											size='sm'
 										>
-											Generate Hashtags
+											{formik.values.isHashtagGenerating
+												? "Generating hashtags..."
+												: "Generate Hashtags"}
 										</Button>
+										{formik.values.isHashtagGenerating && (
+											<Spinner color='primary' size='sm' className='ml-1'>
+												Loading...
+											</Spinner>
+										)}
 									</div>
 								</div>
 							</FormGroup>
@@ -351,7 +366,6 @@ function Publish() {
 								<Button
 									type='submit'
 									style={{
-										borderRadius: "0",
 										zIndex: 1000,
 										marginRight: 60,
 									}}
