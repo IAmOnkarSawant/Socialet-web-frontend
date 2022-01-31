@@ -94,7 +94,7 @@ function search() {
 					{formik.values.tweets.length !== 0 ? (
 						<Col md='9'>
 							{formik.values.tweets.map((tweet) => (
-								<TwitterCard key={tweet.id} tweet={tweet} />
+								<TwitterCard key={tweet.id} tweet={tweet} search={true} />
 							))}
 						</Col>
 					) : (
@@ -154,13 +154,13 @@ function search() {
 							</Card>
 						</Col>
 					)}
-					{/* {formik.values.tweets.length !== 0 && (
+					{formik.values.tweets.length !== 0 && (
 						<Col md='3'>
 							<Card className='shadow-lg'>
 								<CardHeader>Create New</CardHeader>
 							</Card>
 						</Col>
-					)} */}
+					)}
 				</Row>
 			</Container>
 		</React.Fragment>

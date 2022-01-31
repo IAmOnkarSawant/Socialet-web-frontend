@@ -4,7 +4,7 @@ import { BiPin } from "react-icons/bi";
 import { RiReplyLine } from "react-icons/ri";
 import { AiOutlineHeart } from "react-icons/ai";
 
-function TwitterCard({ tweet, ...props }) {
+function TwitterCard({ tweet, search, feed, ...props }) {
 	return (
 		<section className='mb-4 rounded bg-white shadow-lg'>
 			<div className='d-flex flex-row align-items-center justify-content-between px-2 py-2'>
@@ -42,7 +42,12 @@ function TwitterCard({ tweet, ...props }) {
 								{tweet.user.followers_count}
 							</span>
 						</div>
-						<span style={{ fontSize: "12px" }}>Tweet</span>
+						{search && (
+							<span style={{ fontSize: "12px" }}>
+								{tweet.retweet_count === 0 ? "Tweet" : "Retweeted"}
+							</span>
+						)}
+						{feed && <span style={{ fontSize: "12px" }}>Tweet</span>}
 					</div>
 				</div>
 				<div>
@@ -56,7 +61,20 @@ function TwitterCard({ tweet, ...props }) {
 			</div>
 			<hr className='mt-0 mb-1' />
 			<div style={{ paddingLeft: "53px" }} className='pr-1 py-3'>
-				<span style={{ fontSize: "15px", color: "#364141" }}>{tweet.text}</span>
+				{search && (
+					<span style={{ fontSize: "15px", color: "#364141" }}>
+						{" "}
+						{tweet.retweet_count === 0
+							? tweet.full_text
+							: tweet.retweeted_status.full_text}
+					</span>
+				)}
+				{feed && (
+					<span style={{ fontSize: "15px", color: "#364141" }}>
+						{" "}
+						{tweet.full_text}
+					</span>
+				)}
 			</div>
 			<div className='d-flex flex-row justify-content-end align-items-center p-3'>
 				<div>
