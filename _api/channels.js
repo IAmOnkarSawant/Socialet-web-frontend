@@ -8,15 +8,24 @@ export function connectTwitterAuth() {
 }
 
 // POST REQUEST -> SEND FETCH OAUTH TOKEN AND OAUTH VERIFIER
-export function sendOAuthTokens(data){
-    return axios.post(`${TWITTER_URL}/oauth`,data,{
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
+export function sendOAuthTokens(data) {
+	return axios.post(`${TWITTER_URL}/oauth`, data, {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
 }
 
 // GET REQUEST -> TWITTER FEED
-export function getTwitterFeed(){
+export function getTwitterFeed() {
 	return axios.get(`${TWITTER_URL}/feed`);
+}
+
+// GET REQUEST -> TWITTER SEARCH
+export function getSearchResults(query, geocode) {
+	if(!geocode){
+        return axios.get(`${TWITTER_URL}/search?query=${query}`);
+    } else {
+        return axios.get(`${TWITTER_URL}/search?query=${query}&geocode=${geocode}`);
+    }
 }
