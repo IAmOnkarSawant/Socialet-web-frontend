@@ -64,9 +64,11 @@ function TwitterCard({ tweet, search, feed, ...props }) {
 				{search && (
 					<span style={{ fontSize: "15px", color: "#364141" }}>
 						{" "}
-						{tweet.retweet_count === 0
-							? tweet.full_text
-							: tweet.retweeted_status.full_text}
+						{
+							tweet.retweeted && tweet.retweet_count>0
+							? tweet.retweeted_status.full_text
+							: tweet.full_text
+						}
 					</span>
 				)}
 				{feed && (
