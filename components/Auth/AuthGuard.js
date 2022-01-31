@@ -6,7 +6,6 @@ export function AuthGuard({ children }) {
 	const { data: session, status } = useSession();
 	const [hasAccess, setHasAccess] = useState(false);
 	const router = useRouter();
-	console.log(session, status);
 	useEffect(() => {
 		if (status === "unauthenticated" && !session) {
 			router.push("/authPages/login");

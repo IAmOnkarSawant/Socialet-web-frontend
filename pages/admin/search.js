@@ -20,6 +20,7 @@ import {
 } from "reactstrap";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { useSession } from "next-auth/react";
 import { getSearchResults } from "../../_api/channels";
 import TwitterCard from "../../components/Post/TwitterCard";
 import ButtonLoader from "../../components/Loaders/ButtonLoader";
@@ -36,6 +37,8 @@ const validationSchema = yup.object({
 
 function search() {
 	const router = useRouter();
+	const {data:session} = useSession();
+
 	const formik = useFormik({
 		initialValues: {
 			searchTerm: "",
@@ -45,7 +48,7 @@ function search() {
 		validationSchema: validationSchema,
 		onSubmit: ({ searchTerm }) => {
 			formik.setFieldValue("isSearching", true);
-			getSearchResults(searchTerm).then(({ data: { tweets } }) => {
+			getSearchResults(session.token.sub,searchTerm).then(({ data: { tweets } }) => {
 				console.log(tweets);
 				formik.setFieldValue("isSearching", false);
 				formik.setFieldValue("tweets", [...tweets]);

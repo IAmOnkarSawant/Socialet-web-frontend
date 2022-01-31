@@ -2,11 +2,14 @@ import React, { useState,useEffect } from "react";
 import { Card, Container, CardBody, CardTitle, CardSubtitle } from "reactstrap";
 import { ImForward } from "react-icons/im";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import { sendOAuthTokens } from "../../_api/channels";
 
 function Redirect() {
 	const { query } = useRouter();
 	const router = useRouter();
+	const {data:session} = useSession();
+
 
 	const [profileData,setProfileData] = useState({
 		user_id: "",
@@ -18,7 +21,7 @@ function Redirect() {
 
 	const fetchOAuthTokens = () => {
 		const { oauth_token, oauth_verifier } = query;
-		sendOAuthTokens({ oauth_token, oauth_verifier }).then(({ data }) => {
+		sendOAuthTokens({ oauth_token, oauth_verifier,user_id:session.token.sub }).then(({ data }) => {
 			setProfileData(data)
 			router.push("/admin/dashboard");
 		});

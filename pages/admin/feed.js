@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Button, Container, Navbar, NavbarBrand } from "reactstrap";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import { getTwitterFeed } from "../../_api/channels";
 import TwitterCard from "../../components/Post/TwitterCard";
 
 function Feed() {
 	const router = useRouter();
-
-	const [feed, setFeed] = useState([]);
-	const fetchTwitterFeed = () => {
-		getTwitterFeed().then(({ data }) => {
+	const {data:session} = useSession();
+	
+	const [feed,setFeed] = useState([]);
+	const fetchTwitterFeed = () =>{
+		getTwitterFeed(session.token.sub).then(({data})=>{
 			console.log(data);
 			setFeed([...data.feed]);
 		});
