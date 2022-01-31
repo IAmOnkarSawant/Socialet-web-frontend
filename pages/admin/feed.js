@@ -41,7 +41,7 @@ function Feed() {
 			</Navbar>
 			<Container className='py-3' fluid='sm'>
 				{feed.length !== 0 &&
-					feed.map((tweet) => <TwitterCard key={tweet.id} tweet={tweet} />)}
+					feed.map((tweet) => <TwitterCard key={tweet.id} tweet={tweet} feed={true} />)}
 			</Container>
 		</React.Fragment>
 	);
