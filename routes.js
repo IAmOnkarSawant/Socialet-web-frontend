@@ -24,6 +24,12 @@ var routes = [
 		layout:"/admin"
 	},
 	{
+		path:'/search',
+		name:"Search",
+		icon:"ni ni-zoom-split-in text-muted",
+		layout:"/admin"
+	},
+	{
 		path: "/publish",
 		name: "Publish Post",
 		icon: "ni ni-send text-primary",

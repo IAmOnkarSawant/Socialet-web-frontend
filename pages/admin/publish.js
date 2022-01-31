@@ -20,12 +20,13 @@ import { AiFillInfoCircle, AiFillPlusCircle } from "react-icons/ai";
 import { IoCloseOutline } from "react-icons/io5";
 import { IoMdRemoveCircle } from "react-icons/io";
 import EmptyPost from "../../components/Post/EmptyPost";
-import TwitterCard from "../../components/Post/TwitterCard";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useDropzone } from "react-dropzone";
 import { recommendHashtags } from "../../_api/publish";
+import TwitterPreview from "../../components/Post/TwitterPreview";
+import ButtonLoader from "../../components/Loaders/ButtonLoader";
 
 const DUMMY_DASHTAGS = ["#coolday", "#beach"];
 
@@ -276,8 +277,8 @@ function Publish() {
 										</div>
 									</div>
 									<hr className='my-1 mx-2' />
-									<div className='p-2 d-flex flex-row align-items-center'>
-										<Button
+									<div className="p-2">
+										<ButtonLoader
 											className='px-4'
 											onClick={fetchHashtags}
 											disabled={
@@ -287,16 +288,12 @@ function Publish() {
 											type='button'
 											color='primary'
 											size='sm'
+											loading={formik.values.isHashtagGenerating}
 										>
 											{formik.values.isHashtagGenerating
 												? "Generating hashtags..."
 												: "Generate Hashtags"}
-										</Button>
-										{formik.values.isHashtagGenerating && (
-											<Spinner color='primary' size='sm' className='ml-1'>
-												Loading...
-											</Spinner>
-										)}
+										</ButtonLoader>
 									</div>
 								</div>
 							</FormGroup>
@@ -400,7 +397,7 @@ function Publish() {
 							{formik.values.text ||
 							(formik.values.hashtags && formik.values.hashtags.length > 0) ||
 							(formik.values.images && formik.values.images.length > 0) ? (
-								<TwitterCard
+								<TwitterPreview
 									hashtags={formik.values.hashtags}
 									text={formik.values.text}
 									images={formik.values.images}
