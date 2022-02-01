@@ -37,7 +37,7 @@ const validationSchema = yup.object({
 
 function search() {
 	const router = useRouter();
-	const {data:session} = useSession();
+	const { data: session } = useSession();
 
 	const formik = useFormik({
 		initialValues: {
@@ -48,12 +48,21 @@ function search() {
 		validationSchema: validationSchema,
 		onSubmit: ({ searchTerm }) => {
 			formik.setFieldValue("isSearching", true);
-			getSearchResults(session.token.sub,searchTerm).then(({ data: { tweets } }) => {
-				console.log(tweets);
-				formik.setFieldValue("isSearching", false);
-				formik.setFieldValue("tweets", [...tweets]);
-				formik.setSubmitting(false);
-			});
+			let newSearchTerm;
+			if (searchTerm.charCodeAt(0) === 35) {
+				newSearchTerm = searchTerm.replace("#", "hashtag");
+			} else {
+				newSearchTerm = searchTerm;
+			}
+			console.log(newSearchTerm);
+			getSearchResults(session.token.sub, newSearchTerm).then(
+				({ data: { tweets } }) => {
+					console.log(tweets);
+					formik.setFieldValue("isSearching", false);
+					formik.setFieldValue("tweets", [...tweets]);
+					formik.setSubmitting(false);
+				}
+			);
 		},
 	});
 
@@ -92,10 +101,10 @@ function search() {
 					</Button>
 				</div>
 			</Navbar>
-			<Container fluid className='mt-4'>
+			<Container fluid="sm" className='mt-4'>
 				<Row>
 					{formik.values.tweets.length !== 0 ? (
-						<Col md='9'>
+						<Col md='12'>
 							{formik.values.tweets.map((tweet) => (
 								<TwitterCard key={tweet.id} tweet={tweet} search={true} />
 							))}
@@ -154,13 +163,6 @@ function search() {
 										</Row>
 									</form>
 								</CardBody>
-							</Card>
-						</Col>
-					)}
-					{formik.values.tweets.length !== 0 && (
-						<Col md='3'>
-							<Card className='shadow-lg'>
-								<CardHeader>Create New</CardHeader>
 							</Card>
 						</Col>
 					)}

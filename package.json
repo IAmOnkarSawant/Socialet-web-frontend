@@ -32,6 +32,7 @@
     "chart.js": "2.9.4",
     "classnames": "2.2.6",
     "formik": "^2.2.9",
+    "millify": "^4.0.0",
     "moment": "^2.29.1",
     "mongoose": "^6.1.6",
     "next": "10.0.6",

@@ -3,11 +3,14 @@ import { BsTwitter } from "react-icons/bs";
 import { BiPin } from "react-icons/bi";
 import { RiReplyLine } from "react-icons/ri";
 import { AiOutlineHeart } from "react-icons/ai";
+import moment from "moment";
+import millify from "millify";
+import { removeLinkFromText } from "../../utils/formatter";
 
 function TwitterCard({ tweet, search, feed, ...props }) {
 	return (
 		<section className='mb-4 rounded bg-white shadow-lg'>
-			<div className='d-flex flex-row align-items-center justify-content-between px-2 py-2'>
+			<div className='d-flex flex-row align-items-center justify-content-between px-3 py-3'>
 				<div
 					className='d-flex flex-row align-items-center'
 					style={{ color: "rgb(54, 65, 65)" }}
@@ -21,11 +24,11 @@ function TwitterCard({ tweet, search, feed, ...props }) {
 						<div className='d-flex flex-row align-items-center'>
 							<BsTwitter
 								style={{ fontSize: "14px", color: "rgb(29, 161, 242)" }}
-								className='mr-2'
+								className='mr-1'
 							/>
 							<span
 								style={{ fontSize: "13px" }}
-								className='mr-2 font-weight-bolder'
+								className='mr-1 font-weight-bolder'
 							>
 								{tweet.user.name}
 							</span>
@@ -37,9 +40,9 @@ function TwitterCard({ tweet, search, feed, ...props }) {
 									fontSize: "12px",
 									backgroundColor: "rgb(255, 198, 164)",
 								}}
-								className='mr-2 px-2 py-0 rounded-pill'
+								className='mr-2 px-3 py-0 rounded-pill'
 							>
-								{tweet.user.followers_count}
+								{millify(tweet.user.followers_count)}
 							</span>
 						</div>
 						{search && (
@@ -50,33 +53,23 @@ function TwitterCard({ tweet, search, feed, ...props }) {
 						{feed && <span style={{ fontSize: "12px" }}>Tweet</span>}
 					</div>
 				</div>
-				<div>
+				<div className="pr-3">
 					<span style={{ fontSize: "13px" }}>
-						{new Date(tweet.created_at).toLocaleTimeString([], {
-							hour: "2-digit",
-							minute: "2-digit",
-						})}
+						{moment(new Date(tweet.created_at)).startOf("day").fromNow()}
 					</span>
 				</div>
 			</div>
 			<hr className='mt-0 mb-1' />
-			<div style={{ paddingLeft: "53px" }} className='pr-1 py-3'>
-				{search && (
-					<span style={{ fontSize: "15px", color: "#364141" }}>
-						{" "}
-						{
-							tweet.retweeted && tweet.retweet_count>0
-							? tweet.retweeted_status.full_text
-							: tweet.full_text
-						}
-					</span>
-				)}
-				{feed && (
-					<span style={{ fontSize: "15px", color: "#364141" }}>
-						{" "}
-						{tweet.full_text}
-					</span>
-				)}
+			<div style={{ paddingLeft: "53px" }} className='pr-3 py-3'>
+				<span
+					style={{ fontSize: "15px", color: "#364141", whiteSpace: "pre-line" }}
+				>
+					{tweet && tweet.retweet_count === 0
+						? tweet.full_text
+						: tweet.retweeted_status
+						? tweet.retweeted_status.full_text
+						: tweet.full_text}
+				</span>
 			</div>
 			<div className='d-flex flex-row justify-content-end align-items-center p-3'>
 				<div>
