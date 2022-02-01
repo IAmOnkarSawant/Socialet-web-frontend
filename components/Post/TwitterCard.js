@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BsTwitter } from "react-icons/bs";
 import { BiPin } from "react-icons/bi";
 import { RiReplyLine } from "react-icons/ri";
@@ -6,8 +6,10 @@ import { AiOutlineHeart } from "react-icons/ai";
 import moment from "moment";
 import millify from "millify";
 import { removeLinkFromText } from "../../utils/formatter";
+import ModalImage from "../Modal/ModalImage";
 
 function TwitterCard({ tweet, search, feed, ...props }) {
+	const [modalImageURL, setModalImageURL] = useState("");
 	return (
 		<section className='mb-4 rounded bg-white shadow-lg'>
 			<div className='d-flex flex-row align-items-center justify-content-between px-3 py-3'>
@@ -85,6 +87,7 @@ function TwitterCard({ tweet, search, feed, ...props }) {
 											width='140px'
 											src={media.media_url_https}
 											alt={media.display_url}
+											onClick={() => setModalImageURL(media?.media_url_https)}
 										/>
 									</div>
 								)
@@ -98,6 +101,7 @@ function TwitterCard({ tweet, search, feed, ...props }) {
 											width='140px'
 											src={media.media_url_https}
 											alt={media.display_url}
+											onClick={() => setModalImageURL(media?.media_url_https)}
 										/>
 									</div>
 								)
@@ -131,6 +135,9 @@ function TwitterCard({ tweet, search, feed, ...props }) {
 					/>
 				</div>
 			</div>
+			{modalImageURL && (
+				<ModalImage setModalImageURL={setModalImageURL} url={modalImageURL} />
+			)}
 		</section>
 	);
 }
