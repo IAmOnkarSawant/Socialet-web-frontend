@@ -3,15 +3,15 @@ import { Button, Container, Navbar, NavbarBrand } from "reactstrap";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { getTwitterFeed } from "../../_api/channels";
-import TwitterCard from "../../components/Post/TwitterCard";
+import TwitterCard from "../../components/Post/TwitterFeedCard";
 
 function Feed() {
 	const router = useRouter();
-	const {data:session} = useSession();
-	
-	const [feed,setFeed] = useState([]);
-	const fetchTwitterFeed = () =>{
-		getTwitterFeed(session.token.sub).then(({data})=>{
+	const { data: session } = useSession();
+
+	const [feed, setFeed] = useState([]);
+	const fetchTwitterFeed = () => {
+		getTwitterFeed(session.token.sub).then(({ data }) => {
 			console.log(data);
 			setFeed([...data.feed]);
 		});
@@ -43,7 +43,9 @@ function Feed() {
 			</Navbar>
 			<Container className='py-3' fluid='sm'>
 				{feed.length !== 0 &&
-					feed.map((tweet) => <TwitterCard key={tweet.id} tweet={tweet} feed={true} />)}
+					feed.map((tweet) => (
+						<TwitterCard key={tweet.id} tweet={tweet} feed={true} />
+					))}
 			</Container>
 		</React.Fragment>
 	);

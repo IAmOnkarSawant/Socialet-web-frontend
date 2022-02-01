@@ -8,7 +8,7 @@ import millify from "millify";
 import { tweetFormatter } from "../../utils/formatter";
 import ModalImage from "../Modal/ModalImage";
 
-function TwitterCard({ tweet, search, feed, callback, ...props }) {
+function TwitterSearchCard({ tweet, search, feed, callback, ...props }) {
 	const [modalImageURL, setModalImageURL] = useState("");
 	const tweet_text =
 		tweet?.retweet_count === 0
@@ -162,4 +162,4 @@ function TwitterCard({ tweet, search, feed, callback, ...props }) {
 	);
 }
 
-export default TwitterCard;
+export default TwitterSearchCard;

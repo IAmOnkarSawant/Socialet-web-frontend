@@ -23,7 +23,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { useSession } from "next-auth/react";
 import { getSearchResults } from "../../_api/channels";
-import TwitterCard from "../../components/Post/TwitterCard";
+import TwitterCard from "../../components/Post/TwitterSearchCard";
 import ButtonLoader from "../../components/Loaders/ButtonLoader";
 
 const validationSchema = yup.object({
