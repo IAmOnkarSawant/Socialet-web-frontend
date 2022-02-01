@@ -5,11 +5,30 @@ import { RiReplyLine } from "react-icons/ri";
 import { AiOutlineHeart } from "react-icons/ai";
 import moment from "moment";
 import millify from "millify";
-import { removeLinkFromText } from "../../utils/formatter";
+import { tweetFormatter } from "../../utils/formatter";
 import ModalImage from "../Modal/ModalImage";
 
-function TwitterCard({ tweet, search, feed, ...props }) {
+function TwitterCard({ tweet, search, feed, callback, ...props }) {
 	const [modalImageURL, setModalImageURL] = useState("");
+	const tweet_text =
+		tweet?.retweet_count === 0
+			? tweet.full_text
+			: tweet.retweeted_status
+			? tweet.retweeted_status.full_text
+			: tweet.full_text;
+
+	const clickHandler = (e) => {
+		let el = e.target;
+		while (el && el !== e.currentTarget && el.tagName !== "SPAN") {
+			el = el.parentNode;
+		}
+		if (el && el.tagName === "SPAN") {
+			console.log("Clicked!", e.target.innerText.trim());
+			props.formik.setFieldValue("searchTerm", e.target.innerText.trim());
+		}
+		callback();
+	};
+
 	return (
 		<section className='mb-4 rounded bg-white shadow-lg'>
 			<div className='d-flex flex-row align-items-center justify-content-between px-3 py-3'>
@@ -64,14 +83,15 @@ function TwitterCard({ tweet, search, feed, ...props }) {
 			<hr className='mt-0 mb-1' />
 			<div style={{ paddingLeft: "53px" }} className='pr-3 py-3'>
 				<span
-					style={{ fontSize: "15px", color: "#364141", whiteSpace: "pre-line" }}
-				>
-					{tweet && tweet.retweet_count === 0
-						? tweet.full_text
-						: tweet.retweeted_status
-						? tweet.retweeted_status.full_text
-						: tweet.full_text}
-				</span>
+					style={{
+						fontSize: "15px",
+						color: "#364141",
+						whiteSpace: "pre-line",
+						pointerEvents: "none",
+					}}
+					dangerouslySetInnerHTML={{ __html: tweetFormatter(tweet_text) }}
+					onClick={clickHandler}
+				/>
 			</div>
 			<div
 				style={{ paddingLeft: "53px" }}
