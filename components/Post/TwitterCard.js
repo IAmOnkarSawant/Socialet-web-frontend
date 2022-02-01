@@ -53,7 +53,7 @@ function TwitterCard({ tweet, search, feed, ...props }) {
 						{feed && <span style={{ fontSize: "12px" }}>Tweet</span>}
 					</div>
 				</div>
-				<div className="pr-3">
+				<div className='pr-3'>
 					<span style={{ fontSize: "13px" }}>
 						{moment(new Date(tweet.created_at)).startOf("day").fromNow()}
 					</span>
@@ -70,6 +70,38 @@ function TwitterCard({ tweet, search, feed, ...props }) {
 						? tweet.retweeted_status.full_text
 						: tweet.full_text}
 				</span>
+			</div>
+			<div
+				style={{ paddingLeft: "53px" }}
+				className='d-flex flex-row align-items-center'
+			>
+				{tweet.retweet_count === 0
+					? tweet?.entities?.media?.map(
+							(media) =>
+								media.type == "photo" && (
+									<div key={media.id} style={{ cursor: "pointer" }}>
+										<img
+											className='shadow-lg bg-white rounded-lg'
+											width='140px'
+											src={media.media_url_https}
+											alt={media.display_url}
+										/>
+									</div>
+								)
+					  )
+					: tweet?.retweeted_status?.entities.media?.map(
+							(media) =>
+								media?.type == "photo" && (
+									<div key={media.id} style={{ cursor: "pointer" }}>
+										<img
+											className='shadow-lg bg-white rounded-lg'
+											width='140px'
+											src={media.media_url_https}
+											alt={media.display_url}
+										/>
+									</div>
+								)
+					  )}
 			</div>
 			<div className='d-flex flex-row justify-content-end align-items-center p-3'>
 				<div>
