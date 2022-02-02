@@ -17,12 +17,13 @@ import {
 	Navbar,
 	NavbarBrand,
 	Row,
+	Spinner,
 } from "reactstrap";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useSession } from "next-auth/react";
 import { getSearchResults } from "../../_api/channels";
-import TwitterCard from "../../components/Post/TwitterCard";
+import TwitterCard from "../../components/Post/TwitterSearchCard";
 import ButtonLoader from "../../components/Loaders/ButtonLoader";
 
 const validationSchema = yup.object({
@@ -37,7 +38,7 @@ const validationSchema = yup.object({
 
 function search() {
 	const router = useRouter();
-	const {data:session} = useSession();
+	const { data: session } = useSession();
 
 	const formik = useFormik({
 		initialValues: {
@@ -48,14 +49,69 @@ function search() {
 		validationSchema: validationSchema,
 		onSubmit: ({ searchTerm }) => {
 			formik.setFieldValue("isSearching", true);
-			getSearchResults(session.token.sub,searchTerm).then(({ data: { tweets } }) => {
-				console.log(tweets);
-				formik.setFieldValue("isSearching", false);
-				formik.setFieldValue("tweets", [...tweets]);
-				formik.setSubmitting(false);
-			});
+			let newSearchTerm;
+			if (searchTerm.charCodeAt(0) === 35) {
+				newSearchTerm = searchTerm.replace("#", "hashtag");
+			} else {
+				newSearchTerm = searchTerm;
+			}
+			console.log(newSearchTerm);
+			getSearchResults(session.token.sub, newSearchTerm).then(
+				({ data: { tweets } }) => {
+					console.log(tweets);
+					formik.setFieldValue("isSearching", false);
+					formik.setFieldValue("tweets", [...tweets]);
+					formik.setSubmitting(false);
+				}
+			);
 		},
 	});
+
+	if (formik.values.isSearching) {
+		return (
+			<React.Fragment>
+				<Navbar color='white' light expand='md'>
+					<NavbarBrand className='font-weight-bold'>
+						{formik.values.searchTerm && formik.values.tweets.length > 0
+							? formik.values.searchTerm
+							: "Twitter Search"}
+					</NavbarBrand>
+					<div style={{ marginLeft: "auto" }}>
+						{formik.values.tweets.length > 0 && (
+							<Button
+								color='primary'
+								className='mb-3'
+								outline
+								style={{ marginLeft: "auto", marginRight: 15 }}
+								className='px-4'
+								size='sm'
+								onClick={() => formik.setFieldValue("tweets", [])}
+							>
+								Search Keyword
+							</Button>
+						)}
+						<Button
+							color='primary'
+							className='mb-3'
+							outline
+							style={{ marginLeft: "auto", marginRight: 15 }}
+							className='px-4'
+							size='sm'
+							onClick={() => router.back()}
+						>
+							Back
+						</Button>
+					</div>
+				</Navbar>
+				<div
+					style={{ width: "100%" }}
+					className='d-flex flex-row justify-content-center align-items-center'
+				>
+					<Spinner color='default' size='lg' style={{ marginTop: "5%" }} />
+				</div>
+			</React.Fragment>
+		);
+	}
 
 	return (
 		<React.Fragment>
@@ -92,12 +148,18 @@ function search() {
 					</Button>
 				</div>
 			</Navbar>
-			<Container fluid className='mt-4'>
+			<Container fluid='sm' className='mt-4'>
 				<Row>
 					{formik.values.tweets.length !== 0 ? (
-						<Col md='9'>
+						<Col md='12'>
 							{formik.values.tweets.map((tweet) => (
-								<TwitterCard key={tweet.id} tweet={tweet} search={true} />
+								<TwitterCard
+									key={tweet.id}
+									tweet={tweet}
+									search={true}
+									formik={formik}
+									callback={formik.handleSubmit}
+								/>
 							))}
 						</Col>
 					) : (
@@ -154,13 +216,6 @@ function search() {
 										</Row>
 									</form>
 								</CardBody>
-							</Card>
-						</Col>
-					)}
-					{formik.values.tweets.length !== 0 && (
-						<Col md='3'>
-							<Card className='shadow-lg'>
-								<CardHeader>Create New</CardHeader>
 							</Card>
 						</Col>
 					)}
