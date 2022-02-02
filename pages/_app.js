@@ -65,10 +65,6 @@ export default function App({
 					<AuthGuard>
 						<Component {...pageProps} />
 					</AuthGuard>
-				) : Component.auth ? (
-					<Auth>
-						<Component {...pageProps} />
-					</Auth>
 				) : (
 					<Component {...pageProps} />
 				)}
@@ -81,7 +77,7 @@ function Auth({ children }) {
 	const { data: session, status } = useSession();
 	useEffect(() => {
 		if (session && status === "authenticated") {
-			router.replace("/admin/dashboard");
+			router.push("/admin/dashboard");
 		}
 	}, [session]);
 

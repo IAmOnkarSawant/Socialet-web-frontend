@@ -23,6 +23,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { NEW_USER_REGISTRATION_CODED_STRING } from "../../utils/constants";
 
 const validationSchema = yup.object({
 	name: yup
@@ -45,7 +46,9 @@ function Register() {
 	const handlePasswordStrengthChecker = ({ target: { value } }) =>
 		setPassStrength(checkPassStrength(value));
 	const [errorObj, setErrorObj] = useState({});
-	useEffect(() => setErrorObj({}), []);
+	useEffect(() => {
+		return () => setErrorObj({});
+	}, []);
 
 	const formik = useFormik({
 		initialValues: {
@@ -62,7 +65,11 @@ function Register() {
 				password: values.password,
 			});
 			console.log(result);
-			if (!result.error) router.replace("/admin/dashboard");
+			if (!result.error)
+				router.push({
+					pathname: "/admin/dashboard",
+					query: { state: NEW_USER_REGISTRATION_CODED_STRING },
+				});
 			else setErrorObj(result);
 		},
 	});
