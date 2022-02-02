@@ -18,15 +18,11 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }) {
 			: tweet.full_text;
 
 	const clickHandler = (e) => {
-		let el = e.target;
-		while (el && el !== e.currentTarget && el.tagName !== "SPAN") {
-			el = el.parentNode;
+		let el = e.target
+		if(el && el.tagName==="SPAN" && el.innerText.trim().startsWith("#")){
+			props.formik.setFieldValue("searchTerm", el.innerText.trim());
+			callback();
 		}
-		if (el && el.tagName === "SPAN") {
-			console.log("Clicked!", e.target.innerText.trim());
-			props.formik.setFieldValue("searchTerm", e.target.innerText.trim());
-		}
-		callback();
 	};
 
 	return (
@@ -87,9 +83,9 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }) {
 						fontSize: "15px",
 						color: "#364141",
 						whiteSpace: "pre-line",
-						pointerEvents: "none",
+						wordBreak: "break-word"
 					}}
-					dangerouslySetInnerHTML={{ __html: tweetFormatter(tweet_text) }}
+					dangerouslySetInnerHTML={{ __html: tweetFormatter(tweet_text,tweet) }}
 					onClick={clickHandler}
 				/>
 			</div>
