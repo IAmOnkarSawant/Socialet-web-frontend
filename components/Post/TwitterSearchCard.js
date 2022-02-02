@@ -19,6 +19,11 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }) {
 
 	const clickHandler = (e) => {
 		let el = e.target
+		
+		if(el.parentNode.tagName!=="SPAN"){
+			e.preventDefault();
+			return;
+		}
 		if(el && el.tagName==="SPAN" && el.innerText.trim().startsWith("#")){
 			props.formik.setFieldValue("searchTerm", el.innerText.trim());
 			callback();
