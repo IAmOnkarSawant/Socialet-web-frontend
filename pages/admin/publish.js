@@ -23,8 +23,9 @@ import EmptyPost from "../../components/Post/EmptyPost";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import { useDropzone } from "react-dropzone";
-import { recommendHashtags } from "../../_api/publish";
+import { recommendHashtags,postTweet } from "../../_api/publish";
 import TwitterPreview from "../../components/Post/TwitterPreview";
 import ButtonLoader from "../../components/Loaders/ButtonLoader";
 
@@ -42,6 +43,8 @@ const validationSchema = Yup.object({
 
 function Publish() {
 	const router = useRouter();
+	const { data: session } = useSession();
+
 	const formik = useFormik({
 		initialValues: {
 			text: "",
@@ -51,8 +54,18 @@ function Publish() {
 		},
 		validationSchema: validationSchema,
 		onSubmit: (values) => {
-			// will do later as our application grows
-			console.log(JSON.stringify(values, null, 2));
+			let formData = new FormData();
+			values.images.map(({ file }) => formData.append("files", file));
+			
+			formData.append("user_id",session.token.sub);
+			
+			const tweet = values.text+"\n"+values.hashtags.join(' ');
+			formData.append("text",tweet);
+			postTweet(formData).then(({data})=>{
+				// show success/error message in popup later
+				console.log(data)
+				
+			})
 		},
 	});
 
