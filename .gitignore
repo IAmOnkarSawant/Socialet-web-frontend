@@ -38,3 +38,6 @@ yarn-debug.log*
 yarn-error.log*
 
 schema.graphql
+
+# js_files
+sample.js
