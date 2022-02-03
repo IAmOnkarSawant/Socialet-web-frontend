@@ -32,7 +32,9 @@ const validationSchema = yup.object({
 function Login() {
 	const router = useRouter();
 	const [errorObj, setErrorObj] = useState({});
-	useEffect(() => setErrorObj({}), []);
+	useEffect(() => {
+		return () => setErrorObj({});
+	}, []);
 
 	const formik = useFormik({
 		initialValues: {
@@ -46,8 +48,8 @@ function Login() {
 				email: values.email,
 				password: values.password,
 			});
-			console.log(result);
-			if (!result.error) router.replace("/admin/dashboard");
+			console.log(values, result);
+			if (!result.error) router.push("/admin/dashboard");
 			else setErrorObj(result);
 		},
 	});

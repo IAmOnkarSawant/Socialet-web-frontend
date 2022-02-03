@@ -32,20 +32,15 @@ import {
 } from "variables/charts.js";
 import Header from "components/Headers/Header.js";
 import ModalComponent from "../../components/Modal/Modal";
-import axios from "axios";
+import { useRouter } from "next/router";
+import { NEW_USER_REGISTRATION_CODED_STRING } from "../../utils/constants";
 
 const Dashboard = () => {
-	useEffect(async () => {
-		try {
-			const res = await axios.get("http://localhost:5000/");
-			const data = res.data;
-			console.log(data);
-		} catch (err) {
-			console.log(err);
-		}
-	}, []);
-
-	const [isOpen, setModal] = useState(true);
+	const {
+		query: { state },
+	} = useRouter();
+	console.log(state);
+	const [isOpen, setModal] = useState(state === NEW_USER_REGISTRATION_CODED_STRING);
 	const handleClose = () => setModal(false);
 	const [activeNav, setActiveNav] = React.useState(1);
 	const [chartExample1Data, setChartExample1Data] = React.useState("data1");
@@ -329,7 +324,7 @@ const Dashboard = () => {
 						</Card>
 					</Col>
 				</Row>
-				<ModalComponent isOpen={isOpen} onClose={handleClose}/>
+				<ModalComponent isOpen={isOpen} onClose={handleClose} />
 			</Container>
 		</>
 	);
