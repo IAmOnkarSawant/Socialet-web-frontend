@@ -6,8 +6,10 @@ import { AiOutlineHeart } from "react-icons/ai";
 import moment from "moment";
 import millify from "millify";
 import ModalImage from "../Modal/ModalImage";
+import { tweetFormatter } from "../../utils/formatter";
+import { useRouter } from "next/router";
 
-function TwitterSearchCard({ tweet, search, feed, ...props }) {
+function TwitterSearchCard({ tweet, search, feed, formik, ...props }) {
 	const [modalImageURL, setModalImageURL] = useState("");
 	const tweet_text =
 		tweet?.retweet_count === 0
@@ -15,6 +17,23 @@ function TwitterSearchCard({ tweet, search, feed, ...props }) {
 			: tweet.retweeted_status
 			? tweet.retweeted_status.full_text
 			: tweet.full_text;
+
+	const router = useRouter();
+
+	const clickHandler = (e) => {
+		let el = e.target;
+
+		if (el.parentNode.tagName !== "SPAN") {
+			e.preventDefault();
+			return;
+		}
+		if (el && el.tagName === "SPAN" && el.innerText.trim().startsWith("#")) {
+			router.push({
+				pathname: "/admin/search",
+				query: { searchTerm: el.innerText.trim().replace("#", "hashtag") },
+			});
+		}
+	};
 
 	return (
 		<section className='mb-4 rounded bg-white shadow-lg'>
@@ -74,11 +93,13 @@ function TwitterSearchCard({ tweet, search, feed, ...props }) {
 						fontSize: "15px",
 						color: "#364141",
 						whiteSpace: "pre-line",
-						pointerEvents: "none",
+						wordBreak: "break-word",
 					}}
-				>
-					{tweet_text}
-				</span>
+					dangerouslySetInnerHTML={{
+						__html: tweetFormatter(tweet_text, tweet),
+					}}
+					onClick={clickHandler}
+				/>
 			</div>
 			<div
 				style={{ paddingLeft: "53px" }}
