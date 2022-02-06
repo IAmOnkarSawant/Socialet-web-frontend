@@ -65,11 +65,13 @@ function search() {
 
 	useEffect(() => {
 		if (query && query.searchTerm) {
-			const newSearchTerm = formatHashtag(query.searchTerm);
-			formik.setFieldValue("searchTerm", newSearchTerm);
+			formik.setFieldValue(
+				"searchTerm",
+				query.searchTerm.replace("hashtag", "#")
+			);
 			setTimeout(() => {
 				formik.handleSubmit();
-			}, 500);
+			}, 200);
 		}
 	}, [query]);
 
