@@ -1,6 +1,13 @@
 import { useField } from "formik";
 import React from "react";
-import { Card, FormGroup, Input, Label } from "reactstrap";
+import {
+	Card,
+	FormGroup,
+	Input,
+	Label,
+	ListGroup,
+	ListGroupItem,
+} from "reactstrap";
 
 function CheckBoxField(props) {
 	const [field, meta, helpers] = useField(props);
@@ -17,26 +24,33 @@ function CheckBoxField(props) {
 
 	return (
 		<FormGroup>
-			<Label className='mb-0 font-weight-bold' style={{ fontSize: "13px" }}>
+			<Label className='font-weight-bold' style={{ fontSize: "13px" }}>
 				{props.label}
 			</Label>
-			<Card className='mt-1'>
-				{props.options.map((option,index) => (
-					<div style={{ paddingLeft: 32 }} className='border-bottom py-2'>
+			<ListGroup className='mt-1 shadow'>
+				{props.options.map((option, index) => (
+					<ListGroupItem
+						className='custom-control custom-radio'
+						style={{ paddingLeft: "65px" }}
+					>
 						<Input
-							className='mt-2'
+							className='custom-control-input mt-2'
 							type='checkbox'
 							name={option}
 							checked={meta.value.includes(option)}
 							onChange={handleChange}
-							id={option+"_"+index}
+							id={option + "_" + index}
 						/>
-						<Label style={{ fontSize: "13px" }} className='mb-0 mt-1' for={option+"_"+index}>
+						<Label
+							style={{ fontSize: "13px", paddingLeft: -10 }}
+							className='custom-control-label pt-1'
+							for={option + "_" + index}
+						>
 							{option}
 						</Label>
-					</div>
+					</ListGroupItem>
 				))}
-			</Card>
+			</ListGroup>
 		</FormGroup>
 	);
 }

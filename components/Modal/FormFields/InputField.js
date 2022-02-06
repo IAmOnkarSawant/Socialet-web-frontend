@@ -8,10 +8,11 @@ function InputField(props) {
 
 	return (
 		<FormGroup className='mb-3'>
-			<Label className='mb-0 font-weight-bold' style={{ fontSize: "13px" }}>
+			<Label className='font-weight-bold' style={{ fontSize: "13px" }}>
 				{props.label}
 			</Label>
 			<Input
+				className='form-control-alternative'
 				placeholder={props.placeholder}
 				invalid={meta.error && meta.touched}
 				value={field.value}
@@ -20,7 +21,6 @@ function InputField(props) {
 				onChange={field.onChange}
 				onBlur={field.onBlur}
 				color='primary'
-				bsSize='sm'
 			/>
 			<FormFeedback>{meta.touched && meta.error}</FormFeedback>
 		</FormGroup>
