@@ -70,3 +70,19 @@ export const formatHashtag = (searchTerm) => {
 	}
 	return newSearchTerm;
 };
+
+export const getNextDate = (delta) => {
+	var date = new Date();
+	date.setFullYear(date.getFullYear() + delta["years"]);
+	date.setMonth(date.getMonth() + delta["months"]);
+	date.setDate(date.getDate() + delta["days"]);
+	date.setMilliseconds(date.getMilliseconds() + delta["milliseconds"]);
+	console.log(date.toDateString());
+	return date;
+};
+
+export const getRandomDate = (start, end) =>
+	new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+
+export const getRandomHexColor = () =>
+	"#" + Math.floor(Math.random() * 16777215).toString(16);

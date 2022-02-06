@@ -10,6 +10,11 @@ import { AuthGuard } from "../components/Auth/AuthGuard";
 import "assets/plugins/nucleo/css/nucleo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/scss/nextjs-argon-dashboard.scss";
+
+import "@fullcalendar/common/main.min.css";
+import "@fullcalendar/daygrid/main.min.css";
+import "@fullcalendar/timegrid/main.min.css";
+
 import router from "next/router";
 
 Router.events.on("routeChangeStart", (url) => {
