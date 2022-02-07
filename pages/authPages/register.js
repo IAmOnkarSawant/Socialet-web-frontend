@@ -27,17 +27,21 @@ import { NEW_USER_REGISTRATION_CODED_STRING } from "../../utils/constants";
 
 const validationSchema = yup.object({
 	name: yup
-		.string("Enter your name")
+		.string()
 		.min(3, "Name should be of minimum 3 characters length")
 		.required("Email is required"),
 	email: yup
-		.string("Enter your email")
+		.string()
 		.email("Enter a valid email")
 		.required("Email is required"),
 	password: yup
-		.string("Enter your password")
+		.string()
 		.min(8, "Password should be of minimum 8 characters length")
 		.required("Password is required"),
+	confirmPassword: yup
+		.string()
+		.required("Confirm password is required")
+		.oneOf([yup.ref("password"), null], "Passwords must match"),
 });
 
 function Register() {
@@ -55,6 +59,7 @@ function Register() {
 			name: "",
 			email: "",
 			password: "",
+			confirmPassword: "",
 		},
 		validationSchema: validationSchema,
 		onSubmit: async (values) => {
@@ -75,7 +80,7 @@ function Register() {
 	});
 
 	return (
-		<>
+		<React.Fragment>
 			<Col lg='5' md='7'>
 				<Card className='mt-5 mt-lg-1 bg-secondary shadow border-0'>
 					<CardBody className='px-lg-5 py-lg-5'>
@@ -92,25 +97,29 @@ function Register() {
 							>
 								{errorObj?.error}
 							</Alert>
+
 							<FormGroup>
 								<Input
 									name='name'
-									placeholder='foo bar'
+									placeholder='Username'
 									value={formik.values.name}
 									onChange={formik.handleChange}
 									invalid={formik.touched.name && Boolean(formik.errors.name)}
+									className='form-control-alternative'
 								/>
 								<FormFeedback>
 									{formik.touched.name && formik.errors.name}
 								</FormFeedback>
 							</FormGroup>
+
 							<FormGroup>
 								<Input
 									name='email'
-									placeholder='foobar@example.com'
+									placeholder='example@gmail.com'
 									value={formik.values.email}
 									onChange={formik.handleChange}
 									invalid={formik.touched.email && Boolean(formik.errors.email)}
+									className='form-control-alternative'
 								/>
 								<FormFeedback>
 									{formik.touched.email && formik.errors.email}
@@ -118,16 +127,36 @@ function Register() {
 							</FormGroup>
 							<FormGroup>
 								<Input
+									type='password'
 									name='password'
-									placeholder='foobar'
+									placeholder='password'
 									value={formik.values.password}
 									onChange={formik.handleChange}
 									invalid={
 										formik.touched.password && Boolean(formik.errors.password)
 									}
+									className='form-control-alternative'
 								/>
 								<FormFeedback>
 									{formik.touched.password && formik.errors.password}
+								</FormFeedback>
+							</FormGroup>
+							<FormGroup>
+								<Input
+									type='password'
+									name='confirmPassword'
+									placeholder='confirm password'
+									value={formik.values.confirmPassword}
+									onChange={formik.handleChange}
+									invalid={
+										formik.touched.confirmPassword &&
+										Boolean(formik.errors.confirmPassword)
+									}
+									className='form-control-alternative'
+								/>
+								<FormFeedback>
+									{formik.touched.confirmPassword &&
+										formik.errors.confirmPassword}
 								</FormFeedback>
 							</FormGroup>
 							<div
@@ -167,7 +196,7 @@ function Register() {
 					</Col>
 				</Row>
 			</Col>
-		</>
+		</React.Fragment>
 	);
 }
 

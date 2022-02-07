@@ -3,7 +3,6 @@ import Link from "next/link";
 import {
 	Button,
 	Card,
-	CardHeader,
 	CardBody,
 	FormGroup,
 	Input,
@@ -68,10 +67,11 @@ function Login() {
 						<FormGroup className='mb-3'>
 							<Input
 								name='email'
-								placeholder='foobar@example.com'
+								placeholder='example@gmail.com'
 								value={formik.values.email}
 								onChange={formik.handleChange}
 								invalid={formik.touched.email && Boolean(formik.errors.email)}
+								className='form-control-alternative'
 							/>
 							<FormFeedback>
 								{formik.touched.email && formik.errors.email}
@@ -79,13 +79,15 @@ function Login() {
 						</FormGroup>
 						<FormGroup className='mb-3'>
 							<Input
+								type='password'
 								name='password'
-								placeholder='foobar'
+								placeholder='password'
 								value={formik.values.password}
 								onChange={formik.handleChange}
 								invalid={
 									formik.touched.password && Boolean(formik.errors.password)
 								}
+								className='form-control-alternative'
 							/>
 							<FormFeedback>
 								{formik.touched.password && formik.errors.password}
