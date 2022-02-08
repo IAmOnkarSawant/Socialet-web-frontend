@@ -394,7 +394,7 @@ function Publish() {
 															? "85px"
 															: "auto",
 													position: "relative",
-													backgroundColor: "rgb(222, 225, 225)",
+													backgroundColor: "#f5f8fa",
 													cursor: "pointer",
 												}}
 												{...getRootProps()}
