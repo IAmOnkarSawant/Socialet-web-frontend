@@ -10,6 +10,9 @@ import { AuthGuard } from "../components/Auth/AuthGuard";
 import "assets/plugins/nucleo/css/nucleo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/scss/nextjs-argon-dashboard.scss";
+
+import "emoji-mart/css/emoji-mart.css";
+
 import router from "next/router";
 
 Router.events.on("routeChangeStart", (url) => {
