@@ -14,6 +14,7 @@ import "assets/scss/nextjs-argon-dashboard.scss";
 import "@fullcalendar/common/main.min.css";
 import "@fullcalendar/daygrid/main.min.css";
 import "@fullcalendar/timegrid/main.min.css";
+import "emoji-mart/css/emoji-mart.css";
 
 import router from "next/router";
 
