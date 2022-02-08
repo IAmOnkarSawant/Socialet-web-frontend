@@ -184,10 +184,11 @@ function Publish() {
 				<Row>
 					<Col
 						lg='8'
-						className='scrollbar__small py-3 pl-4 bg-secondary position-relative'
+						className='scrollbar py-3 pl-4 position-relative'
 						style={{
 							height: "calc(100vh - 121px)",
 							overflowY: "auto",
+							background: "#F7FAFC",
 						}}
 					>
 						<Card className='mb-4 py-2 px-3 d-flex flex-row align-items-center shadow-lg'>
@@ -211,7 +212,7 @@ function Publish() {
 						</Card>
 						<form onSubmit={formik.handleSubmit}>
 							<FormGroup className='position-relative'>
-								<Card className='shadow-lg p-4'>
+								<Card className='shadow-lg p-4 rounded-lg'>
 									<Row className='mb-3'>
 										<Col sm='1'>
 											<MdOutlineMessage
@@ -254,6 +255,7 @@ function Publish() {
 											borderBottomLeftRadius: 0,
 											borderBottomRightRadius: 0,
 										}}
+										className='textarea'
 									></Input>
 									<span
 										className='d-flex flex-row justify-content-end align-items-center p-3'
@@ -320,7 +322,7 @@ function Publish() {
 
 							{formik.values.isImagePanalOpen && (
 								<FormGroup>
-									<Card className='shadow-lg p-4'>
+									<Card className='shadow-lg p-4 rounded-lg'>
 										<Row className='mb-3'>
 											<Col sm='1'>
 												<IoMdImages
@@ -431,7 +433,7 @@ function Publish() {
 							)}
 
 							<FormGroup style={{ marginBottom: "70px" }}>
-								<Card className='shadow-lg p-4 mb-1'>
+								<Card className='shadow-lg p-4 mb-1 rounded-lg'>
 									<Row className='mb-3'>
 										<Col sm='1'>
 											<FaHashtag
@@ -475,10 +477,10 @@ function Publish() {
 										</Col>
 									</Row>
 									<div
-										className='position-relative mb-2 rounded-sm p-2'
+										className='hashtag__area position-relative mb-2 rounded-sm p-2'
 										style={{
 											border: "2px dashed #CBD5E0",
-											height: "100px",
+											height: "112px",
 											overflowY: "auto",
 										}}
 									>
@@ -557,7 +559,7 @@ function Publish() {
 					<Col
 						lg='4'
 						className='py-3 pr-4'
-						style={{ height: "calc(100vh - 64px)", backgroundColor: "#f3f4f4" }}
+						style={{ height: "calc(100vh - 64px)", background: "#EDF2F7" }}
 					>
 						<p className='font-weight-bold text-dark'>Network Preview</p>
 						<div className='d-flex flex-row justify-content-start'>

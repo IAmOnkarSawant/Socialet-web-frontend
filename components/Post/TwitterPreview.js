@@ -12,7 +12,7 @@ function TwitterPreview({ text, hashtags, images }) {
 				display: "flex",
 				width: "350px",
 			}}
-			className='position-relative border bg-white'
+			className='position-relative shadow-lg rounded-lg bg-white'
 		>
 			<a href='#'>
 				<div

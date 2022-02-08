@@ -7,7 +7,7 @@ function EmptyPost() {
 				Select a profile and start adding content in the left panel.
 			</p>
 			<div
-				className='d-flex flex-row justify-content-center py-4 mt-3 bg-white'
+				className='d-flex flex-row justify-content-center py-4 mt-3 bg-white shadow-lg rounded-lg'
 				style={{ width: "400px" }}
 			>
 				<div
@@ -15,7 +15,7 @@ function EmptyPost() {
 						width: "50px",
 						height: "50px",
 						borderRadius: "50%",
-						backgroundColor: "#dee1e1",
+						backgroundColor: "#f5f8fa",
 					}}
 				/>
 				<div style={{ paddingLeft: "12px" }}>
@@ -25,7 +25,7 @@ function EmptyPost() {
 							height: "24px",
 							borderRadius: "8px",
 							marginBottom: "12px",
-							backgroundColor: "#dee1e1",
+							backgroundColor: "#f5f8fa",
 						}}
 					/>
 					<div
@@ -34,7 +34,7 @@ function EmptyPost() {
 							height: "24px",
 							borderRadius: "8px",
 							marginBottom: "4px",
-							backgroundColor: "#dee1e1",
+							backgroundColor: "#f5f8fa",
 						}}
 					/>
 					<div
@@ -43,14 +43,14 @@ function EmptyPost() {
 							height: "24px",
 							borderRadius: "8px",
 							marginBottom: "4px",
-							backgroundColor: "#dee1e1",
+							backgroundColor: "#f5f8fa",
 						}}
 					/>
 					<div
 						style={{
 							width: "200px",
 							marginBottom: "18px",
-							backgroundColor: "#dee1e1",
+							backgroundColor: "#f5f8fa",
 						}}
 					/>
 					<div
@@ -59,7 +59,7 @@ function EmptyPost() {
 							height: "200px",
 							borderRadius: "8px",
 							marginBottom: "4px",
-							backgroundColor: "#dee1e1",
+							backgroundColor: "#f5f8fa",
 						}}
 					/>
 				</div>
