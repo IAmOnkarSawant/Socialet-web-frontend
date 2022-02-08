@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
 	Button,
 	Card,
@@ -15,24 +15,19 @@ import {
 	Badge,
 	Spinner,
 } from "reactstrap";
-import { BsEmojiSmile, BsTwitter } from "react-icons/bs";
-import { FiCamera } from "react-icons/fi";
+import { BsTwitter } from "react-icons/bs";
 import { AiFillInfoCircle, AiFillPlusCircle } from "react-icons/ai";
 import { IoCloseOutline } from "react-icons/io5";
-import { IoMdRemoveCircle, IoMdImages } from "react-icons/io";
-import { MdOutlineMessage } from "react-icons/md";
-import { FaHashtag } from "react-icons/fa";
+import { IoMdRemoveCircle } from "react-icons/io";
 import EmptyPost from "../../components/Post/EmptyPost";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { useDropzone } from "react-dropzone";
-import { recommendHashtags, postTweet } from "../../_api/publish";
+import { recommendHashtags,postTweet } from "../../_api/publish";
 import TwitterPreview from "../../components/Post/TwitterPreview";
 import ButtonLoader from "../../components/Loaders/ButtonLoader";
-import { Picker } from "emoji-mart";
-import useOnClickOutside from "../../hooks/useOnClickOutside";
 
 const DUMMY_DASHTAGS = ["#coolday", "#beach"];
 
@@ -56,22 +51,21 @@ function Publish() {
 			hashtags: [],
 			images: [],
 			isHashtagGenerating: false,
-			isEmojiPanalOpen: false,
-			isImagePanalOpen: false,
 		},
 		validationSchema: validationSchema,
 		onSubmit: (values) => {
 			let formData = new FormData();
 			values.images.map(({ file }) => formData.append("files", file));
-
-			formData.append("user_id", session.token.sub);
-
-			const tweet = values.text + "\n" + values.hashtags.join(" ");
-			formData.append("text", tweet);
-			postTweet(formData).then(({ data }) => {
+			
+			formData.append("user_id",session.token.sub);
+			
+			const tweet = values.text+"\n"+values.hashtags.join(' ');
+			formData.append("text",tweet);
+			postTweet(formData).then(({data})=>{
 				// show success/error message in popup later
-				console.log(data);
-			});
+				console.log(data)
+				
+			})
 		},
 	});
 
@@ -152,19 +146,6 @@ function Publish() {
 			});
 	};
 
-	const handleEmojiPicker = useCallback(
-		() => formik.setFieldValue("isEmojiPanalOpen", true),
-		[formik]
-	);
-
-	const handleEmojiMart = (e) =>
-		formik.setFieldValue("text", formik.values.text + e.native);
-
-	const emojiRef = useRef();
-	useOnClickOutside(emojiRef, () =>
-		formik.setFieldValue("isEmojiPanalOpen", false)
-	);
-
 	return (
 		<React.Fragment>
 			<Navbar color='white' light expand='md'>
@@ -183,14 +164,13 @@ function Publish() {
 			<Container fluid>
 				<Row>
 					<Col
-						lg='8'
-						className='scrollbar__small py-3 pl-4 bg-secondary position-relative'
+						className='py-3 pl-4 bg-secondary position-relative'
 						style={{
-							height: "calc(100vh - 121px)",
-							overflowY: "auto",
+							height: "calc(100vh - 64px)",
+							overflowY: "scroll",
 						}}
 					>
-						<Card className='mb-4 py-2 px-3 d-flex flex-row align-items-center shadow-lg'>
+						<Card className='mb-4 py-2 px-3 d-flex flex-row align-items-center border-light'>
 							<span
 								style={{ width: "25px", height: "25px" }}
 								className='rounded-circle bg-default text-center text-white font-weight-normal'
@@ -210,208 +190,109 @@ function Publish() {
 							</p>
 						</Card>
 						<form onSubmit={formik.handleSubmit}>
-							<FormGroup className='position-relative'>
-								<Card className='shadow-lg p-4'>
-									<Row className='mb-3'>
-										<Col sm='1'>
-											<MdOutlineMessage
-												style={{
-													fontSize: 50,
-													color: "#1d4ed8",
-													background: "#dbeafe",
-													padding: 12,
-													borderRadius: 5,
-												}}
-											/>
-										</Col>
-										<Col sm='10'>
-											<strong
-												style={{ fontFamily: "sans-serif", fontSize: 17 }}
-												className='text-default d-block'
-											>
-												Create Post
-											</strong>
-											<span className='d-block' style={{ fontSize: 14 }}>
-												Create a high-performing post to get your message
-												across.
-											</span>
-										</Col>
-									</Row>
+							<FormGroup>
+								<div className='position-relative'>
 									<Input
 										aria-label='With textarea'
-										rows={7}
+										rows={6}
 										color='secondary'
 										type='textarea'
 										name='text'
 										invalid={formik.touched.text && Boolean(formik.errors.text)}
-										placeholder='What would you like to share ?'
 										value={formik.values.text}
 										onChange={formik.handleChange}
-										style={{
-											background: "#F7FAFC",
-											border: "1px solid #CBD5E0",
-											borderBottom: 0,
-											borderBottomLeftRadius: 0,
-											borderBottomRightRadius: 0,
-										}}
 									></Input>
 									<span
-										className='d-flex flex-row justify-content-end align-items-center p-3'
 										style={{
+											position: "absolute",
+											right: 15,
+											bottom: 10,
 											color:
 												MAX_CAPTION_LENGTH - formik.values.text.length >= 0
 													? "gray"
 													: "red",
-											fontSize: 14,
-											background: "#F7FAFC",
-											border: "1px solid #CBD5E0",
-											borderTop: 0,
-											borderBottom: 0,
+											fontSize: 12,
 										}}
 									>
 										{MAX_CAPTION_LENGTH - formik.values.text.length}/
 										{MAX_CAPTION_LENGTH}
 									</span>
-									<div
-										style={{
-											border: "1px solid #CBD5E0",
-											borderTop: 0,
-										}}
-										className='rounded-bottom d-flex flex-row align-items-center p-3'
-									>
-										<BsEmojiSmile
-											onClick={handleEmojiPicker}
-											style={{
-												marginRight: 22,
-												fontSize: "20px",
-												color: "black",
-												cursor: "pointer",
-											}}
-										/>
-										<FiCamera
-											onClick={() =>
-												formik.setFieldValue("isImagePanalOpen", true)
-											}
-											style={{
-												marginRight: 22,
-												fontSize: "20px",
-												color: "black",
-												cursor: "pointer",
-											}}
-										/>
-									</div>
-									{formik.values.isEmojiPanalOpen && (
-										<div
-											style={{
-												position: "absolute",
-												zIndex: 1000000,
-												marginTop: "36%",
-											}}
-											ref={emojiRef}
-										>
-											<Picker onSelect={handleEmojiMart} emojiSize={22} />
-										</div>
-									)}
-								</Card>
+								</div>
+								<span style={{ fontSize: 13, color: "red" }}>
+									{formik.touched.text && formik.errors.text}
+								</span>
 							</FormGroup>
-							<span style={{ fontSize: 13, color: "red" }}>
-								{formik.touched.text && formik.errors.text}
-							</span>
 
-							{formik.values.isImagePanalOpen && (
-								<FormGroup>
-									<Card className='shadow-lg p-4'>
-										<Row className='mb-3'>
-											<Col sm='1'>
-												<IoMdImages
+							<FormGroup>
+								<Label>Upload Images</Label>
+								<div className='border bg-white'>
+									<div className='d-flex flex-row flex-wrap px-2 pt-2'>
+										{formik.values.images.map(
+											({ preview, id: imageId }, index) => (
+												<div
+													key={imageId}
 													style={{
-														fontSize: 50,
-														color: "#C49832",
-														background: "#FDF1D0",
-														padding: 12,
-														borderRadius: 5,
+														width: "calc(20% - 8px)",
+														height: "100px",
+														position: "relative",
 													}}
-												/>
-											</Col>
-											<Col sm='10'>
-												<strong
-													style={{ fontFamily: "sans-serif", fontSize: 17 }}
-													className='text-default d-block'
+													className='mr-2 pb-2'
 												>
-													Upload Images
-												</strong>
-												<span className='d-block' style={{ fontSize: 14 }}>
-													Upload Images to generate hashtags for better
-													engagement with customers.
-												</span>
-											</Col>
-										</Row>
-										<div className='d-flex flex-row flex-wrap'>
-											{formik.values.images.map(
-												({ preview, id: imageId }, index) => (
-													<div
-														key={imageId}
+													<img
+														className='rounded-sm'
 														style={{
-															width: "calc(20% - 8px)",
-															height: "100px",
-															position: "relative",
+															width: "100%",
+															height: "100%",
+															filter: "brightness(.7)",
 														}}
-														className='mr-2 pb-2'
-													>
-														<img
-															className='rounded-sm'
-															style={{
-																width: "100%",
-																height: "100%",
-																filter: "brightness(.7)",
-															}}
-															src={preview}
-														/>
+														src={preview}
+													/>
 
-														<IoMdRemoveCircle
-															onClick={() => handleImageDelete(imageId)}
-															style={{
-																position: "absolute",
-																right: "5px",
-																top: "5px",
-																color: "rgba(222, 225, 225,0.9)",
-																cursor: "pointer",
-																fontSize: 20,
-															}}
-														/>
-													</div>
-												)
-											)}
-											<div
-												className='mr-2 mb-2 rounded-sm border border-light'
+													<IoMdRemoveCircle
+														onClick={() => handleImageDelete(imageId)}
+														style={{
+															position: "absolute",
+															right: "5px",
+															top: "5px",
+															color: "rgba(222, 225, 225,0.9)",
+															cursor: "pointer",
+															fontSize: 20,
+														}}
+													/>
+												</div>
+											)
+										)}
+										<div
+											className='mr-2 mb-2 rounded-sm border border-light'
+											style={{
+												width: "calc(20% - 8px)",
+												height:
+													formik.values.images.length === 0 ||
+													formik.values.images.length % 5 === 0
+														? "85px"
+														: "auto",
+												position: "relative",
+												backgroundColor: "rgb(222, 225, 225)",
+												cursor: "pointer",
+											}}
+											{...getRootProps()}
+										>
+											<input {...getInputProps()} />
+											<AiFillPlusCircle
+												size={25}
 												style={{
-													width: "calc(20% - 8px)",
-													height:
-														formik.values.images.length === 0 ||
-														formik.values.images.length % 5 === 0
-															? "85px"
-															: "auto",
-													position: "relative",
-													backgroundColor: "rgb(222, 225, 225)",
-													cursor: "pointer",
+													position: "absolute",
+													left: "50%",
+													top: "50%",
+													transform: "translate(-50%, -50%)",
 												}}
-												{...getRootProps()}
-											>
-												<input {...getInputProps()} />
-												<AiFillPlusCircle
-													size={25}
-													style={{
-														position: "absolute",
-														left: "50%",
-														top: "50%",
-														transform: "translate(-50%, -50%)",
-													}}
-												/>
-											</div>
+											/>
 										</div>
-										<hr className='my-1' />
+									</div>
+									<hr className='my-1 mx-2' />
+									<div className="p-2">
 										<ButtonLoader
-											className='px-4 mt-2'
+											className='px-4'
 											onClick={fetchHashtags}
 											disabled={
 												formik.values.images.length === 0 ||
@@ -426,136 +307,86 @@ function Publish() {
 												? "Generating hashtags..."
 												: "Generate Hashtags"}
 										</ButtonLoader>
-									</Card>
-								</FormGroup>
-							)}
+									</div>
+								</div>
+							</FormGroup>
 
 							<FormGroup style={{ marginBottom: "70px" }}>
-								<Card className='shadow-lg p-4 mb-1'>
-									<Row className='mb-3'>
-										<Col sm='1'>
-											<FaHashtag
-												style={{
-													fontSize: 50,
-													color: "#3b82f6",
-													background: "#DAF7F7",
-													padding: 12,
-													borderRadius: 5,
-												}}
-											/>
-										</Col>
-										<Col sm='10'>
-											<strong
-												style={{ fontFamily: "sans-serif", fontSize: 17 }}
-												className='text-default d-block'
-											>
-												Generate Hashtags
-											</strong>
-											<span className='d-block' style={{ fontSize: 14 }}>
-												Use AI to generate relevant hashtags.
-											</span>
-										</Col>
-										<Col sm='1' className='position-relative'>
-											<AiFillInfoCircle
-												data-tip='Press Enter key or Tab key to add the hashtag'
-												size={15}
-												className='ml-1 mr-3'
-												id='infoToolTip'
-												style={{ position: "absolute", right: 0, top: 0 }}
-											/>
-											<Tooltip
-												flip
-												placement='top'
-												isOpen={tooltipOpen}
-												target='infoToolTip'
-												toggle={toggleToolTip}
-											>
-												Press Enter or Tab key to add the hashtag
-											</Tooltip>
-										</Col>
-									</Row>
-									<div
-										className='position-relative mb-2 rounded-sm p-2'
-										style={{
-											border: "2px dashed #CBD5E0",
-											height: "100px",
-											overflowY: "auto",
-										}}
+								<Label>
+									Hashtags
+									<AiFillInfoCircle
+										data-tip='Press Enter key or Tab key to add the hashtag'
+										size={15}
+										className='ml-1'
+										id='infoToolTip'
+									/>
+									<Tooltip
+										flip
+										placement='top'
+										isOpen={tooltipOpen}
+										target='infoToolTip'
+										toggle={toggleToolTip}
 									>
-										{formik.values.hashtags.map((tag, i) => (
-											<Badge
-												style={{ width: "fit-content", textTransform: "none" }}
-												key={i}
-												pill
-												color='primary'
-												className='badge-sm pl-3 pr-2 mr-2 mb-1'
-											>
-												{tag}
-												<IoCloseOutline
-													onClick={() => handleDelete(tag)}
-													size={15}
-													style={{ cursor: "pointer" }}
-													className='ml-2'
-												/>
-											</Badge>
-										))}
-										{formik.values.hashtags.length === 0 && (
-											<span
-												style={{
-													fontSize: 16,
-													color: "gray",
-													position: "absolute",
-													top: "50%",
-													left: "50%",
-													transform: "translate(-50%, -50%)",
-												}}
-											>
-												No hashtags added/generated.
-											</span>
-										)}
-									</div>
-									<Input
-										onKeyDown={handleKeyDown}
-										color='default'
-										value={tagValue}
-										name='hashtags'
-										invalid={
-											formik.touched.hashtags && Boolean(formik.errors.hashtags)
-										}
-										onChange={handleTagChange}
-										placeholder='Enter Hashtag Here'
-									></Input>
-									<FormFeedback>
-										{formik.touched.hashtags && formik.errors.hashtags}
-									</FormFeedback>
-								</Card>
+										Press Enter or Tab key to add the hashtag
+									</Tooltip>
+								</Label>
+								<div className='mb-1'>
+									{formik.values.hashtags.map((tag, i) => (
+										<Badge
+											key={i}
+											className='badge-md mb-1 mr-1 px-3 text-lowercase'
+											color='primary'
+											pill
+										>
+											{tag}
+											<IoCloseOutline
+												onClick={() => handleDelete(tag)}
+												size={15}
+												style={{ cursor: "pointer" }}
+											/>
+										</Badge>
+									))}
+								</div>
+								<Input
+									onKeyDown={handleKeyDown}
+									value={tagValue}
+									name='hashtags'
+									invalid={
+										formik.touched.hashtags && Boolean(formik.errors.hashtags)
+									}
+									onChange={handleTagChange}
+									placeholder='Enter Hashtag Here'
+								></Input>
+								<FormFeedback>
+									{formik.touched.hashtags && formik.errors.hashtags}
+								</FormFeedback>
 							</FormGroup>
-						</form>
-						<div
-							style={{
-								zIndex: 10,
-								display: "flex",
-								bottom: 0,
-								left: 0,
-								right: 0,
-								padding: "15px",
-							}}
-							className='position-fixed bg-white border-top'
-						>
-							<Button
-								type='submit'
+
+							<div
 								style={{
-									marginLeft: "auto",
+									display: "flex",
+									bottom: 0,
+									width: "100%",
+									padding: "15px",
+									marginRight: 15,
 								}}
-								color='primary'
-								className='px-5'
+								className='position-fixed bg-white border-top'
 							>
-								Share Post
-							</Button>
-						</div>
+								<div style={{ flex: 0.445 }} />
+								<Button
+									type='submit'
+									style={{
+										zIndex: 1000,
+										marginRight: 60,
+									}}
+									color='primary'
+								>
+									Share Post
+								</Button>
+							</div>
+						</form>
 					</Col>
 					<Col
-						lg='4'
 						className='py-3 pr-4'
 						style={{ height: "calc(100vh - 64px)", backgroundColor: "#f3f4f4" }}
 					>
