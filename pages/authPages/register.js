@@ -32,7 +32,7 @@ const validationSchema = yup.object({
 		.required("Email is required"),
 	email: yup
 		.string()
-		.email("Enter a valid email")
+		.email("Enter a valid Email")
 		.required("Email is required"),
 	password: yup
 		.string()
@@ -101,7 +101,7 @@ function Register() {
 							<FormGroup>
 								<Input
 									name='name'
-									placeholder='Username'
+									placeholder='Company Name'
 									value={formik.values.name}
 									onChange={formik.handleChange}
 									invalid={formik.touched.name && Boolean(formik.errors.name)}
@@ -165,7 +165,7 @@ function Register() {
 								} text-muted font-italic`}
 							>
 								<small>
-									password strength:{" "}
+									Password Strength:{" "}
 									<span
 										className={`${colorPicker(passStrength)} font-weight-700`}
 									>
@@ -180,7 +180,7 @@ function Register() {
 									color='primary'
 									type='submit'
 								>
-									Create account
+									Create Account
 								</Button>
 							</div>
 						</form>
@@ -190,7 +190,7 @@ function Register() {
 					<Col className='text-left' xs='6'>
 						<Link href='/authPages/login'>
 							<small style={{ cursor: "pointer" }} className='text-gray'>
-								Already have an account?
+								Already have an Account?
 							</small>
 						</Link>
 					</Col>

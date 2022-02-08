@@ -100,7 +100,7 @@ function Login() {
 								color='primary'
 								type='submit'
 							>
-								Sign in
+								SIGN IN
 							</Button>
 						</div>
 					</form>
@@ -110,7 +110,7 @@ function Login() {
 				<Col className='text-left' xs='6'>
 					<Link href='/authPages/register'>
 						<small style={{ cursor: "pointer" }} className='text-gray'>
-							Create new account
+							Create new Account
 						</small>
 					</Link>
 				</Col>
