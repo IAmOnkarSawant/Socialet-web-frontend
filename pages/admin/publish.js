@@ -532,29 +532,29 @@ function Publish() {
 									</FormFeedback>
 								</Card>
 							</FormGroup>
-						</form>
-						<div
-							style={{
-								zIndex: 10,
-								display: "flex",
-								bottom: 0,
-								left: 0,
-								right: 0,
-								padding: "15px",
-							}}
-							className='position-fixed bg-white border-top'
-						>
-							<Button
-								type='submit'
+							<div
 								style={{
-									marginLeft: "auto",
+									zIndex: 10,
+									display: "flex",
+									bottom: 0,
+									left: 0,
+									right: 0,
+									padding: "15px",
 								}}
-								color='primary'
-								className='px-5'
+								className='position-fixed bg-white border-top'
 							>
-								Share Post
-							</Button>
-						</div>
+								<Button
+									type='submit'
+									style={{
+										marginLeft: "auto",
+									}}
+									color='primary'
+									className='px-5'
+								>
+									Share Post
+								</Button>
+							</div>
+						</form>
 					</Col>
 					<Col
 						lg='4'
