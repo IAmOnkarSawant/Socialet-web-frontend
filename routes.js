@@ -34,18 +34,6 @@ var routes = [
 		name: "Publish Post",
 		icon: "ni ni-send text-primary",
 		layout: "/admin",
-	},
-	{
-		path: "/login",
-		name: "Login",
-		icon: "ni ni-key-25 text-info",
-		layout: "/authPages",
-	},
-	{
-		path: "/register",
-		name: "Register",
-		icon: "ni ni-circle-08 text-pink",
-		layout: "/authPages",
-	},
+	}
 ];
 export default routes;
