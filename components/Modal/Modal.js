@@ -7,6 +7,8 @@ import Account from "../../components/Modal/Forms/Account";
 import Interests from "../../components/Modal/Forms/Interests";
 import ModelForm from "../../components/Modal/FormModel/ModelForm";
 const { formField, formId } = ModelForm;
+import { useSession } from "next-auth/react";
+import { newUserSurvey } from "../../_api/users";
 
 function _renderStepContent(step) {
 	switch (step) {
@@ -28,9 +30,15 @@ function ModalComponent({ isOpen, onClose }) {
 		setActiveStep((step) => step - 1);
 	}
 
+	const { data: session } = useSession();
+
 	function _handleSubmit(values, actions) {
 		if (isLastStep) {
-			console.log(values);
+			newUserSurvey({ user_id: session.token.sub, ...values }).then(
+				({ data }) => {
+					console.log(data);
+				}
+			);
 			onClose();
 		} else {
 			setActiveStep((step) => step + 1);

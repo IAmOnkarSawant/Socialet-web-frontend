@@ -21,11 +21,6 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			default: null,
 		},
-		channel_id:{
-			type: mongoose.Types.ObjectId,
-			ref:'Channel',
-			default:null
-		},
 	},
 	{ timestamps: true }
 );

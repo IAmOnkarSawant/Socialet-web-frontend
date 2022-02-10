@@ -39,8 +39,9 @@ const Dashboard = () => {
 	const {
 		query: { state },
 	} = useRouter();
-	console.log(state);
-	const [isOpen, setModal] = useState(state === NEW_USER_REGISTRATION_CODED_STRING);
+	const [isOpen, setModal] = useState(
+		state === NEW_USER_REGISTRATION_CODED_STRING
+	);
 	const handleClose = () => setModal(false);
 	const [activeNav, setActiveNav] = React.useState(1);
 	const [chartExample1Data, setChartExample1Data] = React.useState("data1");
