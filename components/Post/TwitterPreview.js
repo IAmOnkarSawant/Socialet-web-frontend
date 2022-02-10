@@ -10,7 +10,8 @@ function TwitterPreview({ text, hashtags, images }) {
 				padding: "9px 14px",
 				width: "fit-content",
 				display: "flex",
-				width: "350px",
+				width: "auto",
+				minWidth: "auto",
 			}}
 			className='position-relative shadow-lg rounded-lg bg-white'
 		>
