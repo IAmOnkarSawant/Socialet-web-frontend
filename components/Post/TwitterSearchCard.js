@@ -7,6 +7,8 @@ import moment from "moment";
 import millify from "millify";
 import { tweetFormatter } from "../../utils/formatter";
 import ModalImage from "../Modal/ModalImage";
+import { useRouter } from "next/router";
+
 
 function TwitterSearchCard({ tweet, search, feed, callback, ...props }) {
 	const [modalImageURL, setModalImageURL] = useState("");
@@ -16,6 +18,16 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }) {
 			: tweet.retweeted_status
 			? tweet.retweeted_status.full_text
 			: tweet.full_text;
+
+	const router = useRouter()
+
+	const replyTweetHandler = (e) => {
+		console.log(tweet);
+		router.push({
+			pathname: "/admin/publish",
+			query:{ replyTo: tweet.id}
+		})
+	}
 
 	const clickHandler = (e) => {
 		let el = e.target
@@ -153,6 +165,7 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }) {
 							cursor: "pointer",
 						}}
 						className='ml-4'
+						onClick={replyTweetHandler}
 					/>
 				</div>
 			</div>
