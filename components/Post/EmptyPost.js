@@ -8,7 +8,7 @@ function EmptyPost() {
 			</p>
 			<div
 				className='d-flex flex-row justify-content-center py-4 mt-3 bg-white shadow-lg rounded-lg'
-				style={{ width: "400px" }}
+				style={{ maxWidth: "400px" }}
 			>
 				<div
 					style={{
