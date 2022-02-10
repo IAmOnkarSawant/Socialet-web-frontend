@@ -10,6 +10,7 @@ import { tweetFormatter } from "../../utils/formatter";
 import { useRouter } from "next/router";
 
 function TwitterSearchCard({ tweet, search, feed, formik, ...props }) {
+
 	const [modalImageURL, setModalImageURL] = useState("");
 	const tweet_text =
 		tweet?.retweet_count === 0
@@ -19,6 +20,14 @@ function TwitterSearchCard({ tweet, search, feed, formik, ...props }) {
 			: tweet.full_text;
 
 	const router = useRouter();
+
+	const replyTweetHandler = (e) => {
+		console.log(tweet);
+		router.push({
+			pathname: "/admin/publish",
+			query:{ replyTo: tweet.id}
+		})
+	}
 
 	const clickHandler = (e) => {
 		let el = e.target;
@@ -160,6 +169,7 @@ function TwitterSearchCard({ tweet, search, feed, formik, ...props }) {
 							cursor: "pointer",
 						}}
 						className='ml-4'
+						onClick={replyTweetHandler}
 					/>
 				</div>
 			</div>

@@ -29,3 +29,9 @@ export function getSearchResults(user_id,query, geocode) {
         return axios.get(`${TWITTER_URL}/search?user_id=${user_id}&query=${query}&geocode=${geocode}`);
     }
 }
+
+export function getTweetById(tweet_id, user_id){
+	return axios.get(`${TWITTER_URL}/tweet/?tweet_id=${tweet_id}&user_id=${user_id}`);
+}
+
+

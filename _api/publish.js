@@ -16,3 +16,9 @@ export function postTweet(formData){
 		headers:{ "Content-Type": "multipart/form-data" },
 	})
 }
+
+export function postReplyToTweet(formData){
+	return axios.post(`${TWITTER_URL}/reply`,formData,{
+		headers:{ "Content-Type": "multipart/form-data" },
+	})
+}
