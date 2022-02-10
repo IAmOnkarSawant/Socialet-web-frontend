@@ -13,7 +13,6 @@ import {
   Row,
   Tooltip,
   Badge,
-  Spinner,
 } from "reactstrap";
 import { BsEmojiSmile, BsTwitter } from "react-icons/bs";
 import { FiCamera } from "react-icons/fi";
@@ -100,6 +99,12 @@ function Publish() {
 
   const fetchReplyTweet = () => {
       getTweetById(query && query.replyTo, session.token.sub).then(({ data }) => {
+      if(data && data.error){
+        // handle error case and display message that tweet does not exist anymore.
+        console.log(data)
+  	    formik.setFieldValue("isReply", false);
+        return;
+      }
       setReplyToTweet(data);
 	    formik.setFieldValue("isReply", true);
     });
@@ -183,8 +188,10 @@ function Publish() {
   };
 
   useEffect(() => {
-    fetchReplyTweet();
-  },[]);
+    if(query && query.replyTo){
+      fetchReplyTweet();
+    }
+  },[query.replyTo]);
 
   const handleEmojiPicker = useCallback(
     () => formik.setFieldValue("isEmojiPanalOpen", true),

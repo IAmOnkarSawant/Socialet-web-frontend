@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { BsTwitter } from "react-icons/bs";
 import moment from "moment";
 
 function ReplyTweetCard({tweet}) {
-
   return (
     <section className="mb-4 rounded bg-white shadow-lg">
       <div className="d-flex flex-row align-items-center justify-content-between px-3 py-3">
@@ -14,7 +13,7 @@ function ReplyTweetCard({tweet}) {
           <img
             style={{ width: "35px", height: "35px" }}
             className="mr-2 rounded-circle"
-            src={tweet?.user.profile_image_url}
+            src={tweet?.user?.profile_image_url}
             alt="display picture"
           />
           <div className="d-flex flex-column">
@@ -27,10 +26,10 @@ function ReplyTweetCard({tweet}) {
                 style={{ fontSize: "13px" }}
                 className="mr-1 font-weight-bolder"
               >
-                {tweet?.user.name}
+                {tweet?.user?.name}
               </span>
               <span style={{ fontSize: "13px" }} className="mr-2">
-                @{tweet?.user.screen_name}
+                @{tweet?.user?.screen_name}
               </span>
             </div>
           </div>
@@ -56,7 +55,7 @@ function ReplyTweetCard({tweet}) {
       </div>
       <hr className="mt-0 mb-1" />
       <div className="py-2 pl-4">
-          <h4>- Replying to @{tweet.user.name}</h4>
+          <h4>- Replying to @{tweet?.user?.name}</h4>
       </div> 
     </section>
   );
