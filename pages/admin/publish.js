@@ -17,11 +17,16 @@ import {
 } from "reactstrap";
 import { BsEmojiSmile, BsTwitter } from "react-icons/bs";
 import { FiCamera } from "react-icons/fi";
-import { AiFillInfoCircle, AiFillPlusCircle } from "react-icons/ai";
+import {
+	AiFillInfoCircle,
+	AiFillPlusCircle,
+	AiOutlineSchedule,
+} from "react-icons/ai";
 import { IoCloseOutline } from "react-icons/io5";
 import { IoMdRemoveCircle, IoMdImages } from "react-icons/io";
-import { MdOutlineMessage } from "react-icons/md";
+import { MdNavigateNext, MdOutlineMessage } from "react-icons/md";
 import { FaHashtag } from "react-icons/fa";
+import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import EmptyPost from "../../components/Post/EmptyPost";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -33,6 +38,8 @@ import TwitterPreview from "../../components/Post/TwitterPreview";
 import ButtonLoader from "../../components/Loaders/ButtonLoader";
 import { Picker } from "emoji-mart";
 import useOnClickOutside from "../../hooks/useOnClickOutside";
+import DatePicker from "react-datepicker";
+import moment from "moment";
 
 const DUMMY_DASHTAGS = ["#coolday", "#beach"];
 
@@ -58,6 +65,9 @@ function Publish() {
 			isHashtagGenerating: false,
 			isEmojiPanalOpen: false,
 			isImagePanalOpen: false,
+			isDatePickerOpen: false,
+			scheduleDate: null,
+			isScheduleDateSelected: false,
 		},
 		validationSchema: validationSchema,
 		onSubmit: (values) => {
@@ -186,7 +196,7 @@ function Publish() {
 						lg='8'
 						className='scrollbar py-3 pl-4 position-relative'
 						style={{
-							height: "calc(100vh - 121px)",
+							height: "calc(100vh - 64px)",
 							overflowY: "auto",
 							background: "#F7FAFC",
 						}}
@@ -314,12 +324,11 @@ function Publish() {
 											<Picker onSelect={handleEmojiMart} emojiSize={22} />
 										</div>
 									)}
+									<span style={{ fontSize: 13, color: "red" }} className='mt-1'>
+										{formik.touched.text && formik.errors.text}
+									</span>
 								</Card>
 							</FormGroup>
-							<span style={{ fontSize: 13, color: "red" }}>
-								{formik.touched.text && formik.errors.text}
-							</span>
-
 							{formik.values.isImagePanalOpen && (
 								<FormGroup>
 									<Card className='shadow-lg p-4 rounded-lg'>
@@ -431,8 +440,7 @@ function Publish() {
 									</Card>
 								</FormGroup>
 							)}
-
-							<FormGroup style={{ marginBottom: "70px" }}>
+							<FormGroup>
 								<Card className='shadow-lg p-4 mb-1 rounded-lg'>
 									<Row className='mb-3'>
 										<Col sm='1'>
@@ -532,28 +540,123 @@ function Publish() {
 									</FormFeedback>
 								</Card>
 							</FormGroup>
-							<div
-								style={{
-									zIndex: 10,
-									display: "flex",
-									bottom: 0,
-									left: 0,
-									right: 0,
-									padding: "15px",
-								}}
-								className='position-fixed bg-white border-top'
-							>
-								<Button
-									type='submit'
-									style={{
-										marginLeft: "auto",
-									}}
-									color='primary'
-									className='px-5'
-								>
-									Share Post
-								</Button>
-							</div>
+							<Card className='shadow-lg p-4 mb-1 rounded-lg'>
+								<Row className='mb-3'>
+									<Col sm='1'>
+										<AiOutlineSchedule
+											style={{
+												fontSize: 50,
+												color: "#3b82f6",
+												background: "#DAF7F7",
+												padding: 12,
+												borderRadius: 5,
+											}}
+										/>
+									</Col>
+									<Col sm='11'>
+										<strong
+											style={{ fontFamily: "sans-serif", fontSize: 17 }}
+											className='text-default d-block'
+										>
+											Schedule
+										</strong>
+										<span className='d-block' style={{ fontSize: 14 }}>
+											Select publishing time as per your need.
+										</span>
+									</Col>
+									{formik.values.isScheduleDateSelected ? (
+										<Col sm='12' className='mt-4'>
+											<Button
+												onClick={() => {
+													formik.setFieldValue("isScheduleDateSelected", false);
+													formik.setFieldValue("scheduleDate", null);
+												}}
+												outline
+												color='danger'
+												type='button'
+											>
+												Clear Schedule
+											</Button>
+											<Button color='primary' type='submit'>
+												Publish Post
+											</Button>
+										</Col>
+									) : (
+										<Col sm='12' className='mt-4'>
+											<Button
+												onClick={() =>
+													formik.setFieldValue(
+														"isDatePickerOpen",
+														!formik.values.isDatePickerOpen
+													)
+												}
+												outline
+												color='primary'
+												type='button'
+											>
+												Pick Time
+											</Button>
+											<Button color='primary' type='submit'>
+												Post Now
+											</Button>
+										</Col>
+									)}
+								</Row>
+								<div className='d-flex flex-row align-items-start mb-2'>
+									<div
+										className={`p-3 border shadow rounded ${
+											!formik.values.isDatePickerOpen ? "d-none" : "d-block"
+										}`}
+										style={{ width: "fit-content" }}
+									>
+										<DatePicker
+											inline
+											minDate={moment().toDate()}
+											renderCustomHeader={(args) => (
+												<DayPickerHeader {...args} />
+											)}
+											selected={formik.values.scheduleDate}
+											onChange={(date) => {
+												console.log(date);
+												formik.setFieldValue("scheduleDate", date);
+											}}
+											disabledKeyboardNavigation
+										/>
+									</div>
+									<div
+										className={`mx-3 border shadow rounded ${
+											!formik.values.isDatePickerOpen ? "d-none" : "d-block"
+										}`}
+									>
+										<DatePicker
+											inline
+											showTimeSelect
+											showTimeSelectOnly
+											timeIntervals={1}
+											timeCaption='Time'
+											dateFormat='h:mm aa'
+											selected={formik.values.scheduleDate}
+											onChange={(date) => {
+												console.log(date);
+												formik.setFieldValue("scheduleDate", date);
+												formik.setFieldValue("isScheduleDateSelected", true);
+												formik.setFieldValue("isDatePickerOpen", false);
+											}}
+											disabledKeyboardNavigation
+										/>
+									</div>
+								</div>
+								{formik.values.scheduleDate !== null && (
+									<Badge
+										style={{ width: "fit-content" }}
+										className='px-4'
+										pill
+										color='primary badge-md'
+									>
+										{moment(formik.values.scheduleDate).format("llll")}
+									</Badge>
+								)}
+							</Card>
 						</form>
 					</Col>
 					<Col
@@ -600,3 +703,42 @@ function Publish() {
 Publish.requireAuth = true;
 
 export default Publish;
+
+const DayPickerHeader = ({
+	date,
+	decreaseMonth,
+	increaseMonth,
+	prevMonthButtonDisabled,
+	nextMonthButtonDisabled,
+}) => {
+	return (
+		<div className='mx-3 mb-3 d-flex flex-row justify-content-between align-items-center '>
+			<MdNavigateNext
+				onClick={decreaseMonth}
+				style={{
+					cursor: "pointer",
+					color: prevMonthButtonDisabled ? "lightgray" : "#5E72E4",
+					pointerEvents: prevMonthButtonDisabled && "none",
+					fontSize: 23,
+					fontWeight: "bolder",
+					transform: "rotate(180deg)",
+				}}
+			/>
+
+			<strong className='text-dark'>
+				{date.toLocaleString("default", { month: "short" })}{" "}
+				{date.getFullYear()}
+			</strong>
+
+			<MdNavigateNext
+				style={{
+					cursor: "pointer",
+					color: "#5E72E4",
+					fontSize: 23,
+					fontWeight: "bolder",
+				}}
+				onClick={increaseMonth}
+			/>
+		</div>
+	);
+};

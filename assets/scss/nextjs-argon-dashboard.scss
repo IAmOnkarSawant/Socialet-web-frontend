@@ -95,12 +95,13 @@ textarea {
 }
 
 .scrollbar::-webkit-scrollbar-track {
-	background: #F7FAFC;
+	background: #f7fafc;
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
 	background: lightgray;
 	outline: 1px solid transparent;
+	border-radius: 100px;
 }
 
 //
@@ -109,12 +110,13 @@ textarea {
 }
 
 .textarea::-webkit-scrollbar-track {
-	background: #F7FAFC;
+	background: #f7fafc;
 }
 
 .textarea::-webkit-scrollbar-thumb {
 	background: lightgray;
 	outline: 1px solid transparent;
+	border-radius: 100px;
 }
 
 //
@@ -123,10 +125,11 @@ textarea {
 }
 
 .hashtag__area::-webkit-scrollbar-track {
-	background: #F7FAFC;
+	background: #f7fafc;
 }
 
 .hashtag__area::-webkit-scrollbar-thumb {
 	background: lightgray;
 	outline: 1px solid transparent;
+	border-radius: 100px;
 }
