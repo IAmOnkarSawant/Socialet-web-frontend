@@ -86,3 +86,11 @@ export const getRandomDate = (start, end) =>
 
 export const getRandomHexColor = () =>
 	"#" + Math.floor(Math.random() * 16777215).toString(16);
+
+export const objectToObjectsOfArray = (data) => {
+	let result = Object.keys(data).map((key) => ({
+		account: String(key),
+		isconnected: data[key],
+	}));
+	return result;
+};

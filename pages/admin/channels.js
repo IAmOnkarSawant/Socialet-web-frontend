@@ -1,44 +1,53 @@
 import React, { useState, useEffect } from "react";
 import {
 	Button,
-	Card,
-	Col,
 	Container,
-	FormFeedback,
-	FormGroup,
-	Input,
-	Label,
 	Navbar,
 	NavbarBrand,
-	Row,
-	Tooltip,
-	Badge,
+	Nav,
+	UncontrolledDropdown,
+	DropdownMenu,
+	DropdownItem,
+	DropdownToggle,
 } from "reactstrap";
-import { BsTwitter } from "react-icons/bs";
+import { BsTwitter, BsThreeDotsVertical } from "react-icons/bs";
 import { useRouter } from "next/router";
 import { connectTwitterAuth } from "../../_api/channels";
+import { deleteSocialAccount, getSocialAccounts } from "../../_api/users";
+import { useSession } from "next-auth/react";
+import { objectToObjectsOfArray } from "../../utils/formatter";
 
 function Channels() {
 	const router = useRouter();
-	const { query } = useRouter();
-
-	const connectTwitter = () => {
-		connectTwitterAuth().then(({ data }) => {
-			// console.log(data);
-			window.location.replace(data.oauth_url);
-		});
-	};
-
-	const fetchTokens = () => {
-		console.log(query);
-	};
+	const { data: session } = useSession({ required: true });
+	const [accounts, setAccounts] = useState({});
 
 	useEffect(() => {
-		if (query) {
-			fetchTokens();
+		if (session && session.token) {
+			getSocialAccounts(session.token?.sub).then(({ data }) => {
+				setAccounts(data);
+			});
 		}
-	}, [query]);
+	}, [session]);
 
+	const connectTwitter = () => {
+		connectTwitterAuth().then(({ data }) =>
+			window.location.replace(data.oauth_url)
+		);
+	};
+
+	const handleDisconnect = (social_account_name = "twitter") => {
+		deleteSocialAccount(session.token?.sub, social_account_name).then(
+			({ data }) => {
+				console.log(data);
+				setAccounts((prevAccounts) => ({
+					...prevAccounts,
+					[social_account_name]: false,
+				}));
+			}
+		);
+	};
+	console.log(accounts);
 	return (
 		<React.Fragment>
 			<Navbar color='white' light expand='md'>
@@ -64,60 +73,97 @@ function Channels() {
 					style={{ width: "740px" }}
 					className='d-flex flex-wrap flex-row align-items-center justify-content-center'
 				>
-					<Button
-						color='secondary'
-						className='mb-3 shadow-lg'
-						outline
-						size='md'
-						style={{ width: "200px" }}
-						onClick={connectTwitter}
-					>
-						<section className='d-flex flex-column align-items-center justify-items-center'>
-							<span
-								style={{
-									color: "white",
-									height: "40px",
-									marginTop: "0.25rem",
-									backgroundColor: "rgb(29, 161, 242)",
-									minWidth: "40px",
-									borderRadius: "50%",
-								}}
-								className='d-flex flex-row align-items-center justify-content-center mt-3'
-							>
-								<BsTwitter
-									style={{
-										width: "22px",
-										height: "22px",
-										display: "inline-block",
-									}}
-								/>
-							</span>
-							<main
-								className='mt-3'
-								style={{ textAlign: "center", width: "100%" }}
-							>
-								<h2
-									className='mb-0 font-weight-bold'
-									style={{ color: "black" }}
+					{[...objectToObjectsOfArray(accounts)].map(
+						({ account, isconnected }, index) => {
+							return (
+								<div
+									key={index}
+									className='mb-3 shadow-lg position-relative p-2 mx-2'
+									style={{ width: "200px" }}
 								>
-									Twitter
-								</h2>
-								<p style={{ fontSize: "14px" }} className='text-dark pt-0 mt-0'>
-									Profile
-								</p>
-							</main>
-							<p
-								style={{
-									color: "black",
-									fontFamily: "Roboto, sans-serif",
-									fontSize: "13px",
-								}}
-								className='font-weight-bold'
-							>
-								Connect
-							</p>
-						</section>
-					</Button>
+									{isconnected && (
+										<UncontrolledDropdown
+											direction='down'
+											menuRole='listbox'
+											style={{
+												position: "absolute",
+												top: 10,
+												right: 5,
+											}}
+										>
+											<DropdownToggle
+												style={{ padding: 0, boxShadow: "none" }}
+												color='secondary'
+												id='dropdownMenuButton'
+											>
+												<BsThreeDotsVertical
+													style={{ fontSize: 18, color: "black" }}
+												/>
+											</DropdownToggle>
+											<DropdownMenu
+												persist
+												style={{ padding: 0 }}
+												aria-labelledby='dropdownMenuButton'
+											>
+												<DropdownItem onClick={() => handleDisconnect(account)}>
+													Disconnect account
+												</DropdownItem>
+											</DropdownMenu>
+										</UncontrolledDropdown>
+									)}
+									<section className='d-flex flex-column align-items-center justify-items-center'>
+										<span
+											style={{
+												color: "white",
+												height: "40px",
+												marginTop: "0.25rem",
+												backgroundColor: "rgb(29, 161, 242)",
+												minWidth: "40px",
+												borderRadius: "50%",
+											}}
+											className='d-flex flex-row align-items-center justify-content-center mt-3'
+										>
+											<BsTwitter
+												style={{
+													width: "22px",
+													height: "22px",
+													display: "inline-block",
+												}}
+											/>
+										</span>
+										<main
+											className='mt-3'
+											style={{ textAlign: "center", width: "100%" }}
+										>
+											<h2
+												className='mb-0 font-weight-bold'
+												style={{ color: "black" }}
+											>
+												Twitter
+											</h2>
+											<p
+												style={{ fontSize: "14px" }}
+												className='text-dark pt-0 mt-0'
+											>
+												Profile
+											</p>
+										</main>
+										{!isconnected && (
+											<Button
+												className='font-weight-bold px-3 mb-3 rounded-sm'
+												onClick={connectTwitter}
+												color='primary'
+												size='sm'
+												outline
+											>
+												Connect
+											</Button>
+										)}
+									</section>
+								</div>
+							);
+						}
+					)}
 				</div>
 			</Container>
 		</React.Fragment>
