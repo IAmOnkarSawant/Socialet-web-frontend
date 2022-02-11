@@ -22,10 +22,9 @@ function TwitterSearchCard({ tweet, search, feed, formik, ...props }) {
 	const router = useRouter();
 
 	const replyTweetHandler = (e) => {
-		console.log(tweet);
 		router.push({
 			pathname: "/admin/publish",
-			query:{ replyTo: tweet.id}
+			query:{ replyTo: tweet.id_str}
 		})
 	}
 
