@@ -22,3 +22,11 @@ export function postReplyToTweet(formData){
 		headers:{ "Content-Type": "multipart/form-data" },
 	})
 }
+
+export function postFavorites(tweet_id, user_id){
+	return axios.post(`${TWITTER_URL}/favorite/?tweet_id=${tweet_id}&user_id=${user_id}`)
+}
+
+export function postReTweet(tweet_id, user_id){
+	return axios.post(`${TWITTER_URL}/retweet/?tweet_id=${tweet_id}&user_id=${user_id}`)
+}
