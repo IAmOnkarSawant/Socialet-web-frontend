@@ -6,6 +6,7 @@ function ButtonLoader({ ...props }) {
 		className,
 		onClick,
 		disabled,
+		outline,
 		type,
 		color = "primary",
 		size = "md",
@@ -18,6 +19,7 @@ function ButtonLoader({ ...props }) {
 				className={className}
 				onClick={onClick}
 				disabled={disabled}
+				outline={outline}
 				type={type}
 				color={color}
 				size={size}

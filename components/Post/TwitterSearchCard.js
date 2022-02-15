@@ -43,14 +43,6 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }) {
 
   const router = useRouter();
 
-  const replyTweetHandler = (e) => {
-    console.log(tweet);
-    router.push({
-      pathname: "/admin/publish",
-      query: { replyTo: tweet.id },
-    });
-  };
-
 	const replyTweetHandler = (e) => {
 		router.push({
 			pathname: "/admin/publish",

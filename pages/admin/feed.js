@@ -17,6 +17,8 @@ function Feed() {
 		});
 	};
 
+	console.log(feed)
+
 	useEffect(() => {
 		if (feed.length === 0) {
 			fetchTwitterFeed();

@@ -19,6 +19,7 @@ import "emoji-mart/css/emoji-mart.css";
 import "react-datepicker/dist/react-datepicker.css";
 
 import router from "next/router";
+import { Toaster } from "react-hot-toast";
 
 Router.events.on("routeChangeStart", (url) => {
 	console.log(`Loading: ${url}`);
@@ -77,6 +78,34 @@ export default function App({
 					<Component {...pageProps} />
 				)}
 			</Layout>
+			<Toaster
+				position='bottom-right'
+				reverseOrder={false}
+				gutter={8}
+				containerClassName=''
+				containerStyle={{}}
+				toastOptions={{
+					// Define default options
+					className: "",
+					duration: 5000,
+					style: {
+						fontSize: "14px",
+						borderTopRightRadius: 0,
+						borderBottomRightRadius: 0,
+						fontFamily: "unset",
+					},
+					success: {
+						style: {
+							borderRight: "5px solid #62D346",
+						},
+					},
+					error: {
+						style: {
+							borderRight: "5px solid #ff4b4b",
+						},
+					},
+				}}
+			/>
 		</SessionProvider>
 	);
 }

@@ -44,6 +44,7 @@ import TwitterPreview from "../../components/Post/TwitterPreview";
 import ReplyTweetCard from "../../components/Post/ReplyTweetCard";
 import DatePicker from "react-datepicker";
 import moment from "moment";
+import toast from "react-hot-toast";
 
 const DUMMY_DASHTAGS = ["#coolday", "#beach"];
 
@@ -74,10 +75,12 @@ function Publish() {
       isDatePickerOpen: false,
       scheduleDate: null,
       isScheduleDateSelected: false,
-      isReply:false
+      isReply:false,
+		isSubmitting: false
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
+		formik.setFieldValue('isSubmitting', true)
       if (values.isReply) {
         let formData = new FormData();
         values.images.map(({ file }) => formData.append("files", file));
@@ -104,8 +107,10 @@ function Publish() {
       const tweet = values.text + "\n" + values.hashtags.join(" ");
       formData.append("text", tweet);
       postTweet(formData).then(({ data }) => {
-        // show success/error message in popup later
         console.log(data);
+		  toast.success('Tweet published successfully!');
+		  formik.resetForm()
+		  formik.setFieldValue("isSubmitting", false);
       });
     },
   });
@@ -263,11 +268,9 @@ function Publish() {
 								@SmwtG11
 							</p>
 						</Card>
-            {
-              replyToTweet && (
-                <ReplyTweetCard id={replyToTweet?.id} tweet={replyToTweet} />
-              )
-            }
+						{replyToTweet && (
+							<ReplyTweetCard id={replyToTweet?.id} tweet={replyToTweet} />
+						)}
 						<form onSubmit={formik.handleSubmit}>
 							<FormGroup className='position-relative'>
 								<Card className='shadow-lg p-4 rounded-lg'>
@@ -283,9 +286,9 @@ function Publish() {
 												}}
 											/>
 										</Col>
-                    <Col sm="10">
-                      <strong
-                        style={{ fontFamily: "sans-serif", fontSize: 17 }}
+										<Col sm='10'>
+											<strong
+												style={{ fontFamily: "sans-serif", fontSize: 17 }}
 												className='text-default d-block'
 											>
 												Create Post
@@ -612,44 +615,58 @@ function Publish() {
 											Select publishing time as per your need.
 										</span>
 									</Col>
-									{formik.values.isScheduleDateSelected ? (
-										<Col sm='12' className='mt-4'>
-											<Button
-												onClick={() => {
-													formik.setFieldValue("isScheduleDateSelected", false);
-													formik.setFieldValue("scheduleDate", null);
-												}}
-												outline
-												color='danger'
-												type='button'
-											>
-												Clear Schedule
-											</Button>
-											<Button color='primary' type='submit'>
-                        {query && query.replyTo ? "Schedule Reply" : "Schedule Post"}
-											</Button>
-										</Col>
-									) : (
-										<Col sm='12' className='mt-4'>
-											<Button
-												onClick={() =>
-													formik.setFieldValue(
-														"isDatePickerOpen",
-														!formik.values.isDatePickerOpen
-													)
-												}
-												outline
-												color='primary'
-												type='button'
-											>
-												Pick Time
-											</Button>
-											<Button color='primary' type='submit'>
-                        {query && query.replyTo ? "Reply Now" : "Post Now"}
-											</Button>
-                      
-										</Col>
-									)}
+									<Col sm='12' className='mt-4'>
+										{formik.values.isScheduleDateSelected ? (
+											<Row className="pl-3">
+												<Button
+													onClick={() => {
+														formik.setFieldValue(
+															"isScheduleDateSelected",
+															false
+														);
+														formik.setFieldValue("scheduleDate", null);
+													}}
+													outline
+													color='danger'
+													type='button'
+												>
+													Clear Schedule
+												</Button>
+												<ButtonLoader
+													loading={formik.values.isSubmitting}
+													color='primary'
+													type='submit'
+												>
+													{query && query.replyTo
+														? "Schedule Reply"
+														: "Schedule Post"}
+												</ButtonLoader>
+											</Row>
+										) : (
+											<Row className="pl-3">
+												<Button
+													onClick={() =>
+														formik.setFieldValue(
+															"isDatePickerOpen",
+															!formik.values.isDatePickerOpen
+														)
+													}
+													outline
+													color='primary'
+													type='button'
+												>
+													Pick Time
+												</Button>
+												<ButtonLoader
+													loading={formik.values.isSubmitting}
+													color='primary'
+													type='submit'
+												>
+													{query && query.replyTo ? "Reply Now" : "Post Now"}
+												</ButtonLoader>
+											</Row>
+										)}
+									</Col>
 								</Row>
 								<div className='d-flex flex-row align-items-start mb-2'>
 									<div
