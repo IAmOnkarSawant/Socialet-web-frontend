@@ -127,13 +127,37 @@ function search() {
 				<Row>
 					{formik.values.tweets.length !== 0 && !formik.values.isSearching ? (
 						<Col md='12'>
-							{formik.values.tweets.map((tweet) => (
-								<TwitterCard
-									key={tweet.id}
-									tweet={tweet}
-									search={true}
-									formik={formik}
-									callback={formik.handleSubmit}
+							{formik.values.tweets.map((tweet, index) => {
+								if (index === formik.values.tweets.length - 1) {
+									return (
+										<TwitterCard
+											ref={ref}
+											key={tweet.id + index}
+											tweet={tweet}
+											search={true}
+											formik={formik}
+											callback={formik.handleSubmit}
+											setPage={setPage}
+										/>
+									);
+								}
+								return (
+									<TwitterCard
+										key={tweet.id + index}
+										tweet={tweet}
+										search={true}
+										formik={formik}
+										callback={formik.handleSubmit}
+										setPage={setPage}
+									/>
+								);
+							})}
+							{isLoading && hasMore && (
+								<CenterSpinner
+									style={{ width: "100%", marginTop: 10, marginBottom: 10 }}
+									type='border'
+									size='md'
+									color='primary'
 								/>
 							))}
 						</Col>
