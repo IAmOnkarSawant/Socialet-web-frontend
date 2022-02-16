@@ -159,7 +159,7 @@ function search() {
 									size='md'
 									color='primary'
 								/>
-							))}
+							)}
 						</Col>
 					) : (
 						!formik.values.isSearching && (
