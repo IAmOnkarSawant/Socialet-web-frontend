@@ -13,7 +13,10 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { postFavorites, postReTweet } from "../../_api/twitter";
 
-function TwitterSearchCard({ tweet, search, feed, callback, ...props }, ref) {
+function TwitterSearchCard(
+  { tweet, search, feed, callback, setPage, ...props },
+  ref
+) {
   const [modalImageURL, setModalImageURL] = useState("");
   const [tweetData, setTweetData] = useState(tweet);
   const { data: session } = useSession();
@@ -108,6 +111,7 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }, ref) {
     }
     if (el && el.tagName === "SPAN" && el.innerText.trim().startsWith("#")) {
       props.formik.setFieldValue("searchTerm", el.innerText.trim());
+      setPage(1);
       callback();
     }
   };
@@ -151,11 +155,32 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }, ref) {
                 </span>
               </div>
               {search && (
-                <span style={{ fontSize: "12px" }}>
-                  {tweet.retweet_count === 0 ? "Tweet" : "Retweeted"}
-                </span>
+                <div>
+                  <span style={{ fontSize: "12px" }}>
+                    {tweet.retweet_count === 0 ? "Tweet" : "Retweeted"}
+                  </span>
+                  {tweet.retweet_count !== 0 && (
+                    <AiOutlineRetweet
+                      style={{
+                        fontSize: 15,
+                      }}
+                      className="ml-2"
+                    />
+                  )}
+                  <span
+                    className="text-dark font-weight-bold ml-2"
+                    style={{ fontSize: "12px" }}
+                  >
+                    {tweet.retweet_count !== 0 && (
+                      <span className="text-dark font-weight-normal">
+                        {"by  "}
+                      </span>
+                    )}
+                    {tweet.retweet_count !== 0 &&
+                      tweet?.retweeted_status?.user?.name}
+                  </span>
+                </div>
               )}
-              {feed && <span style={{ fontSize: "12px" }}>Tweet</span>}
             </div>
           </div>
           <div className="pr-3">
@@ -165,10 +190,17 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }, ref) {
           </div>
         </div>
         <hr className="mt-0 mb-1" />
-        <div style={{ paddingLeft: "53px" }} className="pr-3 py-3">
+        <div
+          style={{
+            margin: "10px 60px",
+          }}
+          className={`${
+            tweet.retweet_count === 0 ? "" : "border border-black p-3 rounded"
+          } my-3`}
+        >
           <span
             style={{
-              fontSize: "15px",
+              fontSize: tweet.retweet_count === 0 ? "15px" : "13px",
               color: "#364141",
               whiteSpace: "pre-line",
               wordBreak: "break-word",
@@ -178,44 +210,45 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }, ref) {
             }}
             onClick={clickHandler}
           />
-        </div>
-        <div
-          style={{ paddingLeft: "53px" }}
-          className="d-flex flex-row align-items-center"
-        >
-          {tweet.retweet_count === 0
-            ? tweet?.entities?.media?.map(
-                (media) =>
-                  media.type == "photo" && (
-                    <div key={media.id} style={{ cursor: "pointer" }}>
-                      <img
-                        className="shadow-lg bg-white rounded-lg"
-                        width="140px"
-                        src={media.media_url_https}
-                        alt={media.display_url}
-                        onClick={() => setModalImageURL(media?.media_url_https)}
-                      />
-                    </div>
-                  )
-              )
-            : tweet?.retweeted_status?.entities.media?.map(
-                (media) =>
-                  media?.type == "photo" && (
-                    <div key={media.id} style={{ cursor: "pointer" }}>
-                      <img
-                        className="shadow-lg bg-white rounded-lg"
-                        width="140px"
-                        src={media.media_url_https}
-                        alt={media.display_url}
-                        onClick={() => setModalImageURL(media?.media_url_https)}
-                      />
-                    </div>
-                  )
-              )}
+          <div className="d-flex flex-row align-items-center mt-2">
+            {tweet.retweet_count === 0
+              ? tweet?.entities?.media?.map(
+                  (media) =>
+                    media.type == "photo" && (
+                      <div key={media.id} style={{ cursor: "pointer" }}>
+                        <img
+                          className="shadow-lg bg-white rounded"
+                          width="140px"
+                          src={media.media_url_https}
+                          alt={media.display_url}
+                          onClick={() =>
+                            setModalImageURL(media?.media_url_https)
+                          }
+                        />
+                      </div>
+                    )
+                )
+              : tweet?.retweeted_status?.entities.media?.map(
+                  (media) =>
+                    media?.type == "photo" && (
+                      <div key={media.id} style={{ cursor: "pointer" }}>
+                        <img
+                          className="shadow-lg bg-white rounded"
+                          width="140px"
+                          src={media.media_url_https}
+                          alt={media.display_url}
+                          onClick={() =>
+                            setModalImageURL(media?.media_url_https)
+                          }
+                        />
+                      </div>
+                    )
+                )}
+          </div>
         </div>
         <div className="d-flex flex-row justify-content-end align-items-center p-3">
           <div>
-            {tweetData.favorited ? (
+            {favIconFlag === 1 ? (
               <AiTwotoneHeart
                 style={{
                   marginLeft: "auto",
@@ -242,7 +275,6 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }, ref) {
                 marginLeft: "auto",
                 fontSize: 20,
                 cursor: "pointer",
-                color: tweetData.retweeted ? "#5e72e4" : "",
               }}
               className="ml-4"
               onClick={reTweetHandler}
