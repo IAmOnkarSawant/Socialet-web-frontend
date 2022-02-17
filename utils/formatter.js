@@ -1,4 +1,5 @@
 import twttr from "twitter-text";
+import { social_account_colors, social_account_icons } from "./HelperData";
 
 export const removeLinkFromText = (string) => {
 	return string.replace(/https:\/\/t.co\/[a-zA-Z0-9\-\.]+/g, "");
@@ -91,6 +92,15 @@ export const objectToObjectsOfArray = (data) => {
 	let result = Object.keys(data).map((key) => ({
 		account: String(key),
 		isconnected: data[key],
+		social_icon: {
+			icon: social_account_icons[key],
+			bg_color: social_account_colors[key].background,
+			color: social_account_colors[key].color,
+		},
 	}));
 	return result;
+};
+
+export const capitalizeFirstLetter = ([first, ...rest]) => {
+	return first.toUpperCase() + rest.join("");
 };
