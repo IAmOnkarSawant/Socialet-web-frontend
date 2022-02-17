@@ -87,17 +87,12 @@ function Publish() {
 
         postReplyToTweet(formData).then(({ data }) => {
           // show success/error message in popup later
-          if (data && data.error) {
-            toast.error(data.message);
-          } else {
-            toast.success("Replied to Tweet Successfully!");
-          }
-          formik.resetForm();
-          formik.setFieldValue("isSubmitting", false);
+          console.log(data);
         });
         return;
       }
 
+      console.log(values.isScheduleDateSelected);
       let formData = new FormData();
       values.images.map(({ file }) => formData.append("files", file));
 
@@ -106,13 +101,8 @@ function Publish() {
       const tweet = values.text + "\n" + values.hashtags.join(" ");
       formData.append("text", tweet);
       postTweet(formData).then(({ data }) => {
-        if (data && data.error) {
-          toast.error(data.message);
-        } else {
-          toast.success("Tweet Published Successfully!");
-        }
-        formik.resetForm();
-        formik.setFieldValue("isSubmitting", false);
+        // show success/error message in popup later
+        console.log(data);
       });
     },
   });
