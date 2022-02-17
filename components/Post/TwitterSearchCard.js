@@ -118,7 +118,7 @@ function TwitterSearchCard(
 
   if (!ref) {
     return (
-      <section className="mb-4 rounded bg-white shadow-lg">
+      <section ref={ref} className="mb-4 rounded bg-white shadow-lg">
         <div className="d-flex flex-row align-items-center justify-content-between px-3 py-3">
           <div
             className="d-flex flex-row align-items-center"
@@ -248,7 +248,7 @@ function TwitterSearchCard(
         </div>
         <div className="d-flex flex-row justify-content-end align-items-center p-3">
           <div>
-            {favIconFlag === 1 ? (
+            {tweetData.favorited ? (
               <AiTwotoneHeart
                 style={{
                   marginLeft: "auto",
@@ -275,6 +275,7 @@ function TwitterSearchCard(
                 marginLeft: "auto",
                 fontSize: 20,
                 cursor: "pointer",
+                color: tweetData.retweeted ? "#5e72e4" : "",
               }}
               className="ml-4"
               onClick={reTweetHandler}

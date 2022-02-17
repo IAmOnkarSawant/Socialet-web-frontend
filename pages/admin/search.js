@@ -72,6 +72,62 @@ function search() {
     },
   });
 
+  useEffect(() => {
+    if (query && query.searchTerm) {
+      formik.setFieldValue(
+        "searchTerm",
+        query.searchTerm.replace("hashtag", "#")
+      );
+      setTimeout(() => {
+        formik.handleSubmit();
+      }, 200);
+    }
+    return () => {
+      setPage(0);
+    };
+  }, [query]);
+
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 1,
+  });
+
+  useEffect(() => {
+    if (inView && hasMore) setPage((page) => page + 1);
+  }, [inView]);
+
+  useEffect(() => {
+    const source = axios.CancelToken.source();
+    let isMounted = true;
+    if (inView && page != 1) {
+      setIsLoading(true);
+      const newSearchTerm = formatHashtag(formik.values.searchTerm);
+      getSearchResults(session?.token?.sub, page, newSearchTerm, {
+        cancelToken: source.token,
+      })
+        .then(({ data }) => {
+          console.log(data);
+          if (isMounted) {
+            formik.setFieldValue("tweets", [
+              ...formik.values.tweets,
+              ...data.searched_tweets,
+            ]);
+            setHasMore(data.searched_tweets.length > 0);
+            setIsLoading(false);
+          }
+        })
+        .catch((err) => {
+          if (!isMounted) return;
+          if (axios.isCancel(err)) console.log(err);
+          else console.log(err);
+        });
+    }
+    return () => {
+      isMounted = false;
+      source.cancel();
+    };
+  }, [page, inView]);
+
   return (
     <React.Fragment>
       <Navbar color="white" light expand="md">
