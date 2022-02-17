@@ -12,6 +12,7 @@ import ModalImage from "../Modal/ModalImage";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { postFavorites, postReTweet } from "../../_api/twitter";
+import toast from "react-hot-toast";
 
 function TwitterSearchCard(
   { tweet, search, feed, callback, setPage, ...props },
@@ -88,7 +89,8 @@ function TwitterSearchCard(
       retweet: "True",
     };
     postReTweet(bodyData).then(({ data }) => {
-      console.log(data);
+       toast.success(data?.message);
+       console.log(data);
     });
   };
 

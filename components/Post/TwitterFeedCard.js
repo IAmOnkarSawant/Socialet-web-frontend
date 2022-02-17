@@ -12,6 +12,7 @@ import { tweetFormatter } from "../../utils/formatter";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { postFavorites, postReTweet } from "../../_api/twitter";
+import toast from "react-hot-toast";
 
 function TwitterFeedCard({ tweet, search, feed, formik, ...props }, ref) {
   const [modalImageURL, setModalImageURL] = useState("");
@@ -71,8 +72,8 @@ function TwitterFeedCard({ tweet, search, feed, formik, ...props }, ref) {
         retweet: "False",
       };
       postReTweet(bodyData).then(({ data }) => {
-        // show success/error message in popup later
-        console.log(data);
+        toast.success(data?.message)
+        console.log(data.message);
       });
       return;
     }
