@@ -2,17 +2,24 @@ import axios from "axios";
 import { TWITTER_URL } from "./channels";
 
 // GET REQUEST -> TWITTER FEED
-export function getTwitterFeed(user_id) {
-  return axios.get(`${TWITTER_URL}/feed/?user_id=${user_id}`);
+export function getTwitterFeed(user_id, page = 1, options) {
+  return axios.get(
+    `${TWITTER_URL}/feed/?user_id=${user_id}&page=${page}`,
+    options
+  );
 }
 
 // GET REQUEST -> TWITTER SEARCH
-export function getSearchResults(user_id, query, geocode) {
+export function getSearchResults(user_id, page, query, options = {}, geocode) {
   if (!geocode) {
-    return axios.get(`${TWITTER_URL}/search?user_id=${user_id}&query=${query}`);
+    return axios.get(
+      `${TWITTER_URL}/search?user_id=${user_id}&query=${query}&page=${page}`,
+      options
+    );
   } else {
     return axios.get(
-      `${TWITTER_URL}/search?user_id=${user_id}&query=${query}&geocode=${geocode}`
+      `${TWITTER_URL}/search?user_id=${user_id}&query=${query}&page=${page}&geocode=${geocode}`,
+      options
     );
   }
 }
