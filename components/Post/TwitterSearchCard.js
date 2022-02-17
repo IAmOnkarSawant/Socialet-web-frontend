@@ -11,11 +11,11 @@ import { tweetFormatter } from "../../utils/formatter";
 import ModalImage from "../Modal/ModalImage";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import { postFavorites, postReTweet } from "../../_api/publish";
+import { postFavorites, postReTweet } from "../../_api/twitter";
 
 function TwitterSearchCard({ tweet, search, feed, callback, ...props }) {
   const [modalImageURL, setModalImageURL] = useState("");
-  const [favIconFlag, setFavIconFlag] = useState(0);
+  const [tweetData, setTweetData] = useState(tweet);
   const { data: session } = useSession();
   const tweet_text =
     tweet?.retweet_count === 0
@@ -25,31 +25,80 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }) {
       : tweet.full_text;
 
   const favTweetHandler = (e) => {
-    favIconFlag === 0 ? setFavIconFlag(1) : setFavIconFlag(0);
-    console.log(tweet.id_str, session.token.sub);
-    postFavorites(tweet.id_str, session.token.sub).then(({ data }) => {
+    // already favorited-> to be unfavorited
+    if (tweetData.favorited) {
+      setTweetData({
+        ...tweetData,
+        favorited: false,
+      });
+      const bodyData = {
+        tweet_id: tweet.id_str,
+        user_id: session.token.sub,
+        favorite: "False",
+      };
+      postFavorites(bodyData).then(({ data }) => {
+        // show success/error message in popup later
+        console.log(data);
+      });
+      return;
+    }
+    // if not favorited
+    setTweetData({
+      ...tweetData,
+      favorited: true,
+    });
+    const bodyData = {
+      tweet_id: tweet.id_str,
+      user_id: session.token.sub,
+      favorite: "True",
+    };
+    postFavorites(bodyData).then(({ data }) => {
       // show success/error message in popup later
       console.log(data);
     });
   };
 
   const reTweetHandler = (e) => {
-    postReTweet(tweet.id_str, session.token.sub).then(({ data }) => {
-      // show success/error message in popup later
+    if (tweetData.retweeted) {
+      setTweetData({
+        ...tweetData,
+        retweeted: false,
+      });
+      const bodyData = {
+        tweet_id: tweet.id_str,
+        user_id: session.token.sub,
+        retweet: "False",
+      };
+      postReTweet(bodyData).then(({ data }) => {
+        // show success/error message in popup later
+        console.log(data);
+      });
+      return;
+    }
+    setTweetData({
+      ...tweetData,
+      retweeted: true,
+    });
+    const bodyData = {
+      tweet_id: tweet.id_str,
+      user_id: session.token.sub,
+      retweet: "True",
+    };
+    postReTweet(bodyData).then(({ data }) => {
       console.log(data);
     });
   };
 
-
   const router = useRouter();
 
-	const replyTweetHandler = (e) => {
-		router.push({
-			pathname: "/admin/publish",
-			query:{ replyTo: tweet.id_str}
-
-		})
-	}
+  const replyTweetHandler = (e) => {
+    router.push({
+      pathname: "/admin/publish",
+      query: {
+        replyTo: tweet.id_str,
+      },
+    });
+  };
   const clickHandler = (e) => {
     let el = e.target;
 
@@ -71,24 +120,31 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }) {
           style={{ color: "rgb(54, 65, 65)" }}
         >
           <img
-            style={{ width: "35px", height: "35px" }}
+            style={{
+              width: "35px",
+              height: "35px",
+            }}
             className="mr-2 rounded-circle"
             src={tweet.user.profile_image_url}
           />
           <div className="d-flex flex-column">
             <div className="d-flex flex-row align-items-center">
               <BsTwitter
-                style={{ fontSize: "14px", color: "rgb(29, 161, 242)" }}
+                style={{
+                  fontSize: "14px",
+                  color: "rgb(29, 161, 242)",
+                }}
                 className="mr-1"
               />
               <span
                 style={{ fontSize: "13px" }}
                 className="mr-1 font-weight-bolder"
               >
-                {tweet.user.name}
+                {" "}
+                {tweet.user.name}{" "}
               </span>
               <span style={{ fontSize: "13px" }} className="mr-2">
-                @{tweet.user.screen_name}
+                @{tweet.user.screen_name}{" "}
               </span>
               <span
                 style={{
@@ -97,20 +153,23 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }) {
                 }}
                 className="mr-2 px-3 py-0 rounded-pill"
               >
-                {millify(tweet.user.followers_count)}
+                {" "}
+                {millify(tweet.user.followers_count)}{" "}
               </span>
             </div>
             {search && (
               <span style={{ fontSize: "12px" }}>
-                {tweet.retweet_count === 0 ? "Tweet" : "Retweeted"}
+                {" "}
+                {tweet.retweet_count === 0 ? "Tweet" : "Retweeted"}{" "}
               </span>
             )}
-            {feed && <span style={{ fontSize: "12px" }}>Tweet</span>}
+            {feed && <span style={{ fontSize: "12px" }}>Tweet</span>}{" "}
           </div>
         </div>
         <div className="pr-3">
           <span style={{ fontSize: "13px" }}>
-            {moment(new Date(tweet.created_at)).startOf("day").fromNow()}
+            {" "}
+            {moment(new Date(tweet.created_at)).startOf("day").fromNow()}{" "}
           </span>
         </div>
       </div>
@@ -133,6 +192,7 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }) {
         style={{ paddingLeft: "53px" }}
         className="d-flex flex-row align-items-center"
       >
+        {" "}
         {tweet.retweet_count === 0
           ? tweet?.entities?.media?.map(
               (media) =>
@@ -161,11 +221,12 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }) {
                     />
                   </div>
                 )
-            )}
+            )}{" "}
       </div>
       <div className="d-flex flex-row justify-content-end align-items-center p-3">
         <div>
-		{favIconFlag === 1 ? (
+          {" "}
+          {tweetData.favorited ? (
             <AiTwotoneHeart
               style={{
                 marginLeft: "auto",
@@ -183,18 +244,19 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }) {
                 fontSize: 20,
                 cursor: "pointer",
               }}
-			  className="ml-4"
+              className="ml-4"
               onClick={favTweetHandler}
             />
           )}
-		  <AiOutlineRetweet
+          <AiOutlineRetweet
             style={{
               marginLeft: "auto",
               fontSize: 20,
               cursor: "pointer",
+              color: tweetData.retweeted ? "#5e72e4" : "",
             }}
             className="ml-4"
-			onClick={reTweetHandler}
+            onClick={reTweetHandler}
           />
           <BiPin
             style={{
@@ -217,7 +279,7 @@ function TwitterSearchCard({ tweet, search, feed, callback, ...props }) {
       </div>
       {modalImageURL && (
         <ModalImage setModalImageURL={setModalImageURL} url={modalImageURL} />
-      )}
+      )}{" "}
     </section>
   );
 }
