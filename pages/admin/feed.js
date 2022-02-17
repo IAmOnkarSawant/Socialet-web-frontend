@@ -4,24 +4,51 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { getTwitterFeed } from "../../_api/twitter";
 import TwitterCard from "../../components/Post/TwitterFeedCard";
+import axios from "axios";
+import { useInView } from "react-intersection-observer";
+import CenterSpinner from "../../components/Loaders/CenterSpinner";
 
 function Feed() {
   const router = useRouter();
   const { data: session } = useSession();
 
+  const [page, setPage] = useState(1);
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 1,
+  });
+
   const [feed, setFeed] = useState([]);
-  const fetchTwitterFeed = () => {
-    getTwitterFeed(session.token.sub).then(({ data }) => {
-      console.log(data);
-      setFeed([...data.feed]);
-    });
-  };
+  const [hasMore, setHasMore] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (feed.length === 0) {
-      fetchTwitterFeed();
-    }
-  }, []);
+    if (inView && hasMore) setPage((page) => page + 1);
+  }, [inView]);
+
+  useEffect(() => {
+    const source = axios.CancelToken.source();
+    let isMounted = true;
+    setIsLoading(true);
+    getTwitterFeed(session.token.sub, page, { cancelToken: source.token })
+      .then(({ data }) => {
+        console.log(data);
+        if (isMounted) {
+          setFeed((prevFeed) => [...prevFeed, ...data.feed]);
+          setHasMore(data.feed.length > 0);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (!isMounted) return;
+        if (axios.isCancel(err)) console.log(err);
+        else console.log(err);
+      });
+    return () => {
+      isMounted = false;
+      source.cancel();
+    };
+  }, [page]);
 
   return (
     <React.Fragment>
@@ -33,10 +60,7 @@ function Feed() {
           color="primary"
           className="mb-3"
           outline
-          style={{
-            marginLeft: "auto",
-            marginRight: 15,
-          }}
+          style={{ marginLeft: "auto", marginRight: 15 }}
           className="px-4"
           size="sm"
           onClick={() => router.back()}
@@ -45,11 +69,30 @@ function Feed() {
         </Button>
       </Navbar>
       <Container className="py-3" fluid="sm">
-        {" "}
         {feed.length !== 0 &&
-          feed.map((tweet) => (
-            <TwitterCard key={tweet.id} tweet={tweet} feed={true} />
-          ))}{" "}
+          feed.map((tweet, index) => {
+            if (index === feed.length - 1) {
+              return (
+                <TwitterCard
+                  ref={ref}
+                  key={tweet.id + index}
+                  tweet={tweet}
+                  feed={true}
+                />
+              );
+            }
+            return (
+              <TwitterCard key={tweet.id + index} tweet={tweet} feed={true} />
+            );
+          })}
+        {isLoading && hasMore && (
+          <CenterSpinner
+            style={{ width: "100%", marginTop: 10 }}
+            type="border"
+            size="md"
+            color="primary"
+          />
+        )}
       </Container>
     </React.Fragment>
   );

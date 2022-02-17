@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -26,6 +26,9 @@ import { getSearchResults } from "../../_api/twitter";
 import TwitterCard from "../../components/Post/TwitterSearchCard";
 import ButtonLoader from "../../components/Loaders/ButtonLoader";
 import { formatHashtag } from "../../utils/formatter";
+import CenterSpinner from "../../components/Loaders/CenterSpinner";
+import { useInView } from "react-intersection-observer";
+import axios from "axios";
 
 const validationSchema = yup.object({
   searchTerm: yup
@@ -40,7 +43,11 @@ const validationSchema = yup.object({
 function search() {
   const router = useRouter();
   const { query } = useRouter();
-  const { data: session } = useSession();
+  const { data: session } = useSession({ required: true });
+
+  const [hasMore, setHasMore] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
 
   const formik = useFormik({
     initialValues: {
@@ -52,12 +59,14 @@ function search() {
     onSubmit: ({ searchTerm }) => {
       formik.setFieldValue("isSearching", true);
       const newSearchTerm = formatHashtag(searchTerm);
-      getSearchResults(session.token.sub, newSearchTerm).then(
-        ({ data: { tweets } }) => {
-          console.log(tweets);
+      getSearchResults(session.token.sub, page, newSearchTerm).then(
+        ({ data: { searched_tweets } }) => {
+          console.log(searched_tweets);
           formik.setFieldValue("isSearching", false);
-          formik.setFieldValue("tweets", [...tweets]);
+          formik.setFieldValue("tweets", [...searched_tweets]);
           formik.setSubmitting(false);
+          setHasMore(searched_tweets.length > 0);
+          setIsLoading(false);
         }
       );
     },
@@ -73,7 +82,51 @@ function search() {
         formik.handleSubmit();
       }, 200);
     }
+    return () => {
+      setPage(0);
+    };
   }, [query]);
+
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 1,
+  });
+
+  useEffect(() => {
+    if (inView && hasMore) setPage((page) => page + 1);
+  }, [inView]);
+
+  useEffect(() => {
+    const source = axios.CancelToken.source();
+    let isMounted = true;
+    if (inView && page != 1) {
+      setIsLoading(true);
+      const newSearchTerm = formatHashtag(formik.values.searchTerm);
+      getSearchResults(session?.token?.sub, page, newSearchTerm, {
+        cancelToken: source.token,
+      })
+        .then(({ data }) => {
+          console.log(data);
+          if (isMounted) {
+            formik.setFieldValue("tweets", [
+              ...formik.values.tweets,
+              ...data.searched_tweets,
+            ]);
+            setHasMore(data.searched_tweets.length > 0);
+            setIsLoading(false);
+          }
+        })
+        .catch((err) => {
+          if (!isMounted) return;
+          if (axios.isCancel(err)) console.log(err);
+          else console.log(err);
+        });
+    }
+    return () => {
+      isMounted = false;
+      source.cancel();
+    };
+  }, [page, inView]);
 
   return (
     <React.Fragment>
@@ -81,7 +134,7 @@ function search() {
         <NavbarBrand className="font-weight-bold">
           {formik.values.searchTerm && formik.values.tweets.length > 0
             ? formik.values.searchTerm
-            : "Twitter Search"}{" "}
+            : "Twitter Search"}
         </NavbarBrand>
         <div style={{ marginLeft: "auto" }}>
           {formik.values.tweets.length > 0 && (
@@ -89,10 +142,7 @@ function search() {
               color="primary"
               className="mb-3"
               outline
-              style={{
-                marginLeft: "auto",
-                marginRight: 15,
-              }}
+              style={{ marginLeft: "auto", marginRight: 15 }}
               className="px-4"
               size="sm"
               onClick={() => {
@@ -109,10 +159,7 @@ function search() {
             color="primary"
             className="mb-3"
             outline
-            style={{
-              marginLeft: "auto",
-              marginRight: 15,
-            }}
+            style={{ marginLeft: "auto", marginRight: 15 }}
             className="px-4"
             size="sm"
             onClick={() => router.back()}
@@ -122,27 +169,48 @@ function search() {
         </div>
       </Navbar>
       {formik.values.isSearching && (
-        <div
-          style={{ width: "100%" }}
-          className="d-flex flex-row justify-content-center align-items-center"
-        >
-          <Spinner color="default" size="lg" style={{ marginTop: "5%" }} />
-        </div>
+        <CenterSpinner
+          style={{ width: "100%", marginTop: "5%" }}
+          type="border"
+          size="md"
+          color="primary"
+        />
       )}
       <Container fluid="sm" className="mt-4">
         <Row>
-          {" "}
           {formik.values.tweets.length !== 0 && !formik.values.isSearching ? (
             <Col md="12">
-              {formik.values.tweets.map((tweet) => (
-                <TwitterCard
-                  key={tweet.id}
-                  tweet={tweet}
-                  search={true}
-                  formik={formik}
-                  callback={formik.handleSubmit}
+              {formik.values.tweets.map((tweet, index) => {
+                if (index === formik.values.tweets.length - 1) {
+                  return (
+                    <TwitterCard
+                      ref={ref}
+                      key={tweet.id + index}
+                      tweet={tweet}
+                      search={true}
+                      formik={formik}
+                      callback={formik.handleSubmit}
+                    />
+                  );
+                }
+                return (
+                  <TwitterCard
+                    key={tweet.id + index}
+                    tweet={tweet}
+                    search={true}
+                    formik={formik}
+                    callback={formik.handleSubmit}
+                  />
+                );
+              })}
+              {isLoading && hasMore && (
+                <CenterSpinner
+                  style={{ width: "100%", marginTop: 10, marginBottom: 10 }}
+                  type="border"
+                  size="md"
+                  color="primary"
                 />
-              ))}{" "}
+              )}
             </Col>
           ) : (
             !formik.values.isSearching && (
@@ -183,9 +251,8 @@ function search() {
                               }
                             />
                             <FormFeedback>
-                              {" "}
                               {formik.touched.searchTerm &&
-                                formik.errors.searchTerm}{" "}
+                                formik.errors.searchTerm}
                             </FormFeedback>
                           </FormGroup>
                         </Col>
@@ -199,7 +266,7 @@ function search() {
                           >
                             {formik.values.isSearching
                               ? "Searching..."
-                              : "Search"}{" "}
+                              : "Search"}
                           </ButtonLoader>
                         </Col>
                       </Row>
@@ -208,7 +275,7 @@ function search() {
                 </Card>
               </Col>
             )
-          )}{" "}
+          )}
         </Row>
       </Container>
     </React.Fragment>
