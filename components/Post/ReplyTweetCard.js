@@ -2,7 +2,7 @@ import React from "react";
 import { BsTwitter } from "react-icons/bs";
 import moment from "moment";
 
-function ReplyTweetCard({tweet}) {
+function ReplyTweetCard({ tweet }) {
   return (
     <section className="mb-4 rounded bg-white shadow-lg">
       <div className="d-flex flex-row align-items-center justify-content-between px-3 py-3">
@@ -50,13 +50,13 @@ function ReplyTweetCard({tweet}) {
             wordBreak: "break-word",
           }}
         >
-        {tweet?.text}
+          {tweet?.text}
         </span>
       </div>
       <hr className="mt-0 mb-1" />
       <div className="py-2 pl-4">
-          <h4>- Replying to @{tweet?.user?.name}</h4>
-      </div> 
+        <h4>- Replying to @{tweet?.user?.name}</h4>
+      </div>
     </section>
   );
 }

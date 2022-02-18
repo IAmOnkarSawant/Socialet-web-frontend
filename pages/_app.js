@@ -22,103 +22,103 @@ import router from "next/router";
 import { Toaster } from "react-hot-toast";
 
 Router.events.on("routeChangeStart", (url) => {
-	console.log(`Loading: ${url}`);
-	document.body.classList.add("body-page-transition");
-	ReactDOM.render(
-		<PageChange path={url} />,
-		document.getElementById("page-transition")
-	);
+  console.log(`Loading: ${url}`);
+  document.body.classList.add("body-page-transition");
+  ReactDOM.render(
+    <PageChange path={url} />,
+    document.getElementById("page-transition")
+  );
 });
 Router.events.on("routeChangeComplete", () => {
-	ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
-	document.body.classList.remove("body-page-transition");
+  ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
+  document.body.classList.remove("body-page-transition");
 });
 Router.events.on("routeChangeError", () => {
-	ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
-	document.body.classList.remove("body-page-transition");
+  ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
+  document.body.classList.remove("body-page-transition");
 });
 
 export default function App({
-	Component,
-	pageProps: { session, ...pageProps },
+  Component,
+  pageProps: { session, ...pageProps },
 }) {
-	useEffect(() => {
-		let comment = document.createComment(
-			`Copyrights Included ${new Date().getFullYear()}`
-		);
-		document.insertBefore(comment, document.documentElement);
-	}, []);
+  useEffect(() => {
+    let comment = document.createComment(
+      `Copyrights Included ${new Date().getFullYear()}`
+    );
+    document.insertBefore(comment, document.documentElement);
+  }, []);
 
-	const Layout = Component.layout || (({ children }) => <>{children}</>);
-	const router = useRouter();
-	const { route } = router;
-	console.log(route);
+  const Layout = Component.layout || (({ children }) => <>{children}</>);
+  const router = useRouter();
+  const { route } = router;
+  console.log(route);
 
-	return (
-		<SessionProvider
-			options={{
-				staleTime: 0,
-				refetchInterval: 0,
-			}}
-			session={pageProps.session}
-		>
-			<Head>
-				<meta
-					name='viewport'
-					content='width=device-width, initial-scale=1, shrink-to-fit=no'
-				/>
-				<title>Social Media Workflow Tool</title>
-			</Head>
-			<Layout>
-				{Component.requireAuth ? (
-					<AuthGuard>
-						<Component {...pageProps} />
-					</AuthGuard>
-				) : (
-					<Component {...pageProps} />
-				)}
-			</Layout>
-			<Toaster
-				position='bottom-right'
-				reverseOrder={false}
-				gutter={8}
-				containerClassName=''
-				containerStyle={{}}
-				toastOptions={{
-					// Define default options
-					className: "",
-					duration: 5000,
-					style: {
-						fontSize: "14px",
-						borderTopRightRadius: 0,
-						borderBottomRightRadius: 0,
-						fontFamily: "unset",
-					},
-					success: {
-						style: {
-							borderRight: "5px solid #62D346",
-						},
-					},
-					error: {
-						style: {
-							borderRight: "5px solid #ff4b4b",
-						},
-					},
-				}}
-			/>
-		</SessionProvider>
-	);
+  return (
+    <SessionProvider
+      options={{
+        staleTime: 0,
+        refetchInterval: 0,
+      }}
+      session={pageProps.session}
+    >
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <title>Social Media Workflow Tool</title>
+      </Head>
+      <Layout>
+        {Component.requireAuth ? (
+          <AuthGuard>
+            <Component {...pageProps} />
+          </AuthGuard>
+        ) : (
+          <Component {...pageProps} />
+        )}
+      </Layout>
+      <Toaster
+        position="bottom-right"
+        reverseOrder={false}
+        gutter={8}
+        containerClassName=""
+        containerStyle={{}}
+        toastOptions={{
+          // Define default options
+          className: "",
+          duration: 5000,
+          style: {
+            fontSize: "14px",
+            borderTopRightRadius: 0,
+            borderBottomRightRadius: 0,
+            fontFamily: "unset",
+          },
+          success: {
+            style: {
+              borderRight: "5px solid #62D346",
+            },
+          },
+          error: {
+            style: {
+              borderRight: "5px solid #ff4b4b",
+            },
+          },
+        }}
+      />
+    </SessionProvider>
+  );
 }
 
 function Auth({ children }) {
-	const { data: session, status } = useSession();
-	useEffect(() => {
-		if (session && status === "authenticated") {
-			router.push("/admin/dashboard");
-		}
-	}, [session]);
+  const { data: session, status } = useSession();
+  useEffect(() => {
+    if (session && status === "authenticated") {
+      router.push("/admin/dashboard");
+    }
+  }, [session]);
 
-	if (!session && status === "unauthenticated") return children;
+  if (!session && status === "unauthenticated") return children;
 
-	return null;
+  return null;
 }

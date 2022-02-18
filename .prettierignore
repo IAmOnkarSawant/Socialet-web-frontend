@@ -1,2 +1,8 @@
-.next
-out
+/.next
+/node_modules
+.env.local
+sample.js
+/server
+/assets
+
+README.md

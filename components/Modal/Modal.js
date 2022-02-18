@@ -11,84 +11,84 @@ import { useSession } from "next-auth/react";
 import { newUserSurvey } from "../../_api/users";
 
 function _renderStepContent(step) {
-	switch (step) {
-		case 0:
-			return <Account formField={formField} />;
-		case 1:
-			return <Interests formField={formField} />;
-		default:
-			return <div>Not Found</div>;
-	}
+  switch (step) {
+    case 0:
+      return <Account formField={formField} />;
+    case 1:
+      return <Interests formField={formField} />;
+    default:
+      return <div>Not Found</div>;
+  }
 }
 const steps = ["Customize Account", "Select Interests"];
 function ModalComponent({ isOpen, onClose }) {
-	const [activeStep, setActiveStep] = useState(0);
-	const currentValidationSchema = validationSchema[activeStep];
-	const isLastStep = activeStep === steps.length - 1;
+  const [activeStep, setActiveStep] = useState(0);
+  const currentValidationSchema = validationSchema[activeStep];
+  const isLastStep = activeStep === steps.length - 1;
 
-	function _handleBack() {
-		setActiveStep((step) => step - 1);
-	}
+  function _handleBack() {
+    setActiveStep((step) => step - 1);
+  }
 
-	const { data: session } = useSession();
+  const { data: session } = useSession();
 
-	function _handleSubmit(values, actions) {
-		if (isLastStep) {
-			newUserSurvey({ user_id: session.token.sub, ...values }).then(
-				({ data }) => {
-					console.log(data);
-				}
-			);
-			onClose();
-		} else {
-			setActiveStep((step) => step + 1);
-			actions.setTouched({});
-			actions.setSubmitting(false);
-		}
-	}
+  function _handleSubmit(values, actions) {
+    if (isLastStep) {
+      newUserSurvey({ user_id: session.token.sub, ...values }).then(
+        ({ data }) => {
+          console.log(data);
+        }
+      );
+      onClose();
+    } else {
+      setActiveStep((step) => step + 1);
+      actions.setTouched({});
+      actions.setSubmitting(false);
+    }
+  }
 
-	return (
-		<Modal fullscreen='true' fade isOpen={isOpen} backdrop>
-			<ModalHeader className='pb-1 pl-4' toggle={onClose}>
-				Step - {activeStep + 1} {steps[activeStep]}
-			</ModalHeader>
-			<div className='d-flex flex-row px-4' style={{ width: "100%" }}>
-				{steps.map((step, index) => (
-					<div
-						key={step + "__" + index}
-						style={{
-							height: "5px",
-							backgroundColor: index <= activeStep ? "#5e72e4" : "lightgray",
-							width: "100%",
-							marginRight: "5px",
-							borderRadius: "10px",
-						}}
-					/>
-				))}
-			</div>
-			<Formik
-				initialValues={Initialvalues}
-				validationSchema={currentValidationSchema}
-				onSubmit={_handleSubmit}
-			>
-				{({ isSubmitting }) => (
-					<Form id={formId} autoComplete='off'>
-						<ModalBody>{_renderStepContent(activeStep)}</ModalBody>
-						<ModalFooter>
-							{activeStep !== 0 && (
-								<Button type='submit' color='primary' onClick={_handleBack}>
-									Back
-								</Button>
-							)}
-							<Button disabled={isSubmitting} type='submit' color='primary'>
-								{isLastStep ? "Submit" : "Next"}
-							</Button>
-						</ModalFooter>
-					</Form>
-				)}
-			</Formik>
-		</Modal>
-	);
+  return (
+    <Modal fullscreen="true" fade isOpen={isOpen} backdrop>
+      <ModalHeader className="pb-1 pl-4" toggle={onClose}>
+        Step - {activeStep + 1} {steps[activeStep]}
+      </ModalHeader>
+      <div className="d-flex flex-row px-4" style={{ width: "100%" }}>
+        {steps.map((step, index) => (
+          <div
+            key={step + "__" + index}
+            style={{
+              height: "5px",
+              backgroundColor: index <= activeStep ? "#5e72e4" : "lightgray",
+              width: "100%",
+              marginRight: "5px",
+              borderRadius: "10px",
+            }}
+          />
+        ))}
+      </div>
+      <Formik
+        initialValues={Initialvalues}
+        validationSchema={currentValidationSchema}
+        onSubmit={_handleSubmit}
+      >
+        {({ isSubmitting }) => (
+          <Form id={formId} autoComplete="off">
+            <ModalBody>{_renderStepContent(activeStep)}</ModalBody>
+            <ModalFooter>
+              {activeStep !== 0 && (
+                <Button type="submit" color="primary" onClick={_handleBack}>
+                  Back
+                </Button>
+              )}
+              <Button disabled={isSubmitting} type="submit" color="primary">
+                {isLastStep ? "Submit" : "Next"}
+              </Button>
+            </ModalFooter>
+          </Form>
+        )}
+      </Formik>
+    </Modal>
+  );
 }
 
 export default ModalComponent;

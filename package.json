@@ -20,7 +20,14 @@
     "minify:scss": "node-sass --importer node_modules/node-sass-package-importer/dist/cli.js assets/scss/nextjs-argon-dashboard.scss assets/css/nextjs-argon-dashboard.min.css --output-style compressed",
     "map:scss": "node-sass --importer node_modules/node-sass-package-importer/dist/cli.js assets/scss/nextjs-argon-dashboard.scss assets/css/nextjs-argon-dashboard.css --source-map true",
     "build:scss": "npm run compile:scss && npm run minify:scss && npm run map:scss",
-    "dev": "next dev"
+    "dev": "next dev",
+    "lint": "prettier --check .",
+    "format": "prettier --write ."
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run format && git add -A ."
+    }
   },
   "dependencies": {
     "@babel/preset-react": "^7.16.7",
@@ -67,6 +74,8 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "node-sass": "^4.14.1"
+    "husky": "^4.3.8",
+    "node-sass": "^4.14.1",
+    "prettier": "^2.5.1"
   }
 }
