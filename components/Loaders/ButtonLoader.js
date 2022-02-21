@@ -10,7 +10,7 @@ function ButtonLoader({ ...props }) {
     type,
     color = "primary",
     size = "md",
-    loading,
+    loading
   } = props;
 
   return (
