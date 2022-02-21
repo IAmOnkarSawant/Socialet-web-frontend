@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Spinner } from "reactstrap";
 import { removeDuplicatesFromArrayOfObjects } from "../../utils/formatter";
 import { getUserTimeline } from "../../_api/profile";
+import NotFound from "../Pages/NotFound";
 import TwitterFeedCard from "../Post/TwitterFeedCard";
 
 function Tweets({ user_id, screen_name, tab, ...props }) {
@@ -9,6 +10,7 @@ function Tweets({ user_id, screen_name, tab, ...props }) {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isFoundShow, setIsFoundShow] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -23,6 +25,7 @@ function Tweets({ user_id, screen_name, tab, ...props }) {
           setTweets([...newTweets]);
           setHasMore(posts.length > 0);
           setLoading(false);
+          setIsFoundShow(!posts.length && page === 1);
         })
         .catch((error) => {
           console.error(error);
@@ -30,6 +33,10 @@ function Tweets({ user_id, screen_name, tab, ...props }) {
         });
     }
   }, [user_id, screen_name, tab, page]);
+
+  if (!!isFoundShow) {
+    return <NotFound property="tweets" />;
+  }
 
   return (
     <div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Spinner } from "reactstrap";
 import { removeDuplicatesFromArrayOfObjects } from "../../utils/formatter";
 import { getUserMentions } from "../../_api/profile";
+import NotFound from "../Pages/NotFound";
 import TwitterFeedCard from "../Post/TwitterFeedCard";
 
 function Mentions({ user_id, screen_name, tab, ...props }) {
@@ -9,6 +10,7 @@ function Mentions({ user_id, screen_name, tab, ...props }) {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isFoundShow, setIsFoundShow] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -23,6 +25,7 @@ function Mentions({ user_id, screen_name, tab, ...props }) {
               ),
             ]);
             setHasMore(data?.searched_tweets.length > 0);
+            setIsFoundShow(!data?.searched_tweets.length && page === 1);
           } else {
             setMentions((prevMentions) => [
               ...removeDuplicatesFromArrayOfObjects(
@@ -31,6 +34,7 @@ function Mentions({ user_id, screen_name, tab, ...props }) {
               ),
             ]);
             setHasMore(data?.mentions.length > 0);
+            setIsFoundShow(!data?.mentions.length && page === 1);
           }
           setLoading(false);
         })
@@ -40,6 +44,10 @@ function Mentions({ user_id, screen_name, tab, ...props }) {
         });
     }
   }, [user_id, screen_name, tab, page]);
+
+  if (!!isFoundShow) {
+    return <NotFound property="user mentions" />;
+  }
 
   return (
     <div>

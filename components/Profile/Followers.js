@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Spinner } from "reactstrap";
 import { removeDuplicatesFromArrayOfObjects } from "../../utils/formatter";
 import { getUserFollowers } from "../../_api/profile";
+import NotFound from "../Pages/NotFound";
 import Follow from "./Card/Follow";
 
 function Followers({ user_id, screen_name, tab, ...props }) {
@@ -9,6 +10,7 @@ function Followers({ user_id, screen_name, tab, ...props }) {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isFoundShow, setIsFoundShow] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -23,7 +25,7 @@ function Followers({ user_id, screen_name, tab, ...props }) {
           ]);
           setHasMore(followers.length > 0);
           setLoading(false);
-          console.log(followers);
+          setIsFoundShow(!followers.length && page === 1);
         })
         .catch((error) => {
           console.error(error);
@@ -31,6 +33,10 @@ function Followers({ user_id, screen_name, tab, ...props }) {
         });
     }
   }, [user_id, screen_name, tab, page]);
+
+  if (!!isFoundShow) {
+    return <NotFound property="followers" />;
+  }
 
   return (
     <div>

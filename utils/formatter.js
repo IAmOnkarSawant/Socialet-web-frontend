@@ -127,3 +127,13 @@ export const removeDuplicatesFromArrayOfObjects = (array, key) => {
     return [...removed, item];
   }, []);
 };
+
+export function highlightLinkInText(text) {
+  if (!text) return;
+  let Rexp =
+    /((http|https|ftp):\/\/[\w?=&.\/-;#~%-]+(?![\w\s?&.\/;#~%"=-]*>))/g;
+  return text.replace(
+    Rexp,
+    "<a style=`color:#5065DB;text-decoration:underline;` href='$1' target='_blank'>$1</a>"
+  );
+}
