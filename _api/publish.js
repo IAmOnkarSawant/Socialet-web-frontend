@@ -20,3 +20,12 @@ export function postTweet(formData) {
     },
   });
 }
+
+// POST REQUEST -> TWITTER TWEET SCHEDULING
+export function scheduleTweet(formData) {
+  return axios.post(`${TWITTER_URL}/tweet/schedule`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+}

@@ -34,13 +34,14 @@ import { useDropzone } from "react-dropzone";
 import ButtonLoader from "../../components/Loaders/ButtonLoader";
 import { Picker } from "emoji-mart";
 import useOnClickOutside from "../../hooks/useOnClickOutside";
-import { recommendHashtags, postTweet } from "../../_api/publish";
+import { recommendHashtags, postTweet, scheduleTweet } from "../../_api/publish";
 import { getTweetById, postReplyToTweet } from "../../_api/twitter";
 import TwitterPreview from "../../components/Post/TwitterPreview";
 import ReplyTweetCard from "../../components/Post/ReplyTweetCard";
 import DatePicker from "react-datepicker";
 import moment from "moment";
 import toast from "react-hot-toast";
+import {isSameDay, startOfToday, endOfDay} from 'date-fns';
 
 const DUMMY_DASHTAGS = ["#coolday", "#beach"];
 
@@ -59,6 +60,12 @@ function Publish() {
   const { query } = useRouter();
   const { data: session } = useSession();
   const [replyToTweet, setReplyToTweet] = useState(null);
+  
+  const calculateMinTime = date => {
+    const now = new Date();
+    // setting min time one minute from current time
+    return isSameDay(date, now) ? now.setMinutes(now.getMinutes()+1) : startOfToday()
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -72,6 +79,7 @@ function Publish() {
       scheduleDate: null,
       isScheduleDateSelected: false,
       isReply: false,
+      minTime: calculateMinTime(new Date())
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -105,6 +113,22 @@ function Publish() {
 
       const tweet = values.text + "\n" + values.hashtags.join(" ");
       formData.append("text", tweet);
+      if(values.isScheduleDateSelected){
+        let scheduleDate = new Date(values.scheduleDate).toUTCString()
+        formData.append("scheduled_datetime",scheduleDate)
+        formData.append("time_format","utc")
+        scheduleTweet(formData).then(({ data }) => {
+          if (data && data.error) {
+            toast.error(data.message);
+          } else {
+            toast.success("Tweet Scheduled Successfully!");
+          }
+          formik.resetForm();
+          formik.setSubmitting(false);
+        });
+        return;
+      }
+      
       postTweet(formData).then(({ data }) => {
         if (data && data.error) {
           toast.error(data.message);
@@ -740,12 +764,15 @@ function Publish() {
                       timeIntervals={1}
                       timeCaption="Time"
                       dateFormat="h:mm aa"
-                      selected={formik.values.scheduleDate}
+                      minTime={formik.values.minTime}
+                      maxTime={endOfDay(new Date())}
+                      selected={formik.values.scheduleDate ? formik.values.scheduleDate : formik.values.minTime}
                       onChange={(date) => {
                         console.log(date);
                         formik.setFieldValue("scheduleDate", date);
                         formik.setFieldValue("isScheduleDateSelected", true);
                         formik.setFieldValue("isDatePickerOpen", false);
+                        formik.setFieldValue("minTime", calculateMinTime(date));
                       }}
                       disabledKeyboardNavigation
                     />
