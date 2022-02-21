@@ -7,6 +7,7 @@ import TwitterCard from "../../components/Post/TwitterFeedCard";
 import axios from "axios";
 import { useInView } from "react-intersection-observer";
 import CenterSpinner from "../../components/Loaders/CenterSpinner";
+import { removeDuplicatesFromArrayOfObjects } from "../../utils/formatter";
 
 function Feed() {
   const router = useRouter();
@@ -34,7 +35,12 @@ function Feed() {
       .then(({ data }) => {
         console.log(data);
         if (isMounted) {
-          setFeed((prevFeed) => [...prevFeed, ...data.feed]);
+          setFeed((prevFeed) => [
+            ...removeDuplicatesFromArrayOfObjects(
+              [...prevFeed, ...data.feed],
+              "id"
+            ),
+          ]);
           setHasMore(data.feed.length > 0);
           setIsLoading(false);
         }
@@ -68,29 +74,27 @@ function Feed() {
           Back
         </Button>
       </Navbar>
-      <Container className="py-3" fluid="sm">
+      <Container className="mt-4" fluid="sm">
         {feed.length !== 0 &&
           feed.map((tweet, index) => {
             if (index === feed.length - 1) {
               return (
                 <TwitterCard
                   ref={ref}
-                  key={tweet.id + index}
+                  key={tweet.id}
                   tweet={tweet}
                   feed={true}
                 />
               );
             }
-            return (
-              <TwitterCard key={tweet.id + index} tweet={tweet} feed={true} />
-            );
+            return <TwitterCard key={tweet.id} tweet={tweet} feed={true} />;
           })}
         {isLoading && hasMore && (
           <CenterSpinner
-            style={{ width: "100%", marginTop: 10 }}
+            style={{ width: "100%", marginTop: 10, marginBottom: 20 }}
             type="border"
             size="md"
-            color="primary"
+            color="default"
           />
         )}
       </Container>

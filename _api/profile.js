@@ -52,3 +52,9 @@ export function getUserFollowing(user_id, screen_name, page) {
   }
   return axios.get(`${PROFILE}/user/following?user_id=${user_id}&page=${page}`);
 }
+
+// GET REQUEST -> RESPONSE USER FOLLOW/UNFOLLW FROM TWITTER
+export function followUser(bodyData) {
+  console.log(bodyData);
+  return axios.patch(`${TWITTER_URL}/follow`, bodyData);
+}

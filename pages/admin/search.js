@@ -25,7 +25,10 @@ import { useSession } from "next-auth/react";
 import { getSearchResults } from "../../_api/twitter";
 import TwitterCard from "../../components/Post/TwitterSearchCard";
 import ButtonLoader from "../../components/Loaders/ButtonLoader";
-import { formatHashtag } from "../../utils/formatter";
+import {
+  formatHashtag,
+  removeDuplicatesFromArrayOfObjects,
+} from "../../utils/formatter";
 import CenterSpinner from "../../components/Loaders/CenterSpinner";
 import { useInView } from "react-intersection-observer";
 import axios from "axios";
@@ -109,8 +112,10 @@ function search() {
           console.log(data);
           if (isMounted) {
             formik.setFieldValue("tweets", [
-              ...formik.values.tweets,
-              ...data.searched_tweets,
+              ...removeDuplicatesFromArrayOfObjects(
+                [...formik.values.tweets, ...data.searched_tweets],
+                "id"
+              ),
             ]);
             setHasMore(data.searched_tweets.length > 0);
             setIsLoading(false);
@@ -185,7 +190,7 @@ function search() {
                   return (
                     <TwitterCard
                       ref={ref}
-                      key={tweet.id + index}
+                      key={tweet.id}
                       tweet={tweet}
                       search={true}
                       formik={formik}
@@ -196,7 +201,7 @@ function search() {
                 }
                 return (
                   <TwitterCard
-                    key={tweet.id + index}
+                    key={tweet.id}
                     tweet={tweet}
                     search={true}
                     formik={formik}
@@ -207,10 +212,10 @@ function search() {
               })}
               {isLoading && hasMore && (
                 <CenterSpinner
-                  style={{ width: "100%", marginTop: 10, marginBottom: 10 }}
+                  style={{ width: "100%", marginTop: 10, marginBottom: 20 }}
                   type="border"
                   size="md"
-                  color="primary"
+                  color="default"
                 />
               )}
             </Col>

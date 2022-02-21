@@ -22,11 +22,14 @@ import Mentions from "../../components/Profile/Mentions";
 import Followers from "../../components/Profile/Followers";
 import Following from "../../components/Profile/Following";
 import { useSession } from "next-auth/react";
-import { getUserDetails } from "../../_api/profile";
+import { getUserDetails, followUser } from "../../_api/profile";
 import { useRouter } from "next/router";
+import { RiUserFollowFill, RiUserUnfollowFill } from "react-icons/ri";
+import toast from "react-hot-toast";
 
 function userprofile() {
   const { data: session } = useSession();
+  console.log(session);
   const [tab, setTab] = useState("1");
   const [user, setUser] = useState({});
   const { query } = useRouter();
@@ -44,6 +47,47 @@ function userprofile() {
 
     return () => setUser({});
   }, [session?.token?.sub, query]);
+
+  const follow_user = (e) => {
+    // already follow-> to be unfollow
+    if (user?.following) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        following: false,
+      }));
+      const bodyData = {
+        user_id: session?.token?.sub,
+        id: user?.id_str,
+        following: "False",
+      };
+      followUser(bodyData)
+        .then(({ data }) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      return;
+    }
+    // if not follow
+    setUser((prevUser) => ({
+      ...prevUser,
+      following: true,
+    }));
+    const bodyData = {
+      user_id: session?.token?.sub,
+      id: user?.id_str,
+      following: "True",
+    };
+    followUser(bodyData)
+      .then(({ data }) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    console.log(user);
+  };
 
   return (
     <Container className="pt-3" fluid>
@@ -139,7 +183,7 @@ function userprofile() {
               )}
             </TabContent>
           </Col>
-          <Col className="mt-4" sm="3">
+          <Col className="pt-4" sm="3">
             <div
               style={{
                 position: "relative",
@@ -231,6 +275,60 @@ function userprofile() {
                 </p>
               </div>
             </div>
+            <hr
+              style={{
+                marginLeft: "15px",
+                marginRight: "15px",
+              }}
+              className="my-3"
+            />
+            {query?.username && (
+              <React.Fragment>
+                <div
+                  style={{
+                    marginLeft: "18px",
+                    marginRight: "18px",
+                  }}
+                  className="mt-3 d-flex flex-row align-items-center justify-content-between"
+                >
+                  <div className="d-flex flex-row align-items-center">
+                    <img
+                      width="35px"
+                      height="35px"
+                      className="mr-3 rounded-circle shadow-lg"
+                      src={user?.profile_image_url_https}
+                    />
+                    <p className="mb-0">
+                      <small>@{user?.screen_name}</small>
+                    </p>
+                  </div>
+                  <div className="d-flex flex-row align-items-center">
+                    {user?.following ? (
+                      <RiUserUnfollowFill
+                        onClick={follow_user}
+                        style={{
+                          fontSize: 25,
+                          cursor: "pointer",
+                          color: "#5E72E4",
+                        }}
+                      />
+                    ) : (
+                      <RiUserFollowFill
+                        onClick={follow_user}
+                        style={{ fontSize: 25, cursor: "pointer" }}
+                      />
+                    )}
+                  </div>
+                </div>
+                <hr
+                  style={{
+                    marginLeft: "15px",
+                    marginRight: "15px",
+                  }}
+                  className="my-3"
+                />
+              </React.Fragment>
+            )}
           </Col>
         </Row>
       </Card>
