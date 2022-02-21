@@ -157,7 +157,7 @@ function Channels() {
                       <Button
                         className="font-weight-bold px-3 mb-3 rounded-sm"
                         onClick={connectTwitter}
-                        color="primary"
+                        color="danger"
                         size="sm"
                         outline
                       >
@@ -167,7 +167,7 @@ function Channels() {
                     {isconnected && (
                       <Badge
                         style={{ marginBottom: "20px" }}
-                        color="danger"
+                        color="success"
                         className="badge-md"
                       >
                         connected
