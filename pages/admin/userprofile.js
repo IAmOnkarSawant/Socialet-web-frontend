@@ -36,13 +36,12 @@ function userprofile() {
 
   useEffect(() => {
     if (session?.token?.sub && (query?.username || !query?.username)) {
-      getUserDetails(
-        session?.token?.sub,
-        query?.username?.replace("mention", "")
-      ).then(({ data: { profile } }) => {
-        console.log(profile);
-        setUser(profile);
-      });
+      getUserDetails(session?.token?.sub, query?.username).then(
+        ({ data: { profile } }) => {
+          console.log(profile);
+          setUser(profile);
+        }
+      );
     }
 
     return () => setUser({});
@@ -133,7 +132,7 @@ function userprofile() {
                 <TabPane tabId="1">
                   {query?.username ? (
                     <Tweets
-                      screen_name={query?.username.replace("mention", "")}
+                      screen_name={query?.username}
                       user_id={session?.token?.sub}
                       tab={tab}
                     />
@@ -146,7 +145,7 @@ function userprofile() {
                 <TabPane tabId="2">
                   {query?.username ? (
                     <Mentions
-                      screen_name={query?.username.replace("mention", "")}
+                      screen_name={query?.username}
                       user_id={session?.token?.sub}
                       tab={tab}
                     />
@@ -159,7 +158,7 @@ function userprofile() {
                 <TabPane tabId="3">
                   {query?.username ? (
                     <Followers
-                      screen_name={query?.username.replace("mention", "")}
+                      screen_name={query?.username}
                       user_id={session?.token?.sub}
                       tab={tab}
                     />
@@ -172,7 +171,7 @@ function userprofile() {
                 <TabPane tabId="4">
                   {query?.username ? (
                     <Following
-                      screen_name={query?.username.replace("mention", "")}
+                      screen_name={query?.username}
                       user_id={session?.token?.sub}
                       tab={tab}
                     />

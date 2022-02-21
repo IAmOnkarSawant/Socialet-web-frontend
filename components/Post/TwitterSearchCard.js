@@ -126,7 +126,7 @@ function TwitterSearchCard(
       router.push({
         pathname: "/admin/userprofile",
         query: {
-          username: el.innerText.trim().replace("@", "mention"),
+          username: el.innerText.trim().replace("@", ""),
         },
       });
     }

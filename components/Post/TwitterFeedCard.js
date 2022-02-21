@@ -132,7 +132,7 @@ function TwitterFeedCard({ tweet, search, feed, formik, ...props }, ref) {
       router.push({
         pathname: "/admin/userprofile",
         query: {
-          username: el.innerText.trim().replace("@", "mention"),
+          username: el.innerText.trim().replace("@", ""),
         },
       });
     }
