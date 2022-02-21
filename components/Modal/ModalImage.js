@@ -18,6 +18,7 @@ function ModalImage({ url, setModalImageURL }) {
         height: "100%",
         background: "rgba(0, 0, 0, 0.6)",
         overflow: url ? "hidden" : "none",
+        zIndex: 10000,
       }}
     >
       <Fade>

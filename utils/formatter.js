@@ -9,6 +9,10 @@ function getHashtags(searchText) {
   return twttr.extractHashtags(searchText).map((tag) => "#" + tag);
 }
 
+function getUserMentions(searchText) {
+  return twttr.extractMentions(searchText).map((username) => `@${username}`);
+}
+
 const handleURL = (tweet, tweet_obj) => {
   const allURL = twttr.extractUrls(tweet);
   const entities = tweet_obj.entities;
@@ -48,7 +52,19 @@ export const tweetFormatter = (tweet_full_text, tweet_obj) => {
       (hashtag) =>
         (tweet = tweet.replace(
           hashtag || `<span>${hashtag}</span>`,
-          `<span style="cursor: pointer;color: rgb(17, 109, 170);pointer-events: all" class="font-weight-bold">${hashtag}</span>`
+          `<span type="#hashtag" style="cursor: pointer;color: rgb(17, 109, 170);pointer-events: all" class="font-weight-bold">${hashtag}</span>`
+        ))
+    );
+  }
+
+  // handling userMentions
+  const userMentions = getUserMentions(tweet);
+  if (userMentions.length !== 0) {
+    userMentions.map(
+      (mention) =>
+        (tweet = tweet.replace(
+          mention || `<span>${mention}</span>`,
+          `<span type="usermention" style="cursor: pointer;color: #5E72E4;pointer-events: all" class="font-weight-bold">${mention}</span>`
         ))
     );
   }
@@ -103,4 +119,11 @@ export const objectToObjectsOfArray = (data) => {
 
 export const capitalizeFirstLetter = ([first, ...rest]) => {
   return first.toUpperCase() + rest.join("");
+};
+
+export const removeDuplicatesFromArrayOfObjects = (array, key) => {
+  return array.reduce((arr, item) => {
+    const removed = arr.filter((i) => i[key] !== item[key]);
+    return [...removed, item];
+  }, []);
 };

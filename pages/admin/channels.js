@@ -114,6 +114,11 @@ function Channels() {
                         <DropdownItem onClick={() => handleDisconnect(account)}>
                           Disconnect account
                         </DropdownItem>
+                        <DropdownItem
+                          onClick={() => router.push("/admin/userprofile")}
+                        >
+                          View profile
+                        </DropdownItem>
                       </DropdownMenu>
                     </UncontrolledDropdown>
                   )}

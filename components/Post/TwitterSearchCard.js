@@ -41,7 +41,7 @@ function TwitterSearchCard(
         favorite: "False",
       };
       postFavorites(bodyData).then(({ data }) => {
-        // show success/error message in popup later
+        toast.success(data?.message);
         console.log(data);
       });
       return;
@@ -57,7 +57,7 @@ function TwitterSearchCard(
       favorite: "True",
     };
     postFavorites(bodyData).then(({ data }) => {
-      // show success/error message in popup later
+      toast.success(data?.message);
       console.log(data);
     });
   };
@@ -74,7 +74,7 @@ function TwitterSearchCard(
         retweet: "False",
       };
       postReTweet(bodyData).then(({ data }) => {
-        // show success/error message in popup later
+        toast.success(data?.message);
         console.log(data);
       });
       return;
@@ -111,10 +111,28 @@ function TwitterSearchCard(
       e.preventDefault();
       return;
     }
-    if (el && el.tagName === "SPAN" && el.innerText.trim().startsWith("#")) {
+    if (
+      el &&
+      el.getAttribute("type") === "#hashtag" &&
+      el.innerText.trim().startsWith("#")
+    ) {
       props.formik.setFieldValue("searchTerm", el.innerText.trim());
       setPage(1);
       callback();
+    }
+
+    // handling userMention
+    if (
+      el &&
+      el.getAttribute("type") === "usermention" &&
+      el.innerText.trim().startsWith("@")
+    ) {
+      router.push({
+        pathname: "/admin/userprofile",
+        query: {
+          username: el.innerText.trim().replace("@", "mention"),
+        },
+      });
     }
   };
 
@@ -128,7 +146,7 @@ function TwitterSearchCard(
           >
             <img
               style={{ width: "35px", height: "35px" }}
-              className="mr-2 rounded-circle"
+              className="mr-2 rounded-circle shadow-lg"
               src={tweet.user.profile_image_url}
             />
             <div className="d-flex flex-column">
@@ -146,15 +164,17 @@ function TwitterSearchCard(
                 <span style={{ fontSize: "13px" }} className="mr-2">
                   @{tweet.user.screen_name}
                 </span>
-                <span
-                  style={{
-                    fontSize: "12px",
-                    backgroundColor: "rgb(255, 198, 164)",
-                  }}
-                  className="mr-2 px-3 py-0 rounded-pill"
-                >
-                  {millify(tweet.user.followers_count)}
-                </span>
+                {Number(tweet.user.followers_count) > 10 && (
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      backgroundColor: "rgb(255, 198, 164)",
+                    }}
+                    className="mr-2 px-3 py-0 rounded-pill"
+                  >
+                    {millify(tweet.user.followers_count)}
+                  </span>
+                )}
               </div>
               {search && (
                 <div>
@@ -301,7 +321,7 @@ function TwitterSearchCard(
               width: "35px",
               height: "35px",
             }}
-            className="mr-2 rounded-circle"
+            className="mr-2 rounded-circle shadow-lg"
             src={tweet.user.profile_image_url}
           />
           <div className="d-flex flex-column">
@@ -323,16 +343,17 @@ function TwitterSearchCard(
               <span style={{ fontSize: "13px" }} className="mr-2">
                 @{tweet.user.screen_name}{" "}
               </span>
-              <span
-                style={{
-                  fontSize: "12px",
-                  backgroundColor: "rgb(255, 198, 164)",
-                }}
-                className="mr-2 px-3 py-0 rounded-pill"
-              >
-                {" "}
-                {millify(tweet.user.followers_count)}{" "}
-              </span>
+              {Number(tweet.user.followers_count) > 10 && (
+                <span
+                  style={{
+                    fontSize: "12px",
+                    backgroundColor: "rgb(255, 198, 164)",
+                  }}
+                  className="mr-2 px-3 py-0 rounded-pill"
+                >
+                  {millify(tweet.user.followers_count)}
+                </span>
+              )}
             </div>
             {search && (
               <span style={{ fontSize: "12px" }}>
