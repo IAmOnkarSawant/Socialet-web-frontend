@@ -26,6 +26,7 @@ import { getUserDetails, followUser } from "../../_api/profile";
 import { useRouter } from "next/router";
 import { RiUserFollowFill, RiUserUnfollowFill } from "react-icons/ri";
 import toast from "react-hot-toast";
+import { highlightLinkInText } from "../../utils/formatter";
 
 function userprofile() {
   const { data: session } = useSession();
@@ -255,7 +256,13 @@ function userprofile() {
                 )}
               </div>
               <p style={{ lineHeight: "16px" }} className="mt-3">
-                <small>{user?.description}</small>
+                <small
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      user?.description &&
+                      highlightLinkInText(user?.description),
+                  }}
+                />
               </p>
               <div className="d-flex flex-row align-items-center justify-content-start">
                 <Badge
