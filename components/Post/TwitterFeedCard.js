@@ -84,7 +84,6 @@ function TwitterFeedCard({ tweet, search, feed, formik, ...props }, ref) {
       retweet: "True",
     };
     postReTweet(bodyData).then(({ data }) => {
-      toast.success(data?.message);
       console.log(data);
     });
   };
