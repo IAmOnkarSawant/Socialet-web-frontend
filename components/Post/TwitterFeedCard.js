@@ -12,132 +12,134 @@ import { tweetFormatter } from "../../utils/formatter";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { postFavorites, postReTweet } from "../../_api/twitter";
+import { emotions } from "../../utils/emotion";
+import { Spinner } from "reactstrap";
 
 function TwitterFeedCard({ tweet, search, feed, formik, ...props }, ref) {
-  const [modalImageURL, setModalImageURL] = useState("");
-  const { data: session } = useSession();
-  const [tweetData, setTweetData] = useState(tweet);
-  const tweet_text =
-    tweet?.retweet_count === 0
-      ? tweet.full_text
-      : tweet.retweeted_status
-      ? tweet.retweeted_status.full_text
-      : tweet.full_text;
+	const [modalImageURL, setModalImageURL] = useState("");
+	const { data: session } = useSession();
+	const [tweetData, setTweetData] = useState(tweet);
+	const tweet_text =
+		tweet?.retweet_count === 0
+			? tweet.full_text
+			: tweet.retweeted_status
+			? tweet.retweeted_status.full_text
+			: tweet.full_text;
 
-  const favTweetHandler = (e) => {
-    // already favorited-> to be unfavorited
-    if (tweetData.favorited) {
-      setTweetData({
-        ...tweetData,
-        favorited: false,
-      });
-      const bodyData = {
-        tweet_id: tweet.id_str,
-        user_id: session.token.sub,
-        favorite: "False",
-      };
-      postFavorites(bodyData).then(({ data }) => {
-        console.log(data);
-      });
-      return;
-    }
-    // if not favorited
-    setTweetData({
-      ...tweetData,
-      favorited: true,
-    });
-    const bodyData = {
-      tweet_id: tweet.id_str,
-      user_id: session.token.sub,
-      favorite: "True",
-    };
-    postFavorites(bodyData).then(({ data }) => {
-      console.log(data);
-    });
-  };
+	const favTweetHandler = (e) => {
+		// already favorited-> to be unfavorited
+		if (tweetData.favorited) {
+			setTweetData({
+				...tweetData,
+				favorited: false,
+			});
+			const bodyData = {
+				tweet_id: tweet.id_str,
+				user_id: session.token.sub,
+				favorite: "False",
+			};
+			postFavorites(bodyData).then(({ data }) => {
+				console.log(data);
+			});
+			return;
+		}
+		// if not favorited
+		setTweetData({
+			...tweetData,
+			favorited: true,
+		});
+		const bodyData = {
+			tweet_id: tweet.id_str,
+			user_id: session.token.sub,
+			favorite: "True",
+		};
+		postFavorites(bodyData).then(({ data }) => {
+			console.log(data);
+		});
+	};
 
-  const reTweetHandler = (e) => {
-    if (tweetData.retweeted) {
-      // un retweeting
-      setTweetData({
-        ...tweetData,
-        retweeted: false,
-      });
-      const bodyData = {
-        tweet_id: tweet.id_str,
-        user_id: session.token.sub,
-        retweet: "False",
-      };
-      postReTweet(bodyData).then(({ data }) => {
-        console.log(data.message);
-      });
-      return;
-    }
-    // retweeting
-    setTweetData({
-      ...tweetData,
-      retweeted: true,
-    });
-    const bodyData = {
-      tweet_id: tweet.id_str,
-      user_id: session.token.sub,
-      retweet: "True",
-    };
-    postReTweet(bodyData).then(({ data }) => {
-      console.log(data);
-    });
-  };
+	const reTweetHandler = (e) => {
+		if (tweetData.retweeted) {
+			// un retweeting
+			setTweetData({
+				...tweetData,
+				retweeted: false,
+			});
+			const bodyData = {
+				tweet_id: tweet.id_str,
+				user_id: session.token.sub,
+				retweet: "False",
+			};
+			postReTweet(bodyData).then(({ data }) => {
+				console.log(data.message);
+			});
+			return;
+		}
+		// retweeting
+		setTweetData({
+			...tweetData,
+			retweeted: true,
+		});
+		const bodyData = {
+			tweet_id: tweet.id_str,
+			user_id: session.token.sub,
+			retweet: "True",
+		};
+		postReTweet(bodyData).then(({ data }) => {
+			console.log(data);
+		});
+	};
 
-  const replyTweetHandler = (e) => {
-    router.push({
-      pathname: "/admin/publish",
-      query: {
-        replyTo: tweet.id_str,
-      },
-    });
-  };
+	const replyTweetHandler = (e) => {
+		router.push({
+			pathname: "/admin/publish",
+			query: {
+				replyTo: tweet.id_str,
+			},
+		});
+	};
 
-  const router = useRouter();
+	const router = useRouter();
 
-  const clickHandler = (e) => {
-    let el = e.target;
-    console.log(el.parentNode);
+	const clickHandler = (e) => {
+		let el = e.target;
+		console.log(el.parentNode);
 
-    if (el.parentNode.tagName !== "SPAN") {
-      e.preventDefault();
-      return;
-    }
+		if (el.parentNode.tagName !== "SPAN") {
+			e.preventDefault();
+			return;
+		}
 
-    // handling hashtag
-    if (
-      el &&
-      el.getAttribute("type") === "#hashtag" &&
-      el.innerText.trim().startsWith("#")
-    ) {
-      router.push({
-        pathname: "/admin/search",
-        query: {
-          searchTerm: el.innerText.trim().replace("#", "hashtag"),
-        },
-      });
-    }
+		// handling hashtag
+		if (
+			el &&
+			el.getAttribute("type") === "#hashtag" &&
+			el.innerText.trim().startsWith("#")
+		) {
+			router.push({
+				pathname: "/admin/search",
+				query: {
+					searchTerm: el.innerText.trim().replace("#", "hashtag"),
+				},
+			});
+		}
 
-    // handling userMention
-    if (
-      el &&
-      el.getAttribute("type") === "usermention" &&
-      el.innerText.trim().startsWith("@")
-    ) {
-      router.push({
-        pathname: "/admin/userprofile",
-        query: {
-          username: el.innerText.trim().replace("@", ""),
-        },
-      });
-    }
-  };
+		// handling userMention
+		if (
+			el &&
+			el.getAttribute("type") === "usermention" &&
+			el.innerText.trim().startsWith("@")
+		) {
+			router.push({
+				pathname: "/admin/userprofile",
+				query: {
+					username: el.innerText.trim().replace("@", ""),
+				},
+			});
+		}
+	};
 
-  return (
+	return (
 		<section ref={ref} className='mb-4 rounded bg-white shadow-lg'>
 			<div className='d-flex flex-row align-items-center justify-content-between px-3 py-3'>
 				<div
@@ -225,57 +227,59 @@ function TwitterFeedCard({ tweet, search, feed, formik, ...props }, ref) {
 				)}
 			</div>
 			<div className='d-flex flex-row justify-content-end align-items-center p-3'>
-				<div>
-					{tweetData.favorited ? (
-						<AiTwotoneHeart
-							style={{
-								marginLeft: "auto",
-								fontSize: 20,
-								cursor: "pointer",
-								color: "red",
-							}}
-							className='ml-4'
-							onClick={favTweetHandler}
-						/>
-					) : (
-						<AiOutlineHeart
-							style={{
-								marginLeft: "auto",
-								fontSize: 20,
-								cursor: "pointer",
-							}}
-							className='ml-4'
-							onClick={favTweetHandler}
-						/>
-					)}
-					<FaRetweet
+				{tweet["emotion"] ? (
+					<span
+						style={{
+							marginLeft: "auto",
+							fontSize: 21,
+						}}
+					>
+						{emotions[tweet["emotion"]]}
+					</span>
+				) : (
+					!tweet["emotion"] && <Spinner type='grow' color='default' size='sm' />
+				)}
+				{tweetData.favorited ? (
+					<AiTwotoneHeart
 						style={{
 							marginLeft: "auto",
 							fontSize: 20,
 							cursor: "pointer",
-							color: tweetData.retweeted ? "#5e72e4" : "",
+							color: "red",
 						}}
 						className='ml-4'
-						onClick={reTweetHandler}
+						onClick={favTweetHandler}
 					/>
-					<BiPin
+				) : (
+					<AiOutlineHeart
 						style={{
 							marginLeft: "auto",
 							fontSize: 20,
 							cursor: "pointer",
 						}}
 						className='ml-4'
+						onClick={favTweetHandler}
 					/>
-					<RiReplyLine
-						style={{
-							marginLeft: "auto",
-							fontSize: 20,
-							cursor: "pointer",
-						}}
-						className='ml-4'
-						onClick={replyTweetHandler}
-					/>
-				</div>
+				)}
+				<FaRetweet
+					style={{
+						marginLeft: "auto",
+						fontSize: 20,
+						cursor: "pointer",
+						color: tweetData.retweeted ? "#5e72e4" : "",
+					}}
+					className='ml-4'
+					onClick={reTweetHandler}
+				/>
+				<RiReplyLine
+					style={{
+						marginLeft: "auto",
+						fontSize: 20,
+						cursor: "pointer",
+					}}
+					className='ml-4'
+					onClick={replyTweetHandler}
+				/>
 			</div>
 			{modalImageURL && (
 				<ModalImage setModalImageURL={setModalImageURL} url={modalImageURL} />
