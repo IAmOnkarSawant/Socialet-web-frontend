@@ -32,6 +32,7 @@ import {
 import CenterSpinner from "../../components/Loaders/CenterSpinner";
 import { useInView } from "react-intersection-observer";
 import axios from "axios";
+import { emotionRecogniser } from "../../_api/emotions";
 
 const validationSchema = yup.object({
   searchTerm: yup
@@ -48,9 +49,10 @@ function search() {
   const { query } = useRouter();
   const { data: session } = useSession({ required: true });
 
+  const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [page, setPage] = useState(1);
+  const [isNewPostAvailable, setIsNewPostAvailable] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -70,10 +72,43 @@ function search() {
           formik.setSubmitting(false);
           setHasMore(searched_tweets.length > 0);
           setIsLoading(false);
+          setIsNewPostAvailable(searched_tweets.length > 0);
         }
       );
     },
   });
+
+  const recogniseTweetEmotion = () => {
+    const tweets = formik.values.tweets.map((f) => ({
+      tweet: f.full_text,
+      id: f.id,
+    }));
+    emotionRecogniser({ tweets }).then(({ data }) => {
+      console.log(data.tweets);
+      const resp = formik.values.tweets.map((tweet) => {
+        const emoji = [...data.tweets].find((t) => {
+          if (t.id === tweet.id) {
+            return t;
+          }
+        });
+        console.log(emoji["emotion"]);
+
+        return {
+          ...tweet,
+          emotion: emoji["emotion"],
+        };
+      });
+      console.log(resp);
+      formik.setFieldValue("tweets", [...resp]);
+    });
+  };
+
+  useEffect(() => {
+    if (isNewPostAvailable) {
+      recogniseTweetEmotion();
+      setIsNewPostAvailable(false);
+    }
+  }, [isNewPostAvailable]);
 
   useEffect(() => {
     if (query && query.searchTerm) {
@@ -102,36 +137,35 @@ function search() {
   useEffect(() => {
     const source = axios.CancelToken.source();
     let isMounted = true;
-    if (inView && page != 1) {
-      setIsLoading(true);
-      const newSearchTerm = formatHashtag(formik.values.searchTerm);
-      getSearchResults(session?.token?.sub, page, newSearchTerm, {
-        cancelToken: source.token,
+    setIsLoading(true);
+    const newSearchTerm = formatHashtag(formik.values.searchTerm);
+    getSearchResults(session?.token?.sub, page, newSearchTerm, {
+      cancelToken: source.token,
+    })
+      .then(({ data }) => {
+        console.log(data);
+        if (isMounted) {
+          formik.setFieldValue("tweets", [
+            ...removeDuplicatesFromArrayOfObjects(
+              [...formik.values.tweets, ...data.searched_tweets],
+              "id"
+            ),
+          ]);
+          setHasMore(data.searched_tweets.length > 0);
+          setIsLoading(false);
+          setIsNewPostAvailable(data.searched_tweets.length > 0);
+        }
       })
-        .then(({ data }) => {
-          console.log(data);
-          if (isMounted) {
-            formik.setFieldValue("tweets", [
-              ...removeDuplicatesFromArrayOfObjects(
-                [...formik.values.tweets, ...data.searched_tweets],
-                "id"
-              ),
-            ]);
-            setHasMore(data.searched_tweets.length > 0);
-            setIsLoading(false);
-          }
-        })
-        .catch((err) => {
-          if (!isMounted) return;
-          if (axios.isCancel(err)) console.log(err);
-          else console.log(err);
-        });
-    }
+      .catch((err) => {
+        if (!isMounted) return;
+        if (axios.isCancel(err)) console.log(err);
+        else console.log(err);
+      });
     return () => {
       isMounted = false;
       source.cancel();
     };
-  }, [page, inView]);
+  }, [page]);
 
   return (
     <React.Fragment>
@@ -196,6 +230,7 @@ function search() {
                       formik={formik}
                       callback={formik.handleSubmit}
                       setPage={setPage}
+                      isEmotionShow
                     />
                   );
                 }
@@ -207,6 +242,7 @@ function search() {
                     formik={formik}
                     callback={formik.handleSubmit}
                     setPage={setPage}
+                    isEmotionShow
                   />
                 );
               })}
