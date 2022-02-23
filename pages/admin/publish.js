@@ -26,6 +26,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import { IoMdRemoveCircle, IoMdImages } from "react-icons/io";
 import { MdNavigateNext, MdOutlineMessage } from "react-icons/md";
 import { FaHashtag } from "react-icons/fa";
+import { SiCanva } from "react-icons/si";
 import EmptyPost from "../../components/Post/EmptyPost";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -48,6 +49,9 @@ import moment from "moment";
 import toast from "react-hot-toast";
 import { isSameDay, startOfToday, endOfDay } from "date-fns";
 import ModalGIF from "../../components/Modal/ModalGIF";
+import CanvaButton from "../../components/Canva/Canva";
+import CanvaSVG from "../../components/Canva/CanvaSVG";
+import { DesignTypes } from "../../utils/HelperData";
 
 const DUMMY_DASHTAGS = ["#coolday", "#beach"];
 
@@ -59,6 +63,7 @@ const validationSchema = Yup.object({
       "you are exceeding the characters limit!",
       (val) => val && val.toString().length <= 280
     ),
+  selectedDesignType: Yup.string().required("Design type should be selected"),
 });
 
 function Publish() {
@@ -85,6 +90,9 @@ function Publish() {
       isHashtagGenerating: false,
       isEmojiPanelOpen: false,
       isImagePanelOpen: false,
+      isCanvaPanalOpen: false,
+      selectedDesignType: "",
+      selectedDesignURL: "",
       isDatePickerOpen: false,
       scheduleDate: null,
       isScheduleDateSelected: false,
@@ -360,6 +368,7 @@ function Publish() {
                     placeholder="What would you like to share ?"
                     value={formik.values.text}
                     onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                     style={{
                       background: "#F7FAFC",
                       border: "1px solid #CBD5E0",
@@ -419,11 +428,16 @@ function Publish() {
                         formik.setFieldValue("isGIFModalOpen", true)
                       }
                       style={{
-                        marginRight: 25,
+                        marginRight: 15,
                         fontSize: "20px",
                         color: "black",
                         cursor: "pointer",
                       }}
+                    />
+                    <CanvaSVG
+                      onClick={() =>
+                        formik.setFieldValue("isCanvaPanalOpen", true)
+                      }
                     />
                   </div>
                   {formik.values.isEmojiPanelOpen && (
@@ -450,6 +464,82 @@ function Publish() {
                   </span>
                 </Card>
               </FormGroup>
+              {formik.values.isCanvaPanalOpen && (
+                <FormGroup>
+                  <Card className="shadow-lg p-4 rounded-lg">
+                    <Row className="mb-3">
+                      <Col sm="1">
+                        <IoMdImages
+                          style={{
+                            fontSize: 50,
+                            color: "#8D39FA",
+                            background: "#dabfff",
+                            padding: 12,
+                            borderRadius: 5,
+                          }}
+                        />
+                      </Col>
+                      <Col sm="10">
+                        <strong
+                          style={{
+                            fontFamily: "sans-serif",
+                            fontSize: 17,
+                          }}
+                          className="text-default d-block"
+                        >
+                          Build designs with Canva
+                        </strong>
+                        <span className="d-block" style={{ fontSize: 14 }}>
+                          Canva empowers world to design.
+                        </span>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col sm="4">
+                        <FormGroup>
+                          <Label
+                            className="font-weight-bold"
+                            style={{ fontSize: "13px" }}
+                            for="selectedDesignType"
+                          >
+                            Choose a design type
+                          </Label>
+                          <Input
+                            color="primary"
+                            className=""
+                            type="select"
+                            invalid={
+                              formik.errors.selectedDesignType &&
+                              formik.touched.selectedDesignType
+                            }
+                            value={formik.values.selectedDesignType}
+                            name="selectedDesignType"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          >
+                            <option value="">None</option>
+                            {DesignTypes.map((designType, index) => (
+                              <option key={index} value={designType}>
+                                {designType}
+                              </option>
+                            ))}
+                          </Input>
+                          <FormFeedback>
+                            {formik.touched.selectedDesignType &&
+                              formik.errors.selectedDesignType}
+                          </FormFeedback>
+                        </FormGroup>
+                      </Col>
+                      <Col sm="12">
+                        <CanvaButton
+                          formik={formik}
+                          type={formik.values.selectedDesignType}
+                        />
+                      </Col>
+                    </Row>
+                  </Card>
+                </FormGroup>
+              )}
               {formik.values.isImagePanelOpen && (
                 <FormGroup>
                   <Card className="shadow-lg p-4 rounded-lg">
@@ -828,10 +918,11 @@ function Publish() {
           </Col>
           <Col
             lg="4"
-            className="py-3 pr-4"
+            className="scrollbar py-3 pr-4"
             style={{
               height: "calc(100vh - 64px)",
-              background: "#EDF2F7",
+              background: "#F7FAFC",
+              overflowY: "auto",
             }}
           >
             <p className="font-weight-bold text-dark">Network Preview</p>
@@ -852,6 +943,7 @@ function Publish() {
             <div style={{ marginLeft: "4%" }}>
               {" "}
               {formik.values.text.length ||
+              formik.values.selectedDesignURL ||
               formik.values.hashtags.length ||
               formik.values.images.length ||
               formik.values.GIFs.length ? (
@@ -860,6 +952,7 @@ function Publish() {
                   text={formik.values.text}
                   images={formik.values.images}
                   GIFs={formik.values.GIFs}
+                  canvaDesign={formik.values.selectedDesignURL}
                   formik={formik}
                 />
               ) : (

@@ -1,7 +1,15 @@
 import moment from "moment";
 import React from "react";
 
-function TwitterPreview({ text, hashtags, images, GIFs, formik, ...props }) {
+function TwitterPreview({
+  text,
+  hashtags,
+  images,
+  GIFs,
+  canvaDesign,
+  formik,
+  ...props
+}) {
   return (
     <div
       style={{
@@ -92,27 +100,43 @@ function TwitterPreview({ text, hashtags, images, GIFs, formik, ...props }) {
           })}
         </div>
         <div>
-          {GIFs.map((url, index) => (
-            <div
-              key={index}
+          {canvaDesign && (
+            <img
+              src={canvaDesign}
               style={{
                 maxWidth: "320px",
                 minHeight: "200px",
                 marginRight: 4,
                 marginBottom: 4,
+                objectFit: "scale-down",
               }}
-            >
-              <img
+              className="rounded-sm border"
+            />
+          )}
+        </div>
+        <div>
+          {GIFs.length > 0 &&
+            GIFs.map((url, index) => (
+              <div
+                key={index}
                 style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "scale-down",
+                  maxWidth: "320px",
+                  minHeight: "200px",
+                  marginRight: 4,
+                  marginBottom: 4,
                 }}
-                src={url}
-                className="rounded-sm border"
-              />
-            </div>
-          ))}
+              >
+                <img
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "scale-down",
+                  }}
+                  src={url}
+                  className="rounded-sm border"
+                />
+              </div>
+            ))}
         </div>
         <div className="d-flex flex-row flex-wrap py-1">
           {images.map(({ preview, id: imageId }) => (

@@ -1,0 +1,129 @@
+.canva-btn {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-smooth: always;
+	font-family: "Open Sans", sans-serif;
+	font-weight: 600;
+	line-height: 1.6;
+	box-sizing: border-box;
+	user-select: none;
+	cursor: pointer;
+	border: 1px solid transparent;
+	max-width: 100%;
+	min-width: 80px;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	white-space: nowrap;
+	transition: background-color 0.1s linear;
+}
+
+.canva-btn-i {
+	background-size: contain;
+}
+
+.canva-btn-theme-default {
+	background-color: #aa6bfc;
+	color: #ffffff;
+}
+
+.canva-btn-theme-default:hover,
+.canva-btn-theme-default:focus {
+	background-color: #a25bff;
+}
+
+.canva-btn-theme-default:active {
+	background-color: #a25bff;
+}
+
+.canva-btn-theme-dark {
+	background-color: #0e1318;
+	color: #ffffff;
+}
+
+.canva-btn-theme-light {
+	border-color: #9a9da3;
+	background-color: #ffffff;
+	color: #0e1318;
+}
+
+.canva-btn-theme-light:active {
+	background-color: #f8f9f9;
+}
+
+.canva-btn-size-l {
+	height: 48px;
+	border-radius: 5px;
+	font-size: 16px;
+	padding-right: 16px;
+}
+
+.canva-btn-size-l .canva-btn-i {
+	width: 32px;
+	height: 32px;
+	margin-left: 11px;
+	margin-right: 13px;
+}
+
+.canva-btn-size-m {
+	height: 40px;
+	border-radius: 4px;
+	font-size: 14px;
+	padding-right: 16px;
+}
+
+.canva-btn-size-m .canva-btn-i {
+	width: 24px;
+	height: 24px;
+	margin: 0 9px;
+}
+
+.canva-btn-size-s {
+	height: 32px;
+	border-radius: 3px;
+	font-size: 12px;
+	padding-right: 12px;
+}
+
+.canva-btn-size-s .canva-btn-i {
+	width: 20px;
+	height: 20px;
+	margin: 0 8px;
+}
+
+.canva-btn-size-xs {
+	height: 24px;
+	border-radius: 2px;
+	font-size: 12px;
+	padding-right: 8px;
+}
+
+.canva-btn-size-xs .canva-btn-i {
+	width: 16px;
+	height: 16px;
+	margin-left: 6px;
+	margin-right: 5px;
+}
+
+/* SVG files are inlined here just as an example. If you're going to use Canva logo in SVG format on your website, you can host SVG files and use them in CSS using URL in `background-image: url(...)`; */
+
+.canva-btn-theme-dark .canva-btn-i,
+.canva-btn-theme-light .canva-btn-i,
+.canva-btn-theme-default .canva-btn-i {
+	background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='24' height='24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='12' fill='%235A32FA'/%3E%3Ccircle cx='12' cy='12' r='12' fill='url(%23_1595867151__paint0_radial)'/%3E%3Ccircle cx='12' cy='12' r='12' fill='url(%23_1595867151__paint1_radial)'/%3E%3Ccircle cx='12' cy='12' r='12' fill='url(%23_1595867151__paint2_radial)'/%3E%3Ccircle cx='12' cy='12' r='12' fill='url(%23_1595867151__paint3_radial)'/%3E%3Cpath d='M17.18 14.462c-.098 0-.186.083-.276.266-1.024 2.077-2.793 3.546-4.84 3.546-2.367 0-3.833-2.137-3.833-5.088 0-5 2.786-7.891 5.233-7.891 1.143 0 1.842.718 1.842 1.862 0 1.357-.771 2.076-.771 2.554 0 .215.133.345.398.345 1.065 0 2.315-1.223 2.315-2.952 0-1.675-1.459-2.907-3.906-2.907-4.044 0-7.638 3.749-7.638 8.936 0 4.015 2.293 6.669 5.831 6.669 3.755 0 5.926-3.736 5.926-4.949 0-.268-.137-.391-.28-.391z' fill='%23fff'/%3E%3Cdefs%3E%3CradialGradient id='_1595867151__paint0_radial' cx='0' cy='0' r='1' gradientUnits='userSpaceOnUse' gradientTransform='rotate(-49.416 25.433 5.598) scale(18.5619)'%3E%3Cstop stop-color='%235A32FA'/%3E%3Cstop offset='1' stop-color='%235A32FA' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='_1595867151__paint1_radial' cx='0' cy='0' r='1' gradientUnits='userSpaceOnUse' gradientTransform='rotate(54.703 .54 7.506) scale(20.9321)'%3E%3Cstop stop-color='%2300C4CC'/%3E%3Cstop offset='1' stop-color='%2300C4CC' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='_1595867151__paint2_radial' cx='0' cy='0' r='1' gradientUnits='userSpaceOnUse' gradientTransform='matrix(12.92215 -13.01041 5.98368 5.94309 4.636 21.272)'%3E%3Cstop stop-color='%235A32FA'/%3E%3Cstop offset='1' stop-color='%235A32FA' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='_1595867151__paint3_radial' cx='0' cy='0' r='1' gradientUnits='userSpaceOnUse' gradientTransform='matrix(11.99998 22.99996 -38.5301 20.10265 7 3)'%3E%3Cstop stop-color='%2300C4CC' stop-opacity='.726'/%3E%3Cstop offset='0' stop-color='%2300C4CC'/%3E%3Cstop offset='1' stop-color='%2300C4CC' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3C/svg%3E");
+}
+
+.canva-btn-theme-dark:hover .canva-btn-i,
+.canva-btn-theme-dark:focus .canva-btn-i,
+.canva-btn-theme-light:hover .canva-btn-i,
+.canva-btn-theme-light:focus .canva-btn-i,
+.canva-btn-theme-default:hover .canva-btn-i,
+.canva-btn-theme-default:focus .canva-btn-i {
+	background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='24' height='24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='12' fill='%235A32FA'/%3E%3Ccircle cx='12' cy='12' r='12' fill='url(%23_1595867151__paint0_radial)'/%3E%3Ccircle cx='12' cy='12' r='12' fill='url(%23_1595867151__paint1_radial)'/%3E%3Ccircle cx='12' cy='12' r='12' fill='url(%23_1595867151__paint2_radial)'/%3E%3Ccircle cx='12' cy='12' r='12' fill='url(%23_1595867151__paint3_radial)'/%3E%3Cpath d='M17.18 14.462c-.098 0-.186.083-.276.266-1.024 2.077-2.793 3.546-4.84 3.546-2.367 0-3.833-2.137-3.833-5.088 0-5 2.786-7.891 5.233-7.891 1.143 0 1.842.718 1.842 1.862 0 1.357-.771 2.076-.771 2.554 0 .215.133.345.398.345 1.065 0 2.315-1.223 2.315-2.952 0-1.675-1.459-2.907-3.906-2.907-4.044 0-7.638 3.749-7.638 8.936 0 4.015 2.293 6.669 5.831 6.669 3.755 0 5.926-3.736 5.926-4.949 0-.268-.137-.391-.28-.391z' fill='%23fff'/%3E%3Cdefs%3E%3CradialGradient id='_1595867151__paint0_radial' cx='0' cy='0' r='1' gradientUnits='userSpaceOnUse' gradientTransform='rotate(-49.416 25.433 5.598) scale(18.5619)'%3E%3Cstop stop-color='%235A32FA'/%3E%3Cstop offset='1' stop-color='%235A32FA' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='_1595867151__paint1_radial' cx='0' cy='0' r='1' gradientUnits='userSpaceOnUse' gradientTransform='rotate(54.703 .54 7.506) scale(20.9321)'%3E%3Cstop stop-color='%2300C4CC'/%3E%3Cstop offset='1' stop-color='%2300C4CC' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='_1595867151__paint2_radial' cx='0' cy='0' r='1' gradientUnits='userSpaceOnUse' gradientTransform='matrix(12.92215 -13.01041 5.98368 5.94309 4.636 21.272)'%3E%3Cstop stop-color='%235A32FA'/%3E%3Cstop offset='1' stop-color='%235A32FA' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='_1595867151__paint3_radial' cx='0' cy='0' r='1' gradientUnits='userSpaceOnUse' gradientTransform='matrix(11.99998 22.99996 -38.5301 20.10265 7 3)'%3E%3Cstop stop-color='%2300C4CC' stop-opacity='.726'/%3E%3Cstop offset='0' stop-color='%2300C4CC'/%3E%3Cstop offset='1' stop-color='%2300C4CC' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3C/svg%3E");
+}
+
+.canva-btn-theme-dark:active .canva-btn-i,
+.canva-btn-theme-light:active .canva-btn-i,
+.canva-btn-theme-default:active .canva-btn-i {
+	background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='24' height='24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='12' fill='%235A32FA'/%3E%3Ccircle cx='12' cy='12' r='12' fill='url(%23_1595867151__paint0_radial)'/%3E%3Ccircle cx='12' cy='12' r='12' fill='url(%23_1595867151__paint1_radial)'/%3E%3Ccircle cx='12' cy='12' r='12' fill='url(%23_1595867151__paint2_radial)'/%3E%3Ccircle cx='12' cy='12' r='12' fill='url(%23_1595867151__paint3_radial)'/%3E%3Cpath d='M17.18 14.462c-.098 0-.186.083-.276.266-1.024 2.077-2.793 3.546-4.84 3.546-2.367 0-3.833-2.137-3.833-5.088 0-5 2.786-7.891 5.233-7.891 1.143 0 1.842.718 1.842 1.862 0 1.357-.771 2.076-.771 2.554 0 .215.133.345.398.345 1.065 0 2.315-1.223 2.315-2.952 0-1.675-1.459-2.907-3.906-2.907-4.044 0-7.638 3.749-7.638 8.936 0 4.015 2.293 6.669 5.831 6.669 3.755 0 5.926-3.736 5.926-4.949 0-.268-.137-.391-.28-.391z' fill='%23fff'/%3E%3Cdefs%3E%3CradialGradient id='_1595867151__paint0_radial' cx='0' cy='0' r='1' gradientUnits='userSpaceOnUse' gradientTransform='rotate(-49.416 25.433 5.598) scale(18.5619)'%3E%3Cstop stop-color='%235A32FA'/%3E%3Cstop offset='1' stop-color='%235A32FA' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='_1595867151__paint1_radial' cx='0' cy='0' r='1' gradientUnits='userSpaceOnUse' gradientTransform='rotate(54.703 .54 7.506) scale(20.9321)'%3E%3Cstop stop-color='%2300C4CC'/%3E%3Cstop offset='1' stop-color='%2300C4CC' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='_1595867151__paint2_radial' cx='0' cy='0' r='1' gradientUnits='userSpaceOnUse' gradientTransform='matrix(12.92215 -13.01041 5.98368 5.94309 4.636 21.272)'%3E%3Cstop stop-color='%235A32FA'/%3E%3Cstop offset='1' stop-color='%235A32FA' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='_1595867151__paint3_radial' cx='0' cy='0' r='1' gradientUnits='userSpaceOnUse' gradientTransform='matrix(11.99998 22.99996 -38.5301 20.10265 7 3)'%3E%3Cstop stop-color='%2300C4CC' stop-opacity='.726'/%3E%3Cstop offset='0' stop-color='%2300C4CC'/%3E%3Cstop offset='1' stop-color='%2300C4CC' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3C/svg%3E");
+}
