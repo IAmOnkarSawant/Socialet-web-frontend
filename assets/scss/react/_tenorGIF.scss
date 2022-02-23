@@ -1,0 +1,65 @@
+.react-tenor {
+   background-color: transparent !important;
+  max-width: 100% !important;
+  border: none !important;
+}
+
+.react-tenor-active {
+  box-shadow: none !important;
+}
+
+.react-tenor--search-bar{
+   margin-bottom: 5px !important;
+}
+
+.react-tenor--search{
+   background-color: transparent !important;
+   border-radius: 5px !important;
+   border: 1px solid lightgray !important;
+   padding: 8px 15px !important;
+}
+
+.react-tenor--autocomplete{
+   padding: 8px 15px !important;
+}
+
+.react-tenor--search:focus {
+  box-shadow: 0 0 .5px .5px #5E72E4 !important;
+}
+
+.react-tenor--result{
+   background: transparent !important;
+   padding: 2.5px !important
+}
+
+.react-tenor--result:focus {
+ box-shadow: 0 0 2px 2px #5E72E4 !important;
+  padding: 2.5px !important;
+  border-radius: 5px !important;
+}
+
+.react-tenor--result > *{
+   border-radius: 5px !important;
+   border: .5px solid lightgray !important;
+}
+
+.react-tenor--suggestions{
+   padding: .5em 4px !important;
+}
+
+.react-tenor--suggestions button{
+   background: #5E72E4 !important;
+   padding: 3px 10px !important;
+   margin-right: .5px !important;
+   font-size: 0.85em !important;
+}
+
+.react-tenor--suggestions button:focus{
+  background: #324CDD !important;
+  box-shadow: none !important;
+}
+
+.react-tenor--page-left,
+.react-tenor--page-right{
+   background: #5E72E4 !important;
+}

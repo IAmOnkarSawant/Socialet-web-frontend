@@ -18,6 +18,8 @@ import "@fullcalendar/timegrid/main.min.css";
 import "emoji-mart/css/emoji-mart.css";
 import "react-datepicker/dist/react-datepicker.css";
 
+import "react-tenor/dist/styles.css";
+
 import router from "next/router";
 import { Toaster } from "react-hot-toast";
 
