@@ -29,3 +29,21 @@ export function scheduleTweet(formData) {
     },
   });
 }
+
+// POST REQUEST -> REPLY TO A CERTAIN TWEET
+export function postReplyToTweet(formData) {
+  return axios.post(`${TWITTER_URL}/reply`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+}
+
+// POST REQUEST -> REPLY TO A CERTAIN TWEET
+export function scheduleReplyToTweet(formData) {
+  return axios.post(`${TWITTER_URL}/reply/schedule`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+}

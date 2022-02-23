@@ -39,9 +39,11 @@ import useOnClickOutside from "../../hooks/useOnClickOutside";
 import {
   recommendHashtags,
   postTweet,
+  postReplyToTweet,
   scheduleTweet,
+  scheduleReplyToTweet,
 } from "../../_api/publish";
-import { getTweetById, postReplyToTweet } from "../../_api/twitter";
+import { getTweetById } from "../../_api/twitter";
 import TwitterPreview from "../../components/Post/TwitterPreview";
 import ReplyTweetCard from "../../components/Post/ReplyTweetCard";
 import DatePicker from "react-datepicker";
@@ -63,7 +65,11 @@ const validationSchema = Yup.object({
       "you are exceeding the characters limit!",
       (val) => val && val.toString().length <= 280
     ),
-  selectedDesignType: Yup.string().required("Design type should be selected"),
+  isCanvaPanalOpen: Yup.bool(),
+  selectedDesignType: Yup.string().when("isCanvaPanalOpen", {
+    is: true,
+    then: Yup.string().required("Design Type is Required"),
+  }),
 });
 
 function Publish() {
@@ -96,7 +102,7 @@ function Publish() {
       isDatePickerOpen: false,
       scheduleDate: null,
       isScheduleDateSelected: false,
-      isReply: false,
+      isReply: query && query.replyTo,
       minTime: calculateMinTime(new Date()),
     },
     validationSchema: validationSchema,
@@ -110,6 +116,22 @@ function Publish() {
 
         const tweet = values.text + "\n" + values.hashtags.join(" ");
         formData.append("text", tweet);
+
+        if (values.isScheduleDateSelected) {
+          let scheduleDate = new Date(values.scheduleDate).toUTCString();
+          formData.append("scheduled_datetime", scheduleDate);
+          formData.append("time_format", "utc");
+          scheduleReplyToTweet(formData).then(({ data }) => {
+            if (data && data.error) {
+              toast.error(data.message);
+            } else {
+              toast.success("Reply Scheduled Successfully!");
+            }
+            formik.resetForm();
+            formik.setSubmitting(false);
+          });
+          return;
+        }
 
         postReplyToTweet(formData).then(({ data }) => {
           // show success/error message in popup later
@@ -414,7 +436,10 @@ function Publish() {
                     />
                     <FiCamera
                       onClick={() =>
-                        formik.setFieldValue("isImagePanelOpen", true)
+                        formik.setFieldValue(
+                          "isImagePanelOpen",
+                          !formik.values.isImagePanelOpen
+                        )
                       }
                       style={{
                         marginRight: 22,
@@ -436,7 +461,10 @@ function Publish() {
                     />
                     <CanvaSVG
                       onClick={() =>
-                        formik.setFieldValue("isCanvaPanalOpen", true)
+                        formik.setFieldValue(
+                          "isCanvaPanalOpen",
+                          !formik.values.isCanvaPanalOpen
+                        )
                       }
                     />
                   </div>

@@ -31,15 +31,6 @@ export function getTweetById(tweet_id, user_id) {
   );
 }
 
-// POST REQUEST -> REPLY TO A CERTAIN TWEET
-export function postReplyToTweet(formData) {
-  return axios.post(`${TWITTER_URL}/reply`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-}
-
 // PATCH REQUEST -> FAVORITE A TWEET
 export function postFavorites(bodyData) {
   return axios.patch(`${TWITTER_URL}/favorite`, bodyData);
