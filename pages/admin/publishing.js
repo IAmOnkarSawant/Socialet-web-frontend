@@ -5,17 +5,48 @@ import dayGridMonthPlugin from "@fullcalendar/daygrid";
 import listWeekPlugin from "@fullcalendar/list";
 import boostrapPlugin from "@fullcalendar/bootstrap";
 import {
+  Button,
   Card,
   CardBody,
+  CardFooter,
   CardHeader,
   CardTitle,
   Col,
   Container,
   Row,
 } from "reactstrap";
-import { getRandomDate, getRandomHexColor } from "../../utils/formatter";
+import { getRandomHexColor } from "../../utils/formatter";
+import React, { useEffect, useState } from "react";
+import { getScheduledPosts } from "../../_api/schedule";
+import ModalDelete from "../../components/Modal/ModalDelete";
+import ModalUpdatePost from "../../components/Modal/ModalUpdatePost";
+import { useSession } from "next-auth/react";
+
+const EVENTS = Array.from({ length: 27 }).map((e, index) => ({
+  id: index,
+  text: "Do party",
+  start: new Date(2022, 1, index + 1),
+  interactive: true,
+}));
 
 export default function Publishing() {
+  const { data: session } = useSession();
+  console.log(session);
+  const [scheduledTweets, setScheduledTweets] = useState([]);
+
+  useEffect(() => {
+    if (session?.token?.sub) {
+      getScheduledPosts(session?.token?.sub)
+        .then(({ data }) => {
+          console.log(data);
+          setScheduledTweets([...data]);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [session?.token?.sub]);
+
   const handleSchedulePost = ({ ...args }) => {
     // you can shedule post on clicking date block...
     // you can access selected date arguments(start and end date in ISO as well as string format) here...
@@ -30,6 +61,11 @@ export default function Publishing() {
   const handleReshedulePost = ({ ...args }) => {
     // triggers when user drag certain event from one day to another...
     console.log(args);
+  };
+
+  const filterTweets = (id) => {
+    const new_tweets = scheduledTweets.filter((tweet) => tweet._id !== id);
+    setScheduledTweets([...new_tweets]);
   };
 
   return (
@@ -51,15 +87,16 @@ export default function Publishing() {
               eventBackgroundColor="transparent"
               eventBorderColor="transparent"
               themeSystem="bootstrap"
-              events={Array.from({ length: 28 }).map((e, index) => {
-                const date = getRandomDate(new Date(2022, 2, 1), new Date());
-                return {
-                  id: index,
-                  title: "Do party",
-                  start: new Date(2022, 1, index + 1),
-                  interactive: true,
-                };
-              })}
+              events={[...scheduledTweets]
+                .filter((e) => e.published === false)
+                .map((event, index) => {
+                  return {
+                    id: event._id,
+                    title: event.text,
+                    start: new Date(event.scheduled_datetime),
+                    interactive: true,
+                  };
+                })}
               headerToolbar={{
                 left: "prev,next today prevYear,nextYear",
                 center: "title",
@@ -67,7 +104,9 @@ export default function Publishing() {
               }}
               dateClick={handleSchedulePost}
               eventClick={handleEventClick}
-              eventContent={CustomEvent}
+              eventContent={(args) => (
+                <CustomEvent {...args} callback={filterTweets} />
+              )}
               eventDrop={handleReshedulePost}
               dragScroll
               firstDay={1}
@@ -81,22 +120,61 @@ export default function Publishing() {
 }
 
 // customize event displayer
-function CustomEvent({ ...eventArgs }) {
+function CustomEvent({ callback, ...eventArgs }) {
   const { event } = eventArgs;
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   return (
-    <Card
-      style={{
-        width: "100%",
-        textAlign: "center",
-      }}
-      className="text-primary shadow-lg rounded mx-1 mb-2"
-    >
-      <CardHeader
-        style={{ color: getRandomHexColor() }}
-        className="font-weight-bolder"
+    <React.Fragment>
+      {/* Delete Modal */}
+      <ModalDelete
+        title="Delete Tweet"
+        onCancel={() => setIsDeleteModalOpen(false)}
+        onDelete={() => {
+          setIsDeleteModalOpen(false);
+          callback(event.id);
+        }}
+        isOpen={isDeleteModalOpen}
+        eventId={event.id}
       >
-        {event.title}
-      </CardHeader>
-    </Card>
+        You are about to delete the tweet. Are you sure?
+      </ModalDelete>
+      {/* Update Modal */}
+      <ModalUpdatePost
+        event={event}
+        onClose={() => setIsUpdateModalOpen(false)}
+        isOpen={isUpdateModalOpen}
+      />
+      <Card
+        style={{
+          width: "100%",
+          textAlign: "center",
+        }}
+        className="text-primary shadow-lg rounded mx-1 mb-2"
+      >
+        <CardHeader
+          style={{ color: getRandomHexColor(), wordWrap: "break-word" }}
+          className="font-weight-bolder"
+        >
+          {event.title.substring(0, 20) + "..."}
+        </CardHeader>
+        <CardFooter>
+          <Button
+            size="sm"
+            color="danger"
+            onClick={() => setIsDeleteModalOpen(true)}
+          >
+            Delete
+          </Button>{" "}
+          <Button
+            size="sm"
+            color="primary"
+            onClick={() => setIsUpdateModalOpen(true)}
+          >
+            Update
+          </Button>
+        </CardFooter>
+      </Card>
+    </React.Fragment>
   );
 }
