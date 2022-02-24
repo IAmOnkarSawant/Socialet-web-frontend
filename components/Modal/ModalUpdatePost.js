@@ -37,7 +37,7 @@ function ModalUpdatePost({ event, isOpen, onClose, onUpdate, ...props }) {
         id: event.extendedProps._id,
         user_id: event.extendedProps.user_id,
         text: values.text, //
-        scheduled_datetime: values.scheduledDateTime, //
+        scheduled_datetime: new Date(values.scheduledDateTime).toUTCString(), //
         isReply: event.extendedProps.isReply,
         files: event.extendedProps.files,
         published: event.extendedProps.published,
