@@ -13,3 +13,13 @@ export function deleteScheduledPosts(post_id) {
     `${SCHEDULED_POSTS_URL}/schedule/remove?post_id=${post_id}`
   );
 }
+
+// PATCH REQUEST -> UPDATE SCHEDULED POST
+export function updateScheduledPosts(bodyData) {
+  return axios.patch(`${SCHEDULED_POSTS_URL}/schedule/update`, bodyData);
+}
+
+// PATCH REQUEST -> RE-SCHEDULED POST
+export function reScheduledPosts(bodyData) {
+  return axios.patch(`${SCHEDULED_POSTS_URL}/reschedule`, bodyData);
+}

@@ -18,7 +18,7 @@ function ModalDelete({ eventId, isOpen, onCancel, onDelete, ...props }) {
 
   return (
     <Modal
-      style={{ marginTop: "15%" }}
+      style={{ marginTop: "13%" }}
       fade
       size="md"
       isOpen={isOpen}
@@ -27,11 +27,11 @@ function ModalDelete({ eventId, isOpen, onCancel, onDelete, ...props }) {
       <ModalHeader toggle={onCancel}>{props.title}</ModalHeader>
       <ModalBody className="py-0">{props.children}</ModalBody>
       <ModalFooter>
-        <Button size="sm" color="secondary" onClick={onCancel}>
+        <Button size="md" color="secondary" onClick={onCancel}>
           Cancel
         </Button>{" "}
         <Button
-          size="sm"
+          size="md"
           color="danger"
           onClick={() => {
             handleDeleteTweet();

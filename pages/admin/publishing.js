@@ -16,11 +16,12 @@ import {
   Row,
 } from "reactstrap";
 import { getRandomHexColor } from "../../utils/formatter";
-import React, { useEffect, useState } from "react";
-import { getScheduledPosts } from "../../_api/schedule";
+import React, { useCallback, useEffect, useState } from "react";
+import { getScheduledPosts, reScheduledPosts } from "../../_api/schedule";
 import ModalDelete from "../../components/Modal/ModalDelete";
 import ModalUpdatePost from "../../components/Modal/ModalUpdatePost";
 import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
 
 const EVENTS = Array.from({ length: 27 }).map((e, index) => ({
   id: index,
@@ -31,7 +32,6 @@ const EVENTS = Array.from({ length: 27 }).map((e, index) => ({
 
 export default function Publishing() {
   const { data: session } = useSession();
-  console.log(session);
   const [scheduledTweets, setScheduledTweets] = useState([]);
 
   useEffect(() => {
@@ -55,17 +55,50 @@ export default function Publishing() {
 
   const handleEventClick = ({ ...args }) => {
     // triggers when user clicks on event...
-    console.log(args.event.start);
-  };
-
-  const handleReshedulePost = ({ ...args }) => {
-    // triggers when user drag certain event from one day to another...
     console.log(args);
   };
 
-  const filterTweets = (id) => {
-    const new_tweets = scheduledTweets.filter((tweet) => tweet._id !== id);
-    setScheduledTweets([...new_tweets]);
+  const filterTweets = useCallback(
+    (id) => {
+      const new_tweets = scheduledTweets.filter((tweet) => tweet._id !== id);
+      setScheduledTweets([...new_tweets]);
+    },
+    [scheduledTweets]
+  );
+
+  const updatedTweetOnEdit = useCallback(
+    (id, updatedTweet) => {
+      const filtered_tweets = scheduledTweets.map((tweet) =>
+        tweet._id === id ? { ...updatedTweet } : { ...tweet }
+      );
+      setScheduledTweets([...filtered_tweets]);
+    },
+    [scheduledTweets]
+  );
+
+  const handleReshedulePost = ({ event: newEvent, oldEvent, ...args }) => {
+    console.log(args);
+    const bodyData = {
+      id: newEvent.id || oldEvent.id,
+      scheduled_datetime: new Date(newEvent.startStr).toUTCString(), // updated date || resheduled date
+      timeformat:
+        newEvent.extendedProps.timeformat || oldEvent.extendedProps.timeformat,
+    };
+    reScheduledPosts(bodyData)
+      .then(({ data }) => {
+        console.log(data);
+        // need to update local state! Remember!!
+        const updatedDateInScheduledTweets = [...scheduledTweets].map((tweet) =>
+          tweet._id === data._id
+            ? { ...tweet, scheduled_datetime: data["scheduled_datetime"] }
+            : { ...tweet }
+        );
+        setScheduledTweets([...updatedDateInScheduledTweets]);
+        !data.error
+          ? toast.success("Tweet resheduled successfully")
+          : toast.error("Tweet could't resheduled");
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -84,6 +117,8 @@ export default function Publishing() {
               initialView="dayGridMonth"
               selectable={false}
               editable
+              droppable
+              showNonCurrentDates={false}
               eventBackgroundColor="transparent"
               eventBorderColor="transparent"
               themeSystem="bootstrap"
@@ -93,19 +128,40 @@ export default function Publishing() {
                   return {
                     id: event._id,
                     title: event.text,
-                    start: new Date(event.scheduled_datetime),
+                    date: new Date(event.scheduled_datetime).toISOString(),
+                    start: new Date(event.scheduled_datetime).toISOString(),
+                    end: new Date(event.scheduled_datetime).toISOString(),
+                    overlap: true,
                     interactive: true,
+                    extendedProps: {
+                      _id: event._id,
+                      user_id: event.user_id,
+                      files: event.files,
+                      published: event.published,
+                      expired: event.expired,
+                      isReply: event.isReply,
+                      timeformat: event.timeformat,
+                      replyTweetId: event.replyTweetId,
+                      dateTime: new Date(
+                        event.scheduled_datetime
+                      ).toISOString(),
+                    },
                   };
                 })}
               headerToolbar={{
                 left: "prev,next today prevYear,nextYear",
                 center: "title",
-                right: "dayGridMonth,listWeek",
+                right: "dayGridMonth,timeGridDay,listWeek",
               }}
               dateClick={handleSchedulePost}
               eventClick={handleEventClick}
+              expandRows={false}
               eventContent={(args) => (
-                <CustomEvent {...args} callback={filterTweets} />
+                <CustomEvent
+                  {...args}
+                  updatedTweetOnEdit={updatedTweetOnEdit}
+                  filterTweets={filterTweets}
+                />
               )}
               eventDrop={handleReshedulePost}
               dragScroll
@@ -120,7 +176,7 @@ export default function Publishing() {
 }
 
 // customize event displayer
-function CustomEvent({ callback, ...eventArgs }) {
+function CustomEvent({ filterTweets, updatedTweetOnEdit, ...eventArgs }) {
   const { event } = eventArgs;
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -132,7 +188,7 @@ function CustomEvent({ callback, ...eventArgs }) {
         onCancel={() => setIsDeleteModalOpen(false)}
         onDelete={() => {
           setIsDeleteModalOpen(false);
-          callback(event.id);
+          filterTweets(event.id);
         }}
         isOpen={isDeleteModalOpen}
         eventId={event.id}
@@ -144,6 +200,7 @@ function CustomEvent({ callback, ...eventArgs }) {
         event={event}
         onClose={() => setIsUpdateModalOpen(false)}
         isOpen={isUpdateModalOpen}
+        onUpdate={updatedTweetOnEdit}
       />
       <Card
         style={{
@@ -154,15 +211,17 @@ function CustomEvent({ callback, ...eventArgs }) {
       >
         <CardHeader
           style={{ color: getRandomHexColor(), wordWrap: "break-word" }}
-          className="font-weight-bolder"
+          className="font-weight-bolder py-2"
         >
           {event.title.substring(0, 20) + "..."}
         </CardHeader>
-        <CardFooter>
+        <CardFooter className="py-2">
           <Button
             size="sm"
             color="danger"
             onClick={() => setIsDeleteModalOpen(true)}
+            outline
+            className="rounded-sm shadow-lg"
           >
             Delete
           </Button>{" "}
@@ -170,6 +229,8 @@ function CustomEvent({ callback, ...eventArgs }) {
             size="sm"
             color="primary"
             onClick={() => setIsUpdateModalOpen(true)}
+            outline
+            className="rounded-sm shadow-lg"
           >
             Update
           </Button>
