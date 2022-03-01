@@ -13,6 +13,7 @@ import {
   Row,
   Tooltip,
   Badge,
+  Fade,
 } from "reactstrap";
 import { BsEmojiSmile, BsTwitter } from "react-icons/bs";
 import { FiCamera } from "react-icons/fi";
@@ -49,11 +50,11 @@ import ReplyTweetCard from "../../components/Post/ReplyTweetCard";
 import DatePicker from "react-datepicker";
 import moment from "moment";
 import toast from "react-hot-toast";
-import { isSameDay, startOfToday, endOfDay } from "date-fns";
 import ModalGIF from "../../components/Modal/ModalGIF";
 import CanvaButton from "../../components/Canva/Canva";
 import CanvaSVG from "../../components/Canva/CanvaSVG";
 import { DesignTypes } from "../../utils/HelperData";
+import ModalBestTimePicker from "../../components/Modal/ModalBestTimePicker";
 
 const DUMMY_DASHTAGS = ["#coolday", "#beach"];
 
@@ -78,14 +79,6 @@ function Publish() {
   const { data: session } = useSession();
   const [replyToTweet, setReplyToTweet] = useState(null);
 
-  const calculateMinTime = (date) => {
-    const now = new Date();
-    // setting min time one minute from current time
-    return isSameDay(date, now)
-      ? now.setMinutes(now.getMinutes() + 1)
-      : startOfToday();
-  };
-
   const formik = useFormik({
     initialValues: {
       text: "",
@@ -102,8 +95,8 @@ function Publish() {
       isDatePickerOpen: false,
       scheduleDate: null,
       isScheduleDateSelected: false,
+      isBestTimePickerOpen: false,
       isReply: query && query.replyTo,
-      minTime: calculateMinTime(new Date()),
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -295,6 +288,11 @@ function Publish() {
       <ModalGIF
         isOpen={formik.values.isGIFModalOpen}
         setIsOpen={() => formik.setFieldValue("isGIFModalOpen", false)}
+        formik={formik}
+      />
+      <ModalBestTimePicker
+        isOpen={formik.values.isBestTimePickerOpen}
+        onClose={() => formik.setFieldValue("isBestTimePickerOpen", false)}
         formik={formik}
       />
       <Navbar color="white" light expand="md">
@@ -823,7 +821,7 @@ function Publish() {
                       Select publishing time as per your need.
                     </span>
                   </Col>
-                  <Col sm="12" className="mt-4">
+                  <Col sm="8" className="mt-4">
                     {formik.values.isScheduleDateSelected ? (
                       <Row className="pl-3">
                         <Button
@@ -851,6 +849,17 @@ function Publish() {
                             ? "Schedule Reply"
                             : "Schedule Post"}{" "}
                         </ButtonLoader>
+                        <Button
+                          onClick={() =>
+                            formik.setFieldValue("isBestTimePickerOpen", true)
+                          }
+                          outline
+                          className="ml-2"
+                          color="success"
+                          type="button"
+                        >
+                          Pick Best Time
+                        </Button>
                       </Row>
                     ) : (
                       <Row className="pl-3">
@@ -875,6 +884,17 @@ function Publish() {
                         >
                           {query && query.replyTo ? "Reply Now" : "Post Now"}
                         </ButtonLoader>
+                        <Button
+                          onClick={() =>
+                            formik.setFieldValue("isBestTimePickerOpen", true)
+                          }
+                          outline
+                          className="ml-2"
+                          color="success"
+                          type="button"
+                        >
+                          Pick Best Time
+                        </Button>
                       </Row>
                     )}
                   </Col>
@@ -882,49 +902,46 @@ function Publish() {
                 <div className="d-flex flex-row align-items-start mb-2">
                   <div
                     className={`p-3 border shadow rounded ${
-                      !formik.values.isDatePickerOpen ? "d-none" : "d-block"
+                      !formik.values.isDatePickerOpen &&
+                      !formik.values.scheduleDate
+                        ? "d-none"
+                        : "d-block"
                     }`}
                     style={{ width: "fit-content" }}
                   >
-                    <DatePicker
+                    <Fade
+                      tag={DatePicker}
                       inline
                       minDate={moment().toDate()}
                       renderCustomHeader={(args) => (
                         <DayPickerHeader {...args} />
                       )}
                       selected={formik.values.scheduleDate}
-                      onChange={(date) => {
-                        console.log(date);
-                        formik.setFieldValue("scheduleDate", date);
-                      }}
+                      onChange={(date) =>
+                        formik.setFieldValue("scheduleDate", date)
+                      }
                       disabledKeyboardNavigation
                     />
                   </div>
                   <div
                     className={`mx-3 border shadow rounded ${
-                      !formik.values.isDatePickerOpen ? "d-none" : "d-block"
+                      formik.values.scheduleDate ? "d-block" : "d-none"
                     }`}
                   >
-                    <DatePicker
+                    <Fade
+                      tag={DatePicker}
                       inline
                       showTimeSelect
                       showTimeSelectOnly
                       timeIntervals={1}
                       timeCaption="Time"
                       dateFormat="h:mm aa"
-                      minTime={formik.values.minTime}
-                      maxTime={endOfDay(new Date())}
-                      selected={
-                        formik.values.scheduleDate
-                          ? formik.values.scheduleDate
-                          : formik.values.minTime
-                      }
+                      selected={formik.values.scheduleDate}
                       onChange={(date) => {
                         console.log(date);
                         formik.setFieldValue("scheduleDate", date);
                         formik.setFieldValue("isScheduleDateSelected", true);
                         formik.setFieldValue("isDatePickerOpen", false);
-                        formik.setFieldValue("minTime", calculateMinTime(date));
                       }}
                       disabledKeyboardNavigation
                     />

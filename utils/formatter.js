@@ -137,3 +137,11 @@ export function highlightLinkInText(text) {
     "<a style=`color:#5065DB;text-decoration:underline;` href='$1' target='_blank'>$1</a>"
   );
 }
+
+export function isImageURL(url) {
+  return url.match(/\.(jpeg|jpg|gif|png)$/) != null;
+}
+
+export function randomPercentage() {
+  return Math.floor(Math.random() * 100) + 1 + "%";
+}

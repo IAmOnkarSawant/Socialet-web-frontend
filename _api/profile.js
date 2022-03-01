@@ -58,3 +58,8 @@ export function followUser(bodyData) {
   console.log(bodyData);
   return axios.patch(`${TWITTER_URL}/follow`, bodyData);
 }
+
+// GET REQUEST -> RESPONSE AUTHENTICATED USER LAST 30 DAYS POSTS
+export function getLast30DaysPosts(user_id) {
+  return axios.get(`${PROFILE}/last30daysposts?user_id=${user_id}`);
+}

@@ -17,6 +17,9 @@ import { updateScheduledPosts } from "../../_api/schedule";
 import * as yup from "yup";
 import moment from "moment";
 import toast from "react-hot-toast";
+import { useDropzone } from "react-dropzone";
+import { isImageURL } from "../../utils/formatter";
+import { AiFillPlusCircle } from "react-icons/ai";
 
 const validationSchema = yup.object({
   text: yup.string().required("Tweet is required"),
@@ -30,6 +33,10 @@ function ModalUpdatePost({ event, isOpen, onClose, onUpdate, ...props }) {
       scheduledDateTime: moment(event.extendedProps.dateTime).format(
         "YYYY-MM-DDTkk:mm"
       ),
+      images:
+        event.extendedProps.files && event.extendedProps.files.length !== 0
+          ? event.extendedProps.files
+          : [],
     },
     validationSchema: validationSchema,
     onSubmit: async (values, helpers) => {
@@ -39,7 +46,7 @@ function ModalUpdatePost({ event, isOpen, onClose, onUpdate, ...props }) {
         text: values.text, //
         scheduled_datetime: new Date(values.scheduledDateTime).toUTCString(), //
         isReply: event.extendedProps.isReply,
-        files: event.extendedProps.files,
+        files: values.images, //
         published: event.extendedProps.published,
         expired: event.extendedProps.expired,
         timeformat: event.extendedProps.timeformat,
@@ -57,22 +64,26 @@ function ModalUpdatePost({ event, isOpen, onClose, onUpdate, ...props }) {
     },
   });
 
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: "image/*, video/*",
+    onDrop: (files) => {
+      formik.setFieldValue("images", [
+        ...formik.values.images,
+        ...files.map((file) => URL.createObjectURL(file)),
+      ]);
+    },
+  });
+
   return (
-    <Modal
-      style={{ marginTop: "13%" }}
-      fade
-      size="lg"
-      isOpen={isOpen}
-      toggle={onClose}
-    >
-      <form onSubmit={formik.handleSubmit}>
-        <ModalHeader toggle={onClose}>Update Tweeet</ModalHeader>
-        <ModalBody className="py-0">
+    <Modal fade size="lg" isOpen={isOpen} toggle={onClose}>
+      <ModalHeader toggle={onClose}>Update Tweeet</ModalHeader>
+      <ModalBody className="py-0">
+        <form onSubmit={formik.handleSubmit}>
           <Row>
             <Col sm="12">
               <FormGroup className="mb-1">
                 <Label
-                  className="font-weight-bold"
+                  className="font-weight-bold mb-2"
                   style={{ fontSize: "13px" }}
                 >
                   Tweet
@@ -85,7 +96,7 @@ function ModalUpdatePost({ event, isOpen, onClose, onUpdate, ...props }) {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   invalid={formik.touched.text && Boolean(formik.errors.text)}
-                  // className='form-control-alternative'
+                  className="form-control-alternative scrollbar"
                 />
                 <FormFeedback>
                   {formik.touched.text && formik.errors.text}
@@ -95,7 +106,7 @@ function ModalUpdatePost({ event, isOpen, onClose, onUpdate, ...props }) {
             <Col sm="6">
               <FormGroup className="mb-1">
                 <Label
-                  className="font-weight-bold"
+                  className="font-weight-bold mb-2"
                   style={{ fontSize: "13px" }}
                 >
                   Scheduled Time
@@ -113,7 +124,7 @@ function ModalUpdatePost({ event, isOpen, onClose, onUpdate, ...props }) {
                     formik.touched.scheduledDateTime &&
                     Boolean(formik.errors.scheduledDateTime)
                   }
-                  // className='form-control-alternative'
+                  className="form-control-alternative"
                 />
                 <FormFeedback>
                   {formik.touched.scheduledDateTime &&
@@ -121,17 +132,67 @@ function ModalUpdatePost({ event, isOpen, onClose, onUpdate, ...props }) {
                 </FormFeedback>
               </FormGroup>
             </Col>
+            <Col sm="12">
+              <div
+                className="font-weight-bold mt-2 mb-2"
+                style={{ fontSize: "13px" }}
+              >
+                Upload Images
+              </div>
+              <div
+                className="mr-2 mb-2 rounded-sm shadow-lg position-relative"
+                style={{ width: "100%", height: "120px", background: "white" }}
+                {...getRootProps()}
+              >
+                <input {...getInputProps()} />
+                <AiFillPlusCircle
+                  className="position-absolute"
+                  style={{
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%,-50%)",
+                    fontWeight: "25px",
+                  }}
+                />
+              </div>
+              <div className="d-flex flex-row flex-wrap align-items-center mt-2">
+                {formik.values.images && formik.values.images.length !== 0 ? (
+                  formik.values.images.map((image, index) => (
+                    <img
+                      key={index}
+                      src={image}
+                      alt={"image_" + index}
+                      className="rounded-sm mr-2"
+                      style={{
+                        width: "140px",
+                        height: "85px",
+                        objectFit: "cover",
+                        pointerEvents: "none",
+                        userSelect: "none",
+                      }}
+                    />
+                  ))
+                ) : (
+                  <span
+                    style={{ fontSize: "14px" }}
+                    className="font-weight-bold text-danger"
+                  >
+                    No images found
+                  </span>
+                )}
+              </div>
+            </Col>
           </Row>
-        </ModalBody>
-        <ModalFooter>
-          <Button type="button" size="md" color="secondary " onClick={onClose}>
-            Close
-          </Button>{" "}
-          <Button type="submit" size="md" color="primary">
-            Schedule
-          </Button>
-        </ModalFooter>
-      </form>
+        </form>
+      </ModalBody>
+      <ModalFooter>
+        <Button type="button" size="md" color="secondary " onClick={onClose}>
+          Close
+        </Button>{" "}
+        <Button onClick={formik.handleSubmit} size="md" color="primary">
+          Schedule
+        </Button>
+      </ModalFooter>
     </Modal>
   );
 }

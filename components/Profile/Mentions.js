@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Spinner } from "reactstrap";
 import { removeDuplicatesFromArrayOfObjects } from "../../utils/formatter";
+import { emotionRecogniser } from "../../_api/emotions";
 import { getUserMentions } from "../../_api/profile";
 import NotFound from "../Pages/NotFound";
 import TwitterFeedCard from "../Post/TwitterFeedCard";
@@ -11,6 +12,7 @@ function Mentions({ user_id, screen_name, tab, ...props }) {
   const [hasMore, setHasMore] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isFoundShow, setIsFoundShow] = useState(false);
+  const [isNewPostAvailable, setIsNewPostAvailable] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -26,6 +28,7 @@ function Mentions({ user_id, screen_name, tab, ...props }) {
             ]);
             setHasMore(data?.searched_tweets.length > 0);
             setIsFoundShow(!data?.searched_tweets.length && page === 1);
+            setIsNewPostAvailable(data?.searched_tweets.length > 0);
           } else {
             setMentions((prevMentions) => [
               ...removeDuplicatesFromArrayOfObjects(
@@ -34,7 +37,7 @@ function Mentions({ user_id, screen_name, tab, ...props }) {
               ),
             ]);
             setHasMore(data?.mentions.length > 0);
-            setIsFoundShow(!data?.mentions.length && page === 1);
+            setIsNewPostAvailable(data?.mentions.length > 0);
           }
           setLoading(false);
         })
@@ -45,6 +48,38 @@ function Mentions({ user_id, screen_name, tab, ...props }) {
     }
   }, [user_id, screen_name, tab, page]);
 
+  const recogniseTweetEmotion = () => {
+    const tweets = mentions.map((f) => ({
+      tweet: f.full_text,
+      id: f.id,
+    }));
+    emotionRecogniser({ tweets }).then(({ data }) => {
+      console.log(data.tweets);
+      const resp = mentions.map((tweet) => {
+        const emoji = [...data.tweets].find((t) => {
+          if (t.id === tweet.id) {
+            return t;
+          }
+        });
+        console.log(emoji["emotion"]);
+
+        return {
+          ...tweet,
+          emotion: emoji["emotion"],
+        };
+      });
+      console.log(resp);
+      setMentions((previousFeed) => [...resp]);
+    });
+  };
+
+  useEffect(() => {
+    if (isNewPostAvailable && page) {
+      recogniseTweetEmotion();
+      setIsNewPostAvailable(false);
+    }
+  }, [isNewPostAvailable, page]);
+
   if (!!isFoundShow) {
     return <NotFound property="user mentions" />;
   }
@@ -52,7 +87,7 @@ function Mentions({ user_id, screen_name, tab, ...props }) {
   return (
     <div>
       {mentions.map((mention, index) => (
-        <TwitterFeedCard tweet={mention} key={index} />
+        <TwitterFeedCard isEmotionShow tweet={mention} key={index} />
       ))}
       {mentions.length !== 0 && !loading && (
         <p

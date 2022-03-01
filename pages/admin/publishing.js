@@ -22,15 +22,10 @@ import ModalDelete from "../../components/Modal/ModalDelete";
 import ModalUpdatePost from "../../components/Modal/ModalUpdatePost";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
-
-const EVENTS = Array.from({ length: 27 }).map((e, index) => ({
-  id: index,
-  text: "Do party",
-  start: new Date(2022, 1, index + 1),
-  interactive: true,
-}));
+import { useRouter } from "next/router";
 
 export default function Publishing() {
+  const router = useRouter();
   const { data: session } = useSession();
   const [scheduledTweets, setScheduledTweets] = useState([]);
 
@@ -46,12 +41,6 @@ export default function Publishing() {
         });
     }
   }, [session?.token?.sub]);
-
-  const handleSchedulePost = ({ ...args }) => {
-    // you can shedule post on clicking date block...
-    // you can access selected date arguments(start and end date in ISO as well as string format) here...
-    console.log(args);
-  };
 
   const handleEventClick = ({ ...args }) => {
     // triggers when user clicks on event...
@@ -75,6 +64,10 @@ export default function Publishing() {
     },
     [scheduledTweets]
   );
+
+  const handleSchedulePost = ({ ...args }) => {
+    console.log(args);
+  };
 
   const handleReshedulePost = ({ event: newEvent, oldEvent, ...args }) => {
     console.log(args);
@@ -102,7 +95,7 @@ export default function Publishing() {
   };
 
   return (
-    <Container fluid className="my-4">
+    <Container fluid className="py-4">
       <Row>
         <Col>
           <Card className="rounded-lg shadow-lg p-4">
@@ -128,6 +121,7 @@ export default function Publishing() {
                   return {
                     id: event._id,
                     title: event.text,
+                    // here dates are formatted because ISO date string is not supported in fullcalender.js
                     date: new Date(event.scheduled_datetime).toISOString(),
                     start: new Date(event.scheduled_datetime).toISOString(),
                     end: new Date(event.scheduled_datetime).toISOString(),
@@ -142,6 +136,7 @@ export default function Publishing() {
                       isReply: event.isReply,
                       timeformat: event.timeformat,
                       replyTweetId: event.replyTweetId,
+                      // here dates are formatted because ISO date string is not supported in fullcalender.js
                       dateTime: new Date(
                         event.scheduled_datetime
                       ).toISOString(),

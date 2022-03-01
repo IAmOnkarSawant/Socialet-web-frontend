@@ -6,7 +6,7 @@ var routes = [
     layout: "/admin",
   },
   {
-    path: "/profile",
+    path: "/userprofile",
     name: "My Profile",
     icon: "ni ni-single-02 text-yellow",
     layout: "/admin",
@@ -33,6 +33,12 @@ var routes = [
     path: "/publish",
     name: "Publish Post",
     icon: "ni ni-send text-primary",
+    layout: "/admin",
+  },
+  {
+    path: "/publishing",
+    name: "Calender",
+    icon: "ni ni-calendar-grid-58 text-success",
     layout: "/admin",
   },
 ];
