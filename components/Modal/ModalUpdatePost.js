@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React from "react";
+import React, { useMemo } from "react";
 import {
   Button,
   Col,
@@ -27,12 +27,13 @@ const validationSchema = yup.object({
 });
 
 function ModalUpdatePost({ event, isOpen, onClose, onUpdate, ...props }) {
+  const scheduledDateTime = useMemo(() => {
+    moment(event.extendedProps.dateTime).format("YYYY-MM-DDTkk:mm");
+  }, [event.extendedProps.dateTime]);
   const formik = useFormik({
     initialValues: {
       text: event.title,
-      scheduledDateTime: moment(event.extendedProps.dateTime).format(
-        "YYYY-MM-DDTkk:mm"
-      ),
+      scheduledDateTime,
       images:
         event.extendedProps.files && event.extendedProps.files.length !== 0
           ? event.extendedProps.files

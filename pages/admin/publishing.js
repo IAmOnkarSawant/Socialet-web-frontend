@@ -121,7 +121,7 @@ export default function Publishing() {
                   return {
                     id: event._id,
                     title: event.text,
-                    // here dates are formatted because ISO date string is not supported in fullcalender.js
+                    // here dates are formatted because UTC date string is not supported in fullcalender.js
                     date: new Date(event.scheduled_datetime).toISOString(),
                     start: new Date(event.scheduled_datetime).toISOString(),
                     end: new Date(event.scheduled_datetime).toISOString(),
@@ -136,10 +136,8 @@ export default function Publishing() {
                       isReply: event.isReply,
                       timeformat: event.timeformat,
                       replyTweetId: event.replyTweetId,
-                      // here dates are formatted because ISO date string is not supported in fullcalender.js
-                      dateTime: new Date(
-                        event.scheduled_datetime
-                      ).toISOString(),
+                      // here dates are formatted because UTC date string is not supported in fullcalender.js
+                      dateTime: event.scheduled_datetime,
                     },
                   };
                 })}
