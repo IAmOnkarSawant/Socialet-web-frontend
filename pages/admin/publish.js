@@ -54,7 +54,6 @@ import ModalGIF from "../../components/Modal/ModalGIF";
 import CanvaButton from "../../components/Canva/Canva";
 import CanvaSVG from "../../components/Canva/CanvaSVG";
 import { DesignTypes } from "../../utils/HelperData";
-import ModalBestTimePicker from "../../components/Modal/ModalBestTimePicker";
 
 const DUMMY_DASHTAGS = ["#coolday", "#beach"];
 
@@ -95,7 +94,6 @@ function Publish() {
       isDatePickerOpen: false,
       scheduleDate: null,
       isScheduleDateSelected: false,
-      isBestTimePickerOpen: false,
       isReply: query && query.replyTo,
     },
     validationSchema: validationSchema,
@@ -288,11 +286,6 @@ function Publish() {
       <ModalGIF
         isOpen={formik.values.isGIFModalOpen}
         setIsOpen={() => formik.setFieldValue("isGIFModalOpen", false)}
-        formik={formik}
-      />
-      <ModalBestTimePicker
-        isOpen={formik.values.isBestTimePickerOpen}
-        onClose={() => formik.setFieldValue("isBestTimePickerOpen", false)}
         formik={formik}
       />
       <Navbar color="white" light expand="md">
@@ -849,17 +842,6 @@ function Publish() {
                             ? "Schedule Reply"
                             : "Schedule Post"}{" "}
                         </ButtonLoader>
-                        <Button
-                          onClick={() =>
-                            formik.setFieldValue("isBestTimePickerOpen", true)
-                          }
-                          outline
-                          className="ml-2"
-                          color="success"
-                          type="button"
-                        >
-                          Pick Best Time
-                        </Button>
                       </Row>
                     ) : (
                       <Row className="pl-3">
@@ -884,17 +866,6 @@ function Publish() {
                         >
                           {query && query.replyTo ? "Reply Now" : "Post Now"}
                         </ButtonLoader>
-                        <Button
-                          onClick={() =>
-                            formik.setFieldValue("isBestTimePickerOpen", true)
-                          }
-                          outline
-                          className="ml-2"
-                          color="success"
-                          type="button"
-                        >
-                          Pick Best Time
-                        </Button>
                       </Row>
                     )}
                   </Col>
