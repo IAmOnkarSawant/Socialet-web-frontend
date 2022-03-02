@@ -27,13 +27,12 @@ const validationSchema = yup.object({
 });
 
 function ModalUpdatePost({ event, isOpen, onClose, onUpdate, ...props }) {
-  const scheduledDateTime = useMemo(() => {
-    moment(event.extendedProps.dateTime).format("YYYY-MM-DDTkk:mm");
-  }, [event.extendedProps.dateTime]);
   const formik = useFormik({
     initialValues: {
       text: event.title,
-      scheduledDateTime,
+      scheduledDateTime: moment(event.extendedProps.dateTime).format(
+        "YYYY-MM-DDTkk:mm"
+      ),
       images:
         event.extendedProps.files && event.extendedProps.files.length !== 0
           ? event.extendedProps.files

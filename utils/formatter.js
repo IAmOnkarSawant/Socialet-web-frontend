@@ -145,3 +145,18 @@ export function isImageURL(url) {
 export function randomPercentage() {
   return Math.floor(Math.random() * 100) + 1 + "%";
 }
+
+export function truncateString(str, n) {
+  return str.length > n ? str.substr(0, n - 1).trim() + "&hellip;" : str.trim();
+}
+
+export function formatAMPM(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  var strTime = hours + ":" + minutes + " " + ampm;
+  return strTime;
+}

@@ -5,6 +5,7 @@ import dayGridMonthPlugin from "@fullcalendar/daygrid";
 import listWeekPlugin from "@fullcalendar/list";
 import boostrapPlugin from "@fullcalendar/bootstrap";
 import {
+  Badge,
   Button,
   Card,
   CardBody,
@@ -15,7 +16,11 @@ import {
   Container,
   Row,
 } from "reactstrap";
-import { getRandomHexColor } from "../../utils/formatter";
+import {
+  formatAMPM,
+  getRandomHexColor,
+  truncateString,
+} from "../../utils/formatter";
 import React, { useCallback, useEffect, useState } from "react";
 import { getScheduledPosts, reScheduledPosts } from "../../_api/schedule";
 import ModalDelete from "../../components/Modal/ModalDelete";
@@ -137,7 +142,9 @@ export default function Publishing() {
                       timeformat: event.timeformat,
                       replyTweetId: event.replyTweetId,
                       // here dates are formatted because UTC date string is not supported in fullcalender.js
-                      dateTime: event.scheduled_datetime,
+                      dateTime: new Date(
+                        event.scheduled_datetime
+                      ).toISOString(),
                     },
                   };
                 })}
@@ -198,19 +205,37 @@ function CustomEvent({ filterTweets, updatedTweetOnEdit, ...eventArgs }) {
       <Card
         style={{
           width: "100%",
-          textAlign: "center",
         }}
         className="text-primary shadow-lg rounded mx-1 mb-2"
       >
         <CardHeader
-          style={{ color: getRandomHexColor(), wordWrap: "break-word" }}
-          className="font-weight-bolder py-2"
+          style={{ color: "black" }}
+          className="font-weight-bolder py-2 px-3"
         >
-          {event.title.substring(0, 20) + "..."}
+          <Badge className="badge-sm bg-default text-white text-right font-weight-bolder mb-1">
+            {formatAMPM(new Date(event.extendedProps.dateTime))}
+          </Badge>
+          <div
+            className="text-wrap font-weight-bold"
+            dangerouslySetInnerHTML={{
+              __html: truncateString(event.title, 45),
+            }}
+          />
+          <div className="d-flex flex-row flex-wrap mt-2">
+            {event.extendedProps?.files?.map((image, index) => (
+              <img
+                className="rounded-sm shadow-lg"
+                width="60px"
+                key={index}
+                src={image}
+                alt={`${image}_${index}`}
+              />
+            ))}
+          </div>
         </CardHeader>
-        <CardFooter className="py-2">
+        <CardFooter className="py-2 px-3">
           <Button
-            size="sm"
+            size="sm mx-0"
             color="danger"
             onClick={() => setIsDeleteModalOpen(true)}
             outline
@@ -219,7 +244,7 @@ function CustomEvent({ filterTweets, updatedTweetOnEdit, ...eventArgs }) {
             Delete
           </Button>{" "}
           <Button
-            size="sm"
+            size="sm ml-1"
             color="primary"
             onClick={() => setIsUpdateModalOpen(true)}
             outline

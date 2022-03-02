@@ -54,6 +54,7 @@ import ModalGIF from "../../components/Modal/ModalGIF";
 import CanvaButton from "../../components/Canva/Canva";
 import CanvaSVG from "../../components/Canva/CanvaSVG";
 import { DesignTypes } from "../../utils/HelperData";
+import Tooltipper from "../../components/Tooltip/Tooltipper";
 
 const DUMMY_DASHTAGS = ["#coolday", "#beach"];
 
@@ -416,7 +417,9 @@ function Publish() {
                     }}
                     className="rounded-bottom d-flex flex-row align-items-center p-3"
                   >
+                    <Tooltipper target="emojiIcon" text="Emojis" />
                     <BsEmojiSmile
+                      id="emojiIcon"
                       onClick={handleEmojiPicker}
                       style={{
                         marginRight: 22,
@@ -425,7 +428,9 @@ function Publish() {
                         cursor: "pointer",
                       }}
                     />
+                    <Tooltipper target="imageUploader" text="Upload Images" />
                     <FiCamera
+                      id="imageUploader"
                       onClick={() =>
                         formik.setFieldValue(
                           "isImagePanelOpen",
@@ -439,7 +444,9 @@ function Publish() {
                         cursor: "pointer",
                       }}
                     />
+                    <Tooltipper target="gifPicker" text="GIF Picker" />
                     <AiOutlineGif
+                      id="gifPicker"
                       onClick={() =>
                         formik.setFieldValue("isGIFModalOpen", true)
                       }
@@ -450,14 +457,17 @@ function Publish() {
                         cursor: "pointer",
                       }}
                     />
-                    <CanvaSVG
-                      onClick={() =>
-                        formik.setFieldValue(
-                          "isCanvaPanalOpen",
-                          !formik.values.isCanvaPanalOpen
-                        )
-                      }
-                    />
+                    <Tooltipper target="canvaBtnn" text="Canva post-builder" />
+                    <div id="canvaBtnn">
+                      <CanvaSVG
+                        onClick={() =>
+                          formik.setFieldValue(
+                            "isCanvaPanalOpen",
+                            !formik.values.isCanvaPanalOpen
+                          )
+                        }
+                      />
+                    </div>
                   </div>
                   {formik.values.isEmojiPanelOpen && (
                     <div
@@ -703,26 +713,21 @@ function Publish() {
                       </span>
                     </Col>
                     <Col sm="1" className="position-relative">
+                      <Tooltipper
+                        target="genHashtag"
+                        text="Press Enter or Tab key to add the hashtag"
+                      />
                       <AiFillInfoCircle
                         data-tip="Press Enter key or Tab key to add the hashtag"
                         size={15}
                         className="ml-1 mr-3"
-                        id="infoToolTip"
+                        id="genHashtag"
                         style={{
                           position: "absolute",
                           right: 0,
                           top: 0,
                         }}
                       />
-                      <Tooltip
-                        flip
-                        placement="top"
-                        isOpen={tooltipOpen}
-                        target="infoToolTip"
-                        toggle={toggleToolTip}
-                      >
-                        Press Enter or Tab key to add the hashtag
-                      </Tooltip>
                     </Col>
                   </Row>
                   <div
@@ -880,8 +885,7 @@ function Publish() {
                     }`}
                     style={{ width: "fit-content" }}
                   >
-                    <Fade
-                      tag={DatePicker}
+                    <DatePicker
                       inline
                       minDate={moment().toDate()}
                       renderCustomHeader={(args) => (
@@ -899,8 +903,7 @@ function Publish() {
                       formik.values.scheduleDate ? "d-block" : "d-none"
                     }`}
                   >
-                    <Fade
-                      tag={DatePicker}
+                    <DatePicker
                       inline
                       showTimeSelect
                       showTimeSelectOnly
