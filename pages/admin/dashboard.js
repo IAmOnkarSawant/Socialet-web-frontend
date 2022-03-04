@@ -34,6 +34,8 @@ import Header from "components/Headers/Header.js";
 import ModalComponent from "../../components/Modal/Modal";
 import { useRouter } from "next/router";
 import { NEW_USER_REGISTRATION_CODED_STRING } from "../../utils/constants";
+import { useSession } from "next-auth/react";
+import {getFollowers} from "../../_api/dashboard"
 
 const Dashboard = () => {
   const {
@@ -56,9 +58,25 @@ const Dashboard = () => {
     setChartExample1Data("data" + index);
   };
 
+  const { data: session } = useSession();
+  const [followObj, setFollowObj] = useState({});  
+
+  const getFollowersCount = () =>{
+    const user_id =  session.token.sub;
+    getFollowers(user_id).then(({ data }) => {
+      console.log(data);
+      setFollowObj(data);
+    });
+  }
+
+  useEffect(() => {
+    getFollowersCount();
+  },[])
+  
+
   return (
     <>
-      <Header />
+      <Header followObj={followObj}/>
       {/* Page content */}
       <Container className="mt--7" fluid>
         <Row>
