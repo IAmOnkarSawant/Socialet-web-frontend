@@ -1,135 +1,108 @@
 import React from "react";
-
-// reactstrap components
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 
-function Header({followObj}) {
+function Header({ followObj }) {
   return (
-    <>
-      <div className="header bg-gradient-dark pb-8 pt-5 pt-md-8">
-        <Container fluid>
-          <div className="header-body">
-            {/* Card stats */}
-            <Row>
-              <Col lg="6" xl="3">
-                <Card className="card-stats mb-4 mb-xl-0">
-                  <CardBody>
-                    <Row>
-                      <div className="col">
-                        <CardTitle
-                          tag="h5"
-                          className="text-uppercase text-muted mb-0"
-                        >
-                          FOLLOWERS
-                        </CardTitle>
-                        <span className="h2 font-weight-bold mb-0">
-                          {followObj['followers']}
-                        </span>
+    <div className="header bg-gradient-dark pb-6 pt-4 pt-md-8">
+      <Container fluid>
+        <div className="header-body">
+          <Row>
+            <Col lg="6" xl="3">
+              <Card className="card-stats mb-4 mb-xl-0">
+                <CardBody>
+                  <Row>
+                    <div className="col">
+                      <CardTitle
+                        tag="h5"
+                        className="text-uppercase text-muted mb-0"
+                      >
+                        FOLLOWERS
+                      </CardTitle>
+                      <span className="h2 font-weight-bold mb-0">
+                        {followObj["followers"]}
+                      </span>
+                    </div>
+                    <Col className="col-auto">
+                      <div className="icon icon-shape bg-danger text-white rounded-circle shadow">
+                        <i class="fas fa-users"></i>
                       </div>
-                      <Col className="col-auto">
-                        <div className="icon icon-shape bg-danger text-white rounded-circle shadow">
-                          <i className="fas fa-chart-bar" />
-                        </div>
-                      </Col>
-                    </Row>
-                    <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-success mr-2">
-                        <i className="fa fa-arrow-up" /> {followObj['followers_wa']===0 ? 100 :((followObj['followers'] - followObj['followers_wa'])/followObj['followers_wa'])*100}%
-                      </span>{" "}
-                      <span className="text-nowrap">Since last week</span>
-                    </p>
-                  </CardBody>
-                </Card>
-              </Col>
-              <Col lg="6" xl="3">
-                <Card className="card-stats mb-4 mb-xl-0">
-                  <CardBody>
-                    <Row>
-                      <div className="col">
-                        <CardTitle
-                          tag="h5"
-                          className="text-uppercase text-muted mb-0"
-                        >
-                          FOLLOWINGS
-                        </CardTitle>
-                        <span className="h2 font-weight-bold mb-0">{followObj['followings']}</span>
+                    </Col>
+                  </Row>
+                  <p className="mt-3 mb-0 text-muted text-sm">
+                    <span
+                      className={`${
+                        followObj["followers_percentage"] < 0
+                          ? "text-danger"
+                          : "text-success"
+                      }`}
+                    >
+                      <i
+                        className={`fa ${
+                          followObj["followers_percentage"] < 0
+                            ? "fa-arrow-down"
+                            : "fa-arrow-up"
+                        } mr-2`}
+                      />
+                      {followObj["followers_percentage"] < 0
+                        ? Math.abs(followObj["followers_percentage"])
+                        : followObj["followers_percentage"]}
+                      %
+                    </span>
+                    <span className="ml-2 text-nowrap">Since last 7 days</span>
+                  </p>
+                </CardBody>
+              </Card>
+            </Col>
+            <Col lg="6" xl="3">
+              <Card className="card-stats mb-4 mb-xl-0">
+                <CardBody>
+                  <Row>
+                    <div className="col">
+                      <CardTitle
+                        tag="h5"
+                        className="text-uppercase text-muted mb-0"
+                      >
+                        FOLLOWINGS
+                      </CardTitle>
+                      <span className="h2 font-weight-bold mb-0">
+                        {followObj["followings"]}
+                      </span>
+                    </div>
+                    <Col className="col-auto">
+                      <div className="icon icon-shape bg-warning text-white rounded-circle shadow">
+                        <i class="fas fa-people-arrows"></i>
                       </div>
-                      <Col className="col-auto">
-                        <div className="icon icon-shape bg-warning text-white rounded-circle shadow">
-                          <i className="fas fa-chart-pie" />
-                        </div>
-                      </Col>
-                    </Row>
-                    <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-danger mr-2">
-                        <i className="fas fa-arrow-down" /> {followObj['followings_wa']===0 ? 100 : ((followObj['followings'] - followObj['followings_wa'])/followObj['followings_wa'])*100}%
-                      </span>{" "}
-                      <span className="text-nowrap">Since last week</span>
-                    </p>
-                  </CardBody>
-                </Card>
-              </Col>
-              <Col lg="6" xl="3">
-                <Card className="card-stats mb-4 mb-xl-0">
-                  <CardBody>
-                    <Row>
-                      <div className="col">
-                        <CardTitle
-                          tag="h5"
-                          className="text-uppercase text-muted mb-0"
-                        >
-                          MENTIONS
-                        </CardTitle>
-                        <span className="h2 font-weight-bold mb-0">924</span>
-                      </div>
-                      <Col className="col-auto">
-                        <div className="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                          <i className="fas fa-users" />
-                        </div>
-                      </Col>
-                    </Row>
-                    <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-warning mr-2">
-                        <i className="fas fa-arrow-down" /> 1.10%
-                      </span>{" "}
-                      <span className="text-nowrap">Since yesterday</span>
-                    </p>
-                  </CardBody>
-                </Card>
-              </Col>
-              <Col lg="6" xl="3">
-                <Card className="card-stats mb-4 mb-xl-0">
-                  <CardBody>
-                    <Row>
-                      <div className="col">
-                        <CardTitle
-                          tag="h5"
-                          className="text-uppercase text-muted mb-0"
-                        >
-                          RETWEETS
-                        </CardTitle>
-                        <span className="h2 font-weight-bold mb-0">49,65%</span>
-                      </div>
-                      <Col className="col-auto">
-                        <div className="icon icon-shape bg-info text-white rounded-circle shadow">
-                          <i className="fas fa-percent" />
-                        </div>
-                      </Col>
-                    </Row>
-                    <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-success mr-2">
-                        <i className="fas fa-arrow-up" /> 12%
-                      </span>{" "}
-                      <span className="text-nowrap">Since last month</span>
-                    </p>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-          </div>
-        </Container>
-      </div>
-    </>
+                    </Col>
+                  </Row>
+                  <p className="mt-3 mb-0 text-muted text-sm">
+                    <span
+                      className={`${
+                        followObj["followings_percentage"] < 0
+                          ? "text-danger"
+                          : "text-success"
+                      }`}
+                    >
+                      <i
+                        className={`fa ${
+                          followObj["followings_percentage"] < 0
+                            ? "fa-arrow-down"
+                            : "fa-arrow-up"
+                        } mr-2`}
+                      />
+                      {followObj["followings_percentage"] < 0
+                        ? Math.abs(followObj["followings_percentage"])
+                        : followObj["followings_percentage"]}
+                      %
+                    </span>
+                    <span className="ml-2 text-nowrap">Since last 7 days</span>
+                  </p>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+        </div>
+      </Container>
+    </div>
   );
 }
 

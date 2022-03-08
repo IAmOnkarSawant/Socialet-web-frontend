@@ -1,4 +1,5 @@
 import React from "react";
+import { Card } from "reactstrap";
 import { randomPercentage } from "../../utils/formatter";
 
 function Bars({ ...props }) {
@@ -7,9 +8,9 @@ function Bars({ ...props }) {
   };
 
   return (
-    <div
+    <Card
       style={{ height: "320px", width: "100%" }}
-      className="d-flex flex-row justify-content-center"
+      className="d-flex flex-row justify-content-center shadow-lg rounded-lg mb-4 pt-5"
     >
       {Array.from({ length: 8 })
         .reduce((prevValue, currValue, index, array) => {
@@ -43,7 +44,7 @@ function Bars({ ...props }) {
             <span className="mt-1 mx-auto">{day}</span>
           </div>
         ))}
-    </div>
+    </Card>
   );
 }
 

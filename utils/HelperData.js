@@ -535,3 +535,874 @@ export const DesignTypes = [
   "YouTube Channel Art",
   "YouTube Thumbnail",
 ];
+
+export const cssValuesMonday = [
+  {
+    day: "monday",
+    time: "00",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "monday",
+    time: "01",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "monday",
+    time: "02",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "monday",
+    time: "03",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "monday",
+    time: "04",
+    "0-1 value": 0.1,
+  },
+  {
+    day: "monday",
+    time: "05",
+    "0-1 value": 0.1,
+  },
+  {
+    day: "monday",
+    time: "06",
+    "0-1 value": 0.2,
+  },
+  {
+    day: "monday",
+    time: "07",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "monday",
+    time: "08",
+    "0-1 value": 0.5,
+  },
+  {
+    day: "monday",
+    time: "09",
+    "0-1 value": 0.8,
+  },
+  {
+    day: "monday",
+    time: "10",
+    "0-1 value": 0.8,
+  },
+  {
+    day: "monday",
+    time: "11",
+    "0-1 value": 0.8,
+  },
+  {
+    day: "monday",
+    time: "12",
+    "0-1 value": 0.8,
+  },
+  {
+    day: "monday",
+    time: "13",
+    "0-1 value": 0.8,
+  },
+  {
+    day: "monday",
+    time: "14",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "monday",
+    time: "15",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "monday",
+    time: "16",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "monday",
+    time: "17",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "monday",
+    time: "18",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "monday",
+    time: "19",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "monday",
+    time: "20",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "monday",
+    time: "21",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "monday",
+    time: "22",
+    "0-1 value": 0.25,
+  },
+  {
+    day: "monday",
+    time: "23",
+    "0-1 value": 0.15,
+  },
+];
+
+export const cssValuesTuesday = [
+  {
+    day: "Tuesday",
+    time: "00",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Tuesday",
+    time: "01",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Tuesday",
+    time: "02",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Tuesday",
+    time: "03",
+    "0-1 value": 0.1,
+  },
+  {
+    day: "Tuesday",
+    time: "04",
+    "0-1 value": 0.1,
+  },
+  {
+    day: "Tuesday",
+    time: "05",
+    "0-1 value": 0.2,
+  },
+  {
+    day: "Tuesday",
+    time: "06",
+    "0-1 value": 0.2,
+  },
+  {
+    day: "Tuesday",
+    time: "07",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Tuesday",
+    time: "08",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Tuesday",
+    time: "09",
+    "0-1 value": 1,
+  },
+  {
+    day: "Tuesday",
+    time: "10",
+    "0-1 value": 1,
+  },
+  {
+    day: "Tuesday",
+    time: "11",
+    "0-1 value": 1,
+  },
+  {
+    day: "Tuesday",
+    time: "12",
+    "0-1 value": 1,
+  },
+  {
+    day: "Tuesday",
+    time: "13",
+    "0-1 value": 0.8,
+  },
+  {
+    day: "Tuesday",
+    time: "14",
+    "0-1 value": 0.8,
+  },
+  {
+    day: "Tuesday",
+    time: "15",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Tuesday",
+    time: "16",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Tuesday",
+    time: "17",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Tuesday",
+    time: "18",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Tuesday",
+    time: "19",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Tuesday",
+    time: "20",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Tuesday",
+    time: "21",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Tuesday",
+    time: "22",
+    "0-1 value": 0.25,
+  },
+  {
+    day: "Tuesday",
+    time: "23",
+    "0-1 value": 0.15,
+  },
+];
+
+export const cssValuesWednesday = [
+  {
+    day: "Wednesday",
+    time: "00",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Wednesday",
+    time: "01",
+    "0-1 value": 0.1,
+  },
+  {
+    day: "Wednesday",
+    time: "02",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Wednesday",
+    time: "03",
+    "0-1 value": 0.1,
+  },
+  {
+    day: "Wednesday",
+    time: "04",
+    "0-1 value": 0.1,
+  },
+  {
+    day: "Wednesday",
+    time: "05",
+    "0-1 value": 0.2,
+  },
+  {
+    day: "Wednesday",
+    time: "06",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Wednesday",
+    time: "07",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Wednesday",
+    time: "08",
+    "0-1 value": 0.8,
+  },
+  {
+    day: "Wednesday",
+    time: "09",
+    "0-1 value": 1,
+  },
+  {
+    day: "Wednesday",
+    time: "10",
+    "0-1 value": 1,
+  },
+  {
+    day: "Wednesday",
+    time: "11",
+    "0-1 value": 1,
+  },
+  {
+    day: "Wednesday",
+    time: "12",
+    "0-1 value": 1,
+  },
+  {
+    day: "Wednesday",
+    time: "13",
+    "0-1 value": 1,
+  },
+  {
+    day: "Wednesday",
+    time: "14",
+    "0-1 value": 1,
+  },
+  {
+    day: "Wednesday",
+    time: "15",
+    "0-1 value": 1,
+  },
+  {
+    day: "Wednesday",
+    time: "16",
+    "0-1 value": 0.8,
+  },
+  {
+    day: "Wednesday",
+    time: "17",
+    "0-1 value": 0.8,
+  },
+  {
+    day: "Wednesday",
+    time: "18",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Wednesday",
+    time: "19",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Wednesday",
+    time: "20",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Wednesday",
+    time: "21",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Wednesday",
+    time: "22",
+    "0-1 value": 0.25,
+  },
+  {
+    day: "Wednesday",
+    time: "23",
+    "0-1 value": 0.15,
+  },
+];
+
+export const cssValuesThursday = [
+  {
+    day: "Thursday",
+    time: "00",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Thursday",
+    time: "01",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Thursday",
+    time: "02",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Thursday",
+    time: "03",
+    "0-1 value": 0.1,
+  },
+  {
+    day: "Thursday",
+    time: "04",
+    "0-1 value": 0.1,
+  },
+  {
+    day: "Thursday",
+    time: "05",
+    "0-1 value": 0.1,
+  },
+  {
+    day: "Thursday",
+    time: "06",
+    "0-1 value": 0.2,
+  },
+  {
+    day: "Thursday",
+    time: "07",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Thursday",
+    time: "08",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Thursday",
+    time: "09",
+    "0-1 value": 1,
+  },
+  {
+    day: "Thursday",
+    time: "10",
+    "0-1 value": 1,
+  },
+  {
+    day: "Thursday",
+    time: "11",
+    "0-1 value": 1,
+  },
+  {
+    day: "Thursday",
+    time: "12",
+    "0-1 value": 0.8,
+  },
+  {
+    day: "Thursday",
+    time: "13",
+    "0-1 value": 0.8,
+  },
+  {
+    day: "Thursday",
+    time: "14",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Thursday",
+    time: "15",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Thursday",
+    time: "16",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Thursday",
+    time: "17",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Thursday",
+    time: "18",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Thursday",
+    time: "19",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Thursday",
+    time: "20",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Thursday",
+    time: "21",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Thursday",
+    time: "22",
+    "0-1 value": 0.25,
+  },
+  {
+    day: "Thursday",
+    time: "23",
+    "0-1 value": 0.15,
+  },
+];
+
+export const cssValuesFriday = [
+  {
+    day: "Friday",
+    time: "00",
+    "0-1 value": 0.1,
+  },
+  {
+    day: "Friday",
+    time: "01",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Friday",
+    time: "02",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Friday",
+    time: "03",
+    "0-1 value": 0.1,
+  },
+  {
+    day: "Friday",
+    time: "04",
+    "0-1 value": 0.1,
+  },
+  {
+    day: "Friday",
+    time: "05",
+    "0-1 value": 0.25,
+  },
+  {
+    day: "Friday",
+    time: "06",
+    "0-1 value": 0.3,
+  },
+  {
+    day: "Friday",
+    time: "07",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Friday",
+    time: "08",
+    "0-1 value": 0.5,
+  },
+  {
+    day: "Friday",
+    time: "09",
+    "0-1 value": 1,
+  },
+  {
+    day: "Friday",
+    time: "10",
+    "0-1 value": 0.8,
+  },
+  {
+    day: "Friday",
+    time: "11",
+    "0-1 value": 1,
+  },
+  {
+    day: "Friday",
+    time: "12",
+    "0-1 value": 0.8,
+  },
+  {
+    day: "Friday",
+    time: "13",
+    "0-1 value": 0.8,
+  },
+  {
+    day: "Friday",
+    time: "14",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Friday",
+    time: "15",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Friday",
+    time: "16",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Friday",
+    time: "17",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Friday",
+    time: "18",
+    "0-1 value": 0.25,
+  },
+  {
+    day: "Friday",
+    time: "19",
+    "0-1 value": 0.25,
+  },
+  {
+    day: "Friday",
+    time: "20",
+    "0-1 value": 0.25,
+  },
+  {
+    day: "Friday",
+    time: "21",
+    "0-1 value": 0.25,
+  },
+  {
+    day: "Friday",
+    time: "22",
+    "0-1 value": 0.15,
+  },
+  {
+    day: "Friday",
+    time: "23",
+    "0-1 value": 0.15,
+  },
+];
+
+export const cssValuesSaturday = [
+  {
+    day: "Saturday",
+    time: "00",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Saturday",
+    time: "01",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Saturday",
+    time: "02",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Saturday",
+    time: "03",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Saturday",
+    time: "04",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Saturday",
+    time: "05",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Saturday",
+    time: "06",
+    "0-1 value": 0.1,
+  },
+  {
+    day: "Saturday",
+    time: "07",
+    "0-1 value": 0.2,
+  },
+  {
+    day: "Saturday",
+    time: "08",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Saturday",
+    time: "09",
+    "0-1 value": 0.5,
+  },
+  {
+    day: "Saturday",
+    time: "10",
+    "0-1 value": 0.5,
+  },
+  {
+    day: "Saturday",
+    time: "11",
+    "0-1 value": 0.5,
+  },
+  {
+    day: "Saturday",
+    time: "12",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Saturday",
+    time: "13",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Saturday",
+    time: "14",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Saturday",
+    time: "15",
+    "0-1 value": 0.2,
+  },
+  {
+    day: "Saturday",
+    time: "16",
+    "0-1 value": 0.2,
+  },
+  {
+    day: "Saturday",
+    time: "17",
+    "0-1 value": 0.2,
+  },
+  {
+    day: "Saturday",
+    time: "18",
+    "0-1 value": 0.2,
+  },
+  {
+    day: "Saturday",
+    time: "19",
+    "0-1 value": 0.2,
+  },
+  {
+    day: "Saturday",
+    time: "20",
+    "0-1 value": 0.2,
+  },
+  {
+    day: "Saturday",
+    time: "21",
+    "0-1 value": 0.2,
+  },
+  {
+    day: "Saturday",
+    time: "22",
+    "0-1 value": 0.15,
+  },
+  {
+    day: "Saturday",
+    time: "23",
+    "0-1 value": 0.05,
+  },
+];
+
+export const cssValuesSunday = [
+  {
+    day: "Sunday",
+    time: "00",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Sunday",
+    time: "01",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Sunday",
+    time: "02",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Sunday",
+    time: "03",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Sunday",
+    time: "04",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Sunday",
+    time: "05",
+    "0-1 value": 0.05,
+  },
+  {
+    day: "Sunday",
+    time: "06",
+    "0-1 value": 0.1,
+  },
+  {
+    day: "Sunday",
+    time: "07",
+    "0-1 value": 0.2,
+  },
+  {
+    day: "Sunday",
+    time: "08",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Sunday",
+    time: "09",
+    "0-1 value": 0.5,
+  },
+  {
+    day: "Sunday",
+    time: "10",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Sunday",
+    time: "11",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Sunday",
+    time: "12",
+    "0-1 value": 0.8,
+  },
+  {
+    day: "Sunday",
+    time: "13",
+    "0-1 value": 0.6,
+  },
+  {
+    day: "Sunday",
+    time: "14",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Sunday",
+    time: "15",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Sunday",
+    time: "16",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Sunday",
+    time: "17",
+    "0-1 value": 0.2,
+  },
+  {
+    day: "Sunday",
+    time: "18",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Sunday",
+    time: "19",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Sunday",
+    time: "20",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Sunday",
+    time: "21",
+    "0-1 value": 0.4,
+  },
+  {
+    day: "Sunday",
+    time: "22",
+    "0-1 value": 0.15,
+  },
+  {
+    day: "Sunday",
+    time: "23",
+    "0-1 value": 0.05,
+  },
+];
+
+export const WeekDay = {
+  Monday: cssValuesMonday,
+  Tuesday: cssValuesTuesday,
+  Wednesday: cssValuesWednesday,
+  Thursday: cssValuesThursday,
+  Friday: cssValuesFriday,
+  Saturday: cssValuesSaturday,
+  Sunday: cssValuesSunday,
+};

@@ -133,3 +133,9 @@ textarea {
 	outline: 1px solid transparent;
 	border-radius: 100px;
 }
+
+
+.scale-up-transition:hover{
+	transform: scale(1.12);
+	transition: 0.1s ease-out transform;
+}

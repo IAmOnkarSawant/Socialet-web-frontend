@@ -25,8 +25,8 @@ import { useSession } from "next-auth/react";
 import { getUserDetails, followUser } from "../../_api/profile";
 import { useRouter } from "next/router";
 import { RiUserFollowFill, RiUserUnfollowFill } from "react-icons/ri";
-import toast from "react-hot-toast";
 import { highlightLinkInText } from "../../utils/formatter";
+import BackButton from "../../components/Buttons/BackButton";
 
 function userprofile() {
   const { data: session } = useSession();
@@ -91,6 +91,7 @@ function userprofile() {
 
   return (
     <Container className="pt-3" fluid>
+      <BackButton />
       <Card
         className="shadow-lg rounded-lg"
         style={{

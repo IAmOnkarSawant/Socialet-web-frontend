@@ -88,16 +88,6 @@ export const formatHashtag = (searchTerm) => {
   return newSearchTerm;
 };
 
-export const getNextDate = (delta) => {
-  var date = new Date();
-  date.setFullYear(date.getFullYear() + delta["years"]);
-  date.setMonth(date.getMonth() + delta["months"]);
-  date.setDate(date.getDate() + delta["days"]);
-  date.setMilliseconds(date.getMilliseconds() + delta["milliseconds"]);
-  console.log(date.toDateString());
-  return date;
-};
-
 export const getRandomDate = (start, end) =>
   new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 
@@ -159,4 +149,33 @@ export function formatAMPM(date) {
   minutes = minutes < 10 ? "0" + minutes : minutes;
   var strTime = hours + ":" + minutes + " " + ampm;
   return strTime;
+}
+
+export function formatTweet(text) {
+  // handling hashtags
+  const hashtags = getHashtags(text);
+  let tweet = text;
+  if (hashtags.length !== 0) {
+    hashtags.map(
+      (hashtag) =>
+        (tweet = tweet.replace(
+          hashtag || `<span>${hashtag}</span>`,
+          `<span type="#" style="cursor: pointer;color: rgb(17, 109, 170);pointer-events: all" class="font-weight-bold">${hashtag}</span>`
+        ))
+    );
+  }
+
+  // handling user_mentions
+  const userMentions = getUserMentions(tweet);
+  if (userMentions.length !== 0) {
+    userMentions.map(
+      (mention) =>
+        (tweet = tweet.replace(
+          mention || `<span>${mention}</span>`,
+          `<span type="@" style="cursor: pointer;color: #5E72E4;pointer-events: all" class="font-weight-bold">${mention}</span>`
+        ))
+    );
+  }
+
+  return text;
 }
