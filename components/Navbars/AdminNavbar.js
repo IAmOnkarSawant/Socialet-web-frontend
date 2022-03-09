@@ -11,7 +11,7 @@ import {
   Media,
 } from "reactstrap";
 
-function AdminNavbar({ brandText }) {
+function AdminNavbar({ brandText, user }) {
   return (
     <>
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
@@ -26,14 +26,11 @@ function AdminNavbar({ brandText }) {
               <DropdownToggle className="pr-0" nav>
                 <Media className="align-items-center">
                   <span className="avatar avatar-sm rounded-circle">
-                    <img
-                      alt="..."
-                      src={require("assets/img/theme/team-4-800x800.jpg")}
-                    />
+                    <img alt="..." src={user?.profile_image_url_https} />
                   </span>
                   <Media className="ml-2 d-none d-lg-block">
                     <span className="mb-0 text-sm font-weight-bold">
-                      My Name
+                      {user?.name}
                     </span>
                   </Media>
                 </Media>

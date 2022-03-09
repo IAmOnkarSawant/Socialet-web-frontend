@@ -55,6 +55,7 @@ import CanvaButton from "../../components/Canva/Canva";
 import CanvaSVG from "../../components/Canva/CanvaSVG";
 import { DesignTypes } from "../../utils/HelperData";
 import Tooltipper from "../../components/Tooltip/Tooltipper";
+import { getUserDetails } from "../../_api/profile";
 
 const DUMMY_DASHTAGS = ["#coolday", "#beach"];
 
@@ -187,9 +188,6 @@ function Publish() {
   };
   const MAX_CAPTION_LENGTH = 280;
 
-  const [tooltipOpen, setTooltipOpen] = useState(false);
-  const toggleToolTip = () => setTooltipOpen(!tooltipOpen);
-
   const [tagValue, setTagValue] = useState("");
 
   const handleKeyDown = (e) => {
@@ -282,6 +280,23 @@ function Publish() {
     formik.setFieldValue("isEmojiPanelOpen", false)
   );
 
+  const [user, setUser] = useState({});
+
+  const getUser = useCallback(
+    (user_id) => {
+      getUserDetails(user_id).then(({ data: { profile } }) => {
+        setUser({ ...profile });
+      });
+    },
+    [session?.token?.sub]
+  );
+
+  useEffect(() => {
+    if (session?.token?.sub) {
+      getUser(session?.token?.sub);
+    }
+  }, [session?.token?.sub]);
+
   return (
     <React.Fragment>
       <ModalGIF
@@ -330,12 +345,14 @@ function Publish() {
                 style={{ color: "rgb(29, 161, 242)" }}
                 className="ml-2"
               />
-              <p className="pl-2 mb-0 font-weight-bold text-dark">G11 SMWT</p>
+              <p className="pl-2 mb-0 font-weight-bold text-dark">
+                {user?.name}
+              </p>
               <p
                 style={{ fontSize: "13px" }}
                 className="pl-2 mb-0 font-weight-normal"
               >
-                @SmwtG11
+                @{user?.screen_name}
               </p>
             </Card>
             {replyToTweet && (

@@ -29,19 +29,14 @@ import millify from "millify";
 import {
   CartesianGrid,
   Legend,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
-  Line,
-  BarChart,
-  Bar,
   AreaChart,
   Area,
 } from "recharts";
 import moment from "moment";
-import Bars from "../../components/Bars/Bars";
 import BestTime from "../../components/Bars/BestTime";
 
 const Dashboard = () => {

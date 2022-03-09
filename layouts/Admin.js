@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 // reactstrap components
 // core components
@@ -6,10 +6,13 @@ import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 
 import routes from "routes.js";
+import { useSession } from "next-auth/react";
+import { getUserDetails } from "../_api/profile";
 
 function Admin(props) {
   // used for checking current route
   const router = useRouter();
+  const { data: session } = useSession();
   let mainContentRef = React.createRef();
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
@@ -24,6 +27,25 @@ function Admin(props) {
     }
     return "Brand";
   };
+
+  const [user, setUser] = useState({});
+
+  const getUser = useCallback(
+    (user_id) => {
+      getUserDetails(user_id).then(({ data: { profile } }) => {
+        console.log(profile);
+        setUser({ ...profile });
+      });
+    },
+    [session?.token?.sub]
+  );
+
+  useEffect(() => {
+    if (session?.token?.sub) {
+      getUser(session?.token?.sub);
+    }
+  }, [session?.token?.sub]);
+
   return (
     <>
       <Sidebar
@@ -36,7 +58,7 @@ function Admin(props) {
         }}
       />
       <div className="main-content" ref={mainContentRef}>
-        <AdminNavbar {...props} brandText={getBrandText()} />
+        <AdminNavbar {...props} user={user} brandText={getBrandText()} />
         {props.children}
       </div>
     </>
