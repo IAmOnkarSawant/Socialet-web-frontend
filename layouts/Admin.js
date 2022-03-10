@@ -71,8 +71,8 @@ function Admin(props) {
         routes={routes}
         logo={{
           innerLink: "/admin/index",
-          imgSrc: require("assets/img/brand/nextjs_argon_black.png"),
-          imgAlt: "...",
+          imgSrc: require("assets/img/brand/socialet.png"),
+          imgAlt: "Brand_Name",
         }}
       />
       <div className="main-content" ref={mainContentRef}>
