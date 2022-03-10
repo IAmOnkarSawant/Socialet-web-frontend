@@ -54,12 +54,7 @@ function Admin(props) {
   );
 
   useEffect(() => {
-    if (
-      session?.token?.sub &&
-      accounts &&
-      !!!accounts["twitter"] &&
-      !!isAccountsLoaded
-    ) {
+    if (session?.token?.sub && accounts) {
       getUser(session?.token?.sub);
     }
   }, [session?.token?.sub]);
@@ -76,12 +71,9 @@ function Admin(props) {
         }}
       />
       <div className="main-content" ref={mainContentRef}>
-        {session?.token?.sub &&
-          accounts &&
-          !!!accounts["twitter"] &&
-          !!isAccountsLoaded && (
-            <AdminNavbar {...props} user={user} brandText={getBrandText()} />
-          )}
+        {session?.token?.sub && accounts && (
+          <AdminNavbar {...props} user={user} brandText={getBrandText()} />
+        )}
         {props.children}
       </div>
     </>

@@ -22,8 +22,9 @@ function AdminNavbar() {
             <span>
               <NavbarBrand href="#pablo">
                 <img
+                  width="160px"
                   alt="..."
-                  src={require("assets/img/brand/nextjs_argon_white.png")}
+                  src={require("assets/img/brand/socialet.png")}
                 />
               </NavbarBrand>
             </span>
