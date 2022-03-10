@@ -58,10 +58,9 @@ function Channels() {
         <NavbarBrand className="pl-4 font-weight-bold">Channels</NavbarBrand>
         <Button
           color="primary"
-          className="mb-3"
+          className="px-4"
           outline
           style={{ marginLeft: "auto", marginRight: 15 }}
-          className="px-4"
           size="sm"
           onClick={() => router.back()}
         >

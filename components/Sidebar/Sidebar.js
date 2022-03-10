@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 // nodejs library to set properties for components
@@ -35,13 +35,26 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import { useSession } from "next-auth/react";
+import { getSocialAccounts } from "../../_api/users";
 
 var ps;
 
 function Sidebar(props) {
   // used for checking current route
+  const [collapseOpen, setCollapseOpen] = useState(false);
   const router = useRouter();
-  const [collapseOpen, setCollapseOpen] = React.useState(false);
+  const { data: session } = useSession();
+  const [accounts, setAccounts] = useState({});
+
+  useEffect(() => {
+    if (session?.token?.sub) {
+      getSocialAccounts(session.token?.sub).then(({ data: accnts }) => {
+        setAccounts({ ...accnts });
+      });
+    }
+  }, [session?.token?.sub]);
+
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
     return router.route.indexOf(routeName) > -1;
@@ -56,22 +69,33 @@ function Sidebar(props) {
   };
   // creates the links that appear in the left menu / Sidebar
   const createLinks = (routes) => {
-    return routes.map((prop, key) => {
-      return (
-        <NavItem key={key} active={activeRoute(prop.layout + prop.path)}>
-          <Link href={prop.layout + prop.path}>
-            <NavLink
-              href={prop.path}
-              active={activeRoute(prop.layout + prop.path)}
-              onClick={closeCollapse}
-            >
-              <i className={prop.icon} />
-              {prop.name}
-            </NavLink>
-          </Link>
-        </NavItem>
-      );
-    });
+    return [...routes]
+      .map((route) => {
+        if (accounts && !accounts["twitter"]) {
+          return {
+            ...route,
+            disabled: true,
+          };
+        }
+        return route;
+      })
+      .map((prop, key) => {
+        return (
+          <NavItem key={key} active={activeRoute(prop.layout + prop.path)}>
+            <Link href={prop.layout + prop.path}>
+              <NavLink
+                href={prop.path}
+                active={activeRoute(prop.layout + prop.path)}
+                onClick={closeCollapse}
+                disabled={prop.disabled}
+              >
+                <i className={prop.icon} />
+                {prop.name}
+              </NavLink>
+            </Link>
+          </NavItem>
+        );
+      });
   };
   const { routes, logo } = props;
   let navbarBrand = (
@@ -141,24 +165,6 @@ function Sidebar(props) {
                 <DropdownItem>
                   <i className="ni ni-single-02" />
                   <span>My profile</span>
-                </DropdownItem>
-              </Link>
-              <Link href="/admin/profile">
-                <DropdownItem>
-                  <i className="ni ni-settings-gear-65" />
-                  <span>Settings</span>
-                </DropdownItem>
-              </Link>
-              <Link href="/admin/profile">
-                <DropdownItem>
-                  <i className="ni ni-calendar-grid-58" />
-                  <span>Activity</span>
-                </DropdownItem>
-              </Link>
-              <Link href="/admin/profile">
-                <DropdownItem>
-                  <i className="ni ni-support-16" />
-                  <span>Support</span>
                 </DropdownItem>
               </Link>
               <DropdownItem divider />

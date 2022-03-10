@@ -8,6 +8,7 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 import routes from "routes.js";
 import { useSession } from "next-auth/react";
 import { getUserDetails } from "../_api/profile";
+import { getSocialAccounts } from "../_api/users";
 
 function Admin(props) {
   // used for checking current route
@@ -29,6 +30,18 @@ function Admin(props) {
   };
 
   const [user, setUser] = useState({});
+  const [accounts, setAccounts] = useState({});
+  const [isAccountsLoaded, setIsAccountsLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsAccountsLoaded(false);
+    if (session?.token?.sub) {
+      getSocialAccounts(session.token?.sub).then(({ data: accnts }) => {
+        setAccounts({ ...accnts });
+        setIsAccountsLoaded(true);
+      });
+    }
+  }, [session?.token?.sub]);
 
   const getUser = useCallback(
     (user_id) => {
@@ -41,7 +54,12 @@ function Admin(props) {
   );
 
   useEffect(() => {
-    if (session?.token?.sub) {
+    if (
+      session?.token?.sub &&
+      accounts &&
+      !!!accounts["twitter"] &&
+      !!isAccountsLoaded
+    ) {
       getUser(session?.token?.sub);
     }
   }, [session?.token?.sub]);
@@ -58,7 +76,12 @@ function Admin(props) {
         }}
       />
       <div className="main-content" ref={mainContentRef}>
-        <AdminNavbar {...props} user={user} brandText={getBrandText()} />
+        {session?.token?.sub &&
+          accounts &&
+          !!!accounts["twitter"] &&
+          !!isAccountsLoaded && (
+            <AdminNavbar {...props} user={user} brandText={getBrandText()} />
+          )}
         {props.children}
       </div>
     </>

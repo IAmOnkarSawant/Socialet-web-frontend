@@ -38,6 +38,8 @@ import {
 } from "recharts";
 import moment from "moment";
 import BestTime from "../../components/Bars/BestTime";
+import { getSocialAccounts } from "../../_api/users";
+import AccessCard from "../../components/AccessCard/AccessCard";
 
 const Dashboard = () => {
   const {
@@ -56,6 +58,9 @@ const Dashboard = () => {
   const [follower, setFollower] = useState({});
   const [mention, setMention] = useState({});
   const [timeline, setTimeline] = useState([]);
+
+  const [accounts, setAccounts] = useState({});
+  const [isAccountsLoaded, setIsAccountsLoaded] = useState(false);
 
   const getFollowersCount = useCallback(
     (user_id) => {
@@ -138,8 +143,27 @@ const Dashboard = () => {
     }
   }, [session?.token?.sub]);
 
+  useEffect(() => {
+    setIsAccountsLoaded(false);
+    if (session?.token?.sub) {
+      getSocialAccounts(session.token?.sub).then(({ data: accnts }) => {
+        setAccounts({ ...accnts });
+        setIsAccountsLoaded(true);
+      });
+    }
+  }, [session?.token?.sub]);
+
+  if (
+    session?.token?.sub &&
+    accounts &&
+    accounts["twitter"] === false &&
+    !isAccountsLoaded
+  ) {
+    return <AccessCard />;
+  }
+
   return (
-    <>
+    <React.Fragment>
       <Header followObj={followObj} />
       <Container className="mt-4" fluid>
         <div>
@@ -429,7 +453,7 @@ const Dashboard = () => {
         </Row>
         <ModalComponent isOpen={isOpen} onClose={handleClose} />
       </Container>
-    </>
+    </React.Fragment>
   );
 };
 
