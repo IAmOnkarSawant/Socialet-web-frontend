@@ -29,7 +29,7 @@ function CanvaButton({ formik, type, ...props }) {
         },
         onDesignPublish: (opts) => {
           console.log(opts);
-          formik.setFieldValue("selectedDesignURL", opts?.exportUrl);
+          formik.setFieldValue("canvaDesign", opts);
         },
       });
     }

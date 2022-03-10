@@ -92,7 +92,7 @@ function Publish() {
       isImagePanelOpen: false,
       isCanvaPanalOpen: false,
       selectedDesignType: "",
-      selectedDesignURL: "",
+      canvaDesign: null,
       isDatePickerOpen: false,
       scheduleDate: null,
       isScheduleDateSelected: false,
@@ -102,6 +102,10 @@ function Publish() {
     onSubmit: (values) => {
       if (values.isReply) {
         let formData = new FormData();
+        if (values.canvaDesign) {
+          formData.append("canva_design_url", values.canvaDesign.exportUrl);
+          formData.append("canva_design_title", values.canvaDesign.designTitle);
+        }
         values.images.map(({ file }) => formData.append("files", file));
 
         formData.append("user_id", session.token.sub);
@@ -140,6 +144,10 @@ function Publish() {
       }
 
       let formData = new FormData();
+      if (values.canvaDesign) {
+        formData.append("canva_design_url", values.canvaDesign.exportUrl);
+        formData.append("canva_design_title", values.canvaDesign.designTitle);
+      }
       values.images.map(({ file }) => formData.append("files", file));
 
       formData.append("user_id", session.token.sub);
