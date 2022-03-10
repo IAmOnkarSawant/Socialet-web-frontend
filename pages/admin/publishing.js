@@ -28,6 +28,7 @@ import ModalUpdatePost from "../../components/Modal/ModalUpdatePost";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
+import BackButton from "../../components/Buttons/BackButton";
 
 export default function Publishing() {
   const router = useRouter();
@@ -171,6 +172,7 @@ export default function Publishing() {
           </Card>
         </Col>
       </Row>
+      <BackButton />
     </Container>
   );
 }

@@ -36,14 +36,14 @@ var routes = [
   },
   {
     path: "/publish",
-    name: "Publish Post",
+    name: "Publish",
     icon: "ni ni-send text-primary",
     layout: "/admin",
     disabled: false,
   },
   {
     path: "/publishing",
-    name: "Calender",
+    name: "Calendar",
     icon: "ni ni-calendar-grid-58 text-success",
     layout: "/admin",
     disabled: false,
