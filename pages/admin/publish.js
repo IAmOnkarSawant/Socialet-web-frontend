@@ -996,7 +996,7 @@ function Publish() {
                   text={formik.values.text}
                   images={formik.values.images}
                   GIFs={formik.values.GIFs}
-                  canvaDesign={formik.values.selectedDesignURL}
+                  canvaDesign={formik.values.canvaDesign}
                   formik={formik}
                 />
               ) : (

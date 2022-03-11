@@ -10,6 +10,7 @@ function TwitterPreview({
   formik,
   ...props
 }) {
+  console.log(canvaDesign);
   return (
     <div
       style={{
@@ -102,7 +103,7 @@ function TwitterPreview({
         <div>
           {canvaDesign && (
             <img
-              src={canvaDesign}
+              src={canvaDesign.exportUrl}
               style={{
                 maxWidth: "320px",
                 minHeight: "200px",
