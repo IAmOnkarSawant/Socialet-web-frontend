@@ -112,7 +112,8 @@ const Dashboard = () => {
   const getTimelinee = useCallback(
     (user_id) => {
       getTimeline(user_id).then(({ data }) => {
-        const newTimeline = data?.followers?.map((fl) => {
+        let newTimeline = null;
+        newTimeline = data?.followers?.map((fl) => {
           const followingFind = data?.followings?.find((f) => {
             if (String(f.date) === String(fl.date)) {
               return f;
@@ -126,7 +127,10 @@ const Dashboard = () => {
             ),
           };
         });
-        setTimeline([...newTimeline]);
+        console.log(newTimeline);
+        if (newTimeline) {
+          setTimeline([...newTimeline]);
+        }
       });
     },
     [session?.token?.sub]

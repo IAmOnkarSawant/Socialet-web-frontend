@@ -72,6 +72,11 @@ function Sidebar(props) {
     return [...routes]
       .map((route) => {
         if (accounts && !accounts["twitter"]) {
+          if (route.name === "Channels") {
+            return {
+              ...route,
+            };
+          }
           return {
             ...route,
             disabled: true,
