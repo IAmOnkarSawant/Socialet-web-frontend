@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 import { getUserDetails } from "../_api/profile";
 import { getSocialAccounts } from "../_api/users";
 
-function Admin(props) {
+function Admin({ ...props }) {
   // used for checking current route
   const router = useRouter();
   const { data: session } = useSession();
@@ -26,7 +26,7 @@ function Admin(props) {
         return routes[i].name;
       }
     }
-    return "Brand";
+    return "Dashboard";
   };
 
   const [user, setUser] = useState({});
@@ -60,23 +60,25 @@ function Admin(props) {
   }, [session?.token?.sub]);
 
   return (
-    <>
-      <Sidebar
-        {...props}
-        routes={routes}
-        logo={{
-          innerLink: "/admin/index",
-          imgSrc: require("assets/img/brand/socialet.png"),
-          imgAlt: "Brand_Name",
-        }}
-      />
+    <React.Fragment>
+      {router.route.split("/")[2] !== "management" && (
+        <Sidebar
+          {...props}
+          routes={routes}
+          logo={{
+            innerLink: "/admin/index",
+            imgSrc: require("assets/img/brand/socialet.png"),
+            imgAlt: "Brand_Name",
+          }}
+        />
+      )}
       <div className="main-content" ref={mainContentRef}>
         {session?.token?.sub && accounts && (
           <AdminNavbar {...props} user={user} brandText={getBrandText()} />
         )}
         {props.children}
       </div>
-    </>
+    </React.Fragment>
   );
 }
 

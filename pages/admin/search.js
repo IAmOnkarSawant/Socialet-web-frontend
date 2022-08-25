@@ -179,10 +179,9 @@ function search() {
           {formik.values.tweets.length > 0 && (
             <Button
               color="primary"
-              className="mb-3"
+              className="mb-3 px-4"
               outline
               style={{ marginLeft: "auto", marginRight: 15 }}
-              className="px-4"
               size="sm"
               onClick={() => {
                 formik.setFieldValue("tweets", []);
@@ -196,10 +195,9 @@ function search() {
           )}
           <Button
             color="primary"
-            className="mb-3"
+            className="mb-3 px-4"
             outline
             style={{ marginLeft: "auto", marginRight: 15 }}
-            className="px-4"
             size="sm"
             onClick={() => router.back()}
           >

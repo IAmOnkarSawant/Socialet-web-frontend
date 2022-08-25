@@ -15,9 +15,20 @@ import { emotions } from "../../utils/emotion";
 import { Spinner } from "reactstrap";
 
 function TwitterFeedCard(
-  { tweet, search, feed, formik, isEmotionShow, ...props },
+  {
+    tweet,
+    search,
+    feed,
+    formik,
+    isEmotionShow = false,
+    isLikeShow = false,
+    isRetweetShow = false,
+    isReplyShow = false,
+    ...props
+  },
   ref
 ) {
+  console.log(ref);
   const [modalImageURL, setModalImageURL] = useState("");
   const { data: session } = useSession();
   const [tweetData, setTweetData] = useState(tweet);
@@ -242,47 +253,52 @@ function TwitterFeedCard(
           isEmotionShow &&
           !tweet["emotion"] && <Spinner type="grow" color="default" size="sm" />
         )}
-        {tweetData.favorited ? (
-          <AiTwotoneHeart
+        {isLikeShow &&
+          (tweetData.favorited ? (
+            <AiTwotoneHeart
+              style={{
+                marginLeft: "auto",
+                fontSize: 20,
+                cursor: "pointer",
+                color: "red",
+              }}
+              className="ml-4"
+              onClick={favTweetHandler}
+            />
+          ) : (
+            <AiOutlineHeart
+              style={{
+                marginLeft: "auto",
+                fontSize: 20,
+                cursor: "pointer",
+              }}
+              className="ml-4"
+              onClick={favTweetHandler}
+            />
+          ))}
+        {isRetweetShow && tweetData.retweeted && (
+          <FaRetweet
             style={{
               marginLeft: "auto",
               fontSize: 20,
               cursor: "pointer",
-              color: "red",
+              color: tweetData.retweeted ? "#5e72e4" : "",
             }}
             className="ml-4"
-            onClick={favTweetHandler}
-          />
-        ) : (
-          <AiOutlineHeart
-            style={{
-              marginLeft: "auto",
-              fontSize: 20,
-              cursor: "pointer",
-            }}
-            className="ml-4"
-            onClick={favTweetHandler}
+            onClick={reTweetHandler}
           />
         )}
-        <FaRetweet
-          style={{
-            marginLeft: "auto",
-            fontSize: 20,
-            cursor: "pointer",
-            color: tweetData.retweeted ? "#5e72e4" : "",
-          }}
-          className="ml-4"
-          onClick={reTweetHandler}
-        />
-        <RiReplyLine
-          style={{
-            marginLeft: "auto",
-            fontSize: 20,
-            cursor: "pointer",
-          }}
-          className="ml-4"
-          onClick={replyTweetHandler}
-        />
+        {isReplyShow && (
+          <RiReplyLine
+            style={{
+              marginLeft: "auto",
+              fontSize: 20,
+              cursor: "pointer",
+            }}
+            className="ml-4"
+            onClick={replyTweetHandler}
+          />
+        )}
       </div>
       {modalImageURL && (
         <ModalImage setModalImageURL={setModalImageURL} url={modalImageURL} />

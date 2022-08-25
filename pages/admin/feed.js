@@ -14,6 +14,8 @@ function Feed() {
   const router = useRouter();
   const { data: session } = useSession();
 
+  console.log(session);
+
   const [page, setPage] = useState(1);
   const { ref, inView } = useInView({
     triggerOnce: true,
@@ -119,15 +121,21 @@ function Feed() {
                   tweet={tweet}
                   feed={true}
                   isEmotionShow
+                  isLikeShow
+                  isRetweetShow
+                  isReplyShow
                 />
               );
             }
             return (
               <TwitterCard
-                isEmotionShow
                 key={tweet.id}
                 tweet={tweet}
                 feed={true}
+                isEmotionShow
+                isLikeShow
+                isRetweetShow
+                isReplyShow
               />
             );
           })}

@@ -1,6 +1,8 @@
 import axios from "axios";
 import { TWITTER_URL } from "./channels";
 
+export const TWITTER_ADMIN_URL = `${process.env.NEXT_PUBLIC_API_URL}/admin`;
+
 // GET REQUEST -> TWITTER FEED
 export function getTwitterFeed(user_id, page = 1, options) {
   return axios.get(
@@ -29,6 +31,11 @@ export function getTweetById(tweet_id, user_id) {
   return axios.get(
     `${TWITTER_URL}/tweet/?tweet_id=${tweet_id}&user_id=${user_id}`
   );
+}
+
+// GET REQUEST -> GET WEEKLY TWEETS
+export function getWeeklyTweets(user_id) {
+  return axios.get(`${TWITTER_ADMIN_URL}/weekly_analysis/?user_id=${user_id}`);
 }
 
 // PATCH REQUEST -> FAVORITE A TWEET

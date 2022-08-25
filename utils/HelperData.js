@@ -1406,3 +1406,51 @@ export const WeekDay = {
   Saturday: cssValuesSaturday,
   Sunday: cssValuesSunday,
 };
+
+const getRandomColor = () => {
+  var letters = "0123456789ABCDEF";
+  var color = "#";
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
+
+export const ministries = [
+  {
+    mediaUnit: "All India Radio",
+    displayURL:
+      "https://www.deccanherald.com/sites/dh/files/article_images/2019/12/31/file6xurwkygrq91b3rzyiyq-1577795882.jpg",
+    color: getRandomColor(),
+  },
+  {
+    mediaUnit: "New Media Wing",
+    displayURL:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpAYLAJfOGczSSy3VB6CFgiPt6XaZa5NeD3s5IyyuzGsF6zCDFUouoph_3QY84YMKDYwY&usqp=CAU",
+    color: getRandomColor(),
+  },
+  {
+    mediaUnit: "Bureau of Outreach and communication",
+    displayURL:
+      "https://yt3.ggpht.com/3We4nUrphNb7SpQzvbsp5uZt3_QbN_0Ioxj6BMnktOrKVk-3e2opQ-84X3u465JYBaNferzRYtM=s900-c-k-c0x00ffffff-no-rj",
+    color: getRandomColor(),
+  },
+  {
+    mediaUnit: "Publications Division",
+    displayURL:
+      "https://media.9curry.com/uploads/organization/image/2426/Publications_Division_Logo.png",
+    color: getRandomColor(),
+  },
+  {
+    mediaUnit: "Press Information Bureau",
+    displayURL:
+      "https://previews.123rf.com/images/grandeduc/grandeduc1509/grandeduc150900128/44445147-press-conference-3d-render-of-speaker-podium-with-microphones-and-blue-curtain-background.jpg",
+    color: getRandomColor(),
+  },
+  {
+    mediaUnit: "DD News",
+    displayURL:
+      "https://www.schools360.in/wp-content/uploads/2019/06/dd-news.jpg",
+    color: getRandomColor(),
+  },
+];

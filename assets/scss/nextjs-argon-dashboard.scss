@@ -143,3 +143,13 @@ textarea {
 // .navbar-brand-img{
 
 // }
+
+.scrollable_feed {
+	height: 800px !important;
+	scroll-behavior: smooth;
+	overflow-y: scroll;
+}
+
+.padding_left_decreaser{
+	padding-right: 5px !important;
+}
