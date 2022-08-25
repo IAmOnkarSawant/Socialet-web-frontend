@@ -38,6 +38,20 @@ export function getWeeklyTweets(user_id) {
   return axios.get(`${TWITTER_ADMIN_URL}/weekly_analysis/?user_id=${user_id}`);
 }
 
+// GET REQUEST -> GET TRENDING HASHTAGS
+export function getTrendingHashtags(user_id, loc) {
+  return axios.get(
+    `${TWITTER_ADMIN_URL}/trendy_hashtags/?user_id=${user_id}&loc=${loc}`
+  );
+}
+
+// GET REQUEST -> GET TRENDING TOPICS
+export function getTopics(user_id, loc) {
+  return axios.get(
+    `${TWITTER_ADMIN_URL}/trendy_topics/?user_id=${user_id}&loc=${loc}`
+  );
+}
+
 // PATCH REQUEST -> FAVORITE A TWEET
 export function postFavorites(bodyData) {
   return axios.patch(`${TWITTER_URL}/favorite`, bodyData);
