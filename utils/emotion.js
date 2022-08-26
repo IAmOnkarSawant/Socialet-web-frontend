@@ -4,6 +4,4 @@ export const emotions = {
   Sad: "😞",
   Surprise: "😲",
   Happy: "😄",
-  // Love: "🥰",
-  // Neutral: "😐",
 };

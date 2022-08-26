@@ -12,7 +12,7 @@ import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from "recharts";
 // 	{ name: "neutral", value: 200 },
 // ];
 
-const COLORS = ["#172b4d", "#5e72e4", "#11cdef", "#2dce89", "#f5365c"];
+const COLORS = ["#2dce89", "#5e72e4", "#11cdef", "#fb6340", "#fcdb03"];
 
 function AnalysisCard({ data, ...props }) {
   const dataUpdated = Object.entries(data).map(([key, value], index) => {
@@ -40,12 +40,10 @@ function AnalysisCard({ data, ...props }) {
                 dataKey="value"
                 label
                 labelLine
+                isAnimationActive={false}
               >
                 {dataUpdated.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
+                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
                 ))}
               </Pie>
             </PieChart>

@@ -193,6 +193,8 @@ function search() {
                 if (query) {
                   window.history.replaceState(null, "", "/dashboard/search");
                 }
+                formik.setFieldValue("pieData", {});
+                formik.setFieldValue("isEmotionsFetched", false);
               }}
             >
               Search Keyword
