@@ -85,6 +85,7 @@ function search() {
     }));
     emotionRecogniser({ tweets }).then(({ data }) => {
       console.log(data.tweets);
+      console.log(data);
       const resp = formik.values.tweets.map((tweet) => {
         const emoji = [...data.tweets].find((t) => {
           if (t.id === tweet.id) {

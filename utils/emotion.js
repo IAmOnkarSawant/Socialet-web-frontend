@@ -1,9 +1,9 @@
 export const emotions = {
-	fear: "😨",
-	anger: "😠",
-	sadness: "😞",
-	surprise: "😲",
-	joy: "😄",
-	love: "🥰",
-	neutral: "😐",
+  Fear: "😨",
+  Angry: "😠",
+  Sad: "😞",
+  Surprise: "😲",
+  Happy: "😄",
+  // Love: "🥰",
+  // Neutral: "😐",
 };
