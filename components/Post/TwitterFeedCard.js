@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsTwitter } from "react-icons/bs";
 import { FaRetweet } from "react-icons/fa";
 import { RiReplyLine } from "react-icons/ri";
@@ -13,6 +13,9 @@ import { useSession } from "next-auth/react";
 import { postFavorites, postReTweet } from "../../_api/twitter";
 import { emotions } from "../../utils/emotion";
 import { Spinner } from "reactstrap";
+import { languagesList } from "../../utils/HelperData";
+import { postTranslatedText } from "../../_api/emotions";
+// const translate = require("google-translate-api");
 
 function TwitterFeedCard(
   {
@@ -38,6 +41,18 @@ function TwitterFeedCard(
       : tweet.retweeted_status
       ? tweet.retweeted_status.full_text
       : tweet.full_text;
+
+  const [translatedTweet, setTranslatedTweet] = useState({
+    id: null,
+    tweet: "",
+  });
+
+  const translateText = (id, inputText, language) => {
+    console.log(inputText, language);
+    postTranslatedText({ text: inputText, language }).then(({ data }) => {
+      setTranslatedTweet({ id, tweet: data.translated });
+    });
+  };
 
   const favTweetHandler = (e) => {
     // already favorited-> to be unfavorited
@@ -215,7 +230,11 @@ function TwitterFeedCard(
             wordBreak: "break-word",
           }}
           dangerouslySetInnerHTML={{
-            __html: tweetFormatter(tweet_text, tweet),
+            __html: translatedTweet?.tweet
+              ? translatedTweet?.tweet === "language not supported!"
+                ? tweetFormatter(tweet_text, tweet)
+                : translatedTweet?.tweet
+              : tweetFormatter(tweet_text, tweet),
           }}
           onClick={clickHandler}
         />
@@ -240,6 +259,23 @@ function TwitterFeedCard(
         )}
       </div>
       <div className="d-flex flex-row justify-content-end align-items-center p-3">
+        <select
+          onChange={(e) =>
+            translateText(tweet?.id, tweet?.full_text, e.target.value)
+          }
+          style={{ marginLeft: 36 }}
+        >
+          <option disabled value="">
+            Select Language
+          </option>
+          {Object.entries(languagesList).map(([key, value], index) => {
+            return (
+              <option key={key} value={key}>
+                {value}
+              </option>
+            );
+          })}
+        </select>
         {isEmotionShow && tweet["emotion"] ? (
           <span
             style={{

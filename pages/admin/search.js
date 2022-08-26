@@ -33,6 +33,7 @@ import CenterSpinner from "../../components/Loaders/CenterSpinner";
 import { useInView } from "react-intersection-observer";
 import axios from "axios";
 import { emotionRecogniser } from "../../_api/emotions";
+import AnalysisCard from "../../components/AnalysisCard/AnalysisCard";
 
 const validationSchema = yup.object({
   searchTerm: yup
@@ -58,7 +59,9 @@ function search() {
     initialValues: {
       searchTerm: "",
       tweets: [],
+      pieData: {},
       isSearching: false,
+      isEmotionsFetched: false,
     },
     validationSchema: validationSchema,
     onSubmit: ({ searchTerm }) => {
@@ -84,8 +87,8 @@ function search() {
       id: f.id,
     }));
     emotionRecogniser({ tweets }).then(({ data }) => {
-      console.log(data.tweets);
       console.log(data);
+      formik.setFieldValue("pieData", data.chart_data);
       const resp = formik.values.tweets.map((tweet) => {
         const emoji = [...data.tweets].find((t) => {
           if (t.id === tweet.id) {
@@ -101,6 +104,7 @@ function search() {
       });
       console.log(resp);
       formik.setFieldValue("tweets", [...resp]);
+      formik.setFieldValue("isEmotionsFetched", true);
     });
   };
 
@@ -216,6 +220,13 @@ function search() {
       )}
       <Container fluid="sm" className="mt-4">
         <Row>
+          {formik.values.pieData &&
+            formik.values.tweets.length !== 0 &&
+            formik.values.isEmotionsFetched && (
+              <Col md="12" className="mb-4">
+                <AnalysisCard data={formik.values.pieData} />
+              </Col>
+            )}
           {formik.values.tweets.length !== 0 && !formik.values.isSearching ? (
             <Col md="12">
               {formik.values.tweets.map((tweet, index) => {

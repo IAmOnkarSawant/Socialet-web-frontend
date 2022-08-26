@@ -3,62 +3,92 @@ import MediaUnitsHeader from "components/Headers/MediaUnintsHeader.js";
 import Admin from "layouts/Admin.js";
 import { removeDuplicatesFromArrayOfObjects } from "../../utils/formatter";
 import { emotionRecogniser } from "../../_api/emotions";
-import { getTrendingHashtags, getWeeklyTweets } from "../../_api/twitter";
+import {
+  getTrendingHashtags,
+  getTrendingTopics,
+  getWeeklyTweets,
+} from "../../_api/twitter";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Card, CardBody, CardTitle, Col, Container, Row } from "reactstrap";
+import {
+  Badge,
+  Card,
+  CardBody,
+  CardTitle,
+  Col,
+  Container,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Row,
+  UncontrolledDropdown,
+} from "reactstrap";
 import TwitterCard from "../../components/Post/TwitterFeedCard";
 import CenterSpinner from "../../components/Loaders/CenterSpinner";
+import { countryList } from "../../utils/HelperData";
+import { BarChart, Bar, ResponsiveContainer } from "recharts";
 
 function management() {
   const router = useRouter();
   const { data: session } = useSession();
   const [feed, setFeed] = useState([]);
+  const [hashtags, setHashtags] = useState([]);
   const [openMediaUnit, setOpenMediaUnit] = useState(false);
+  const [country, setCountry] = useState("");
+  const [topics, setTopics] = useState([]);
 
   const recogniseTweetEmotion = () => {
     const tweets = feed.map((f) => ({
       tweet: f.full_text,
       id: f.id,
     }));
-    emotionRecogniser({ tweets }).then(({ data }) => {
-      console.log(data.tweets);
-      const resp = feed.map((tweet) => {
-        const emoji = [...data.tweets].find((t) => {
-          if (t.id === tweet.id) {
-            return t;
-          }
-        });
-        console.log(emoji["emotion"]);
-
-        return {
-          ...tweet,
-          emotion: emoji["emotion"],
-        };
-      });
-      console.log(resp);
-      setFeed((previousFeed) => [...resp]);
-    });
+    setFeed(tweets);
   };
 
-  useEffect(() => {
-    recogniseTweetEmotion();
-  }, []);
-
-  useEffect(() => {
-    getWeeklyTweets(session.token.sub)
-      .then(({ data }) => {
-        console.log(data);
-        setFeed(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
   // useEffect(() => {
-  // 	getTrendingHashtags(())
-  // }, []);
+  // 	if (openMediaUnit) {
+  // 		recogniseTweetEmotion();
+  // 	}
+  // }, [openMediaUnit]);
+
+  useEffect(() => {
+    if (openMediaUnit) {
+      getWeeklyTweets(session.token.sub)
+        .then(({ data }) => {
+          console.log(data);
+          setFeed(data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [openMediaUnit]);
+
+  useEffect(() => {
+    if (country) {
+      getTrendingHashtags(session.token.sub, country)
+        .then(({ data }) => setHashtags(data))
+        .then(() => {
+          getTrendingTopics(session.token.sub, country).then(({ data }) =>
+            setTopics(data)
+          );
+        });
+    }
+  }, [country]);
+
+  const clickHandler = (e) => {
+    let el = e.target;
+    console.log(el.tagName, el.parentNode.tagName);
+    if (el.tagName === "SPAN") {
+      console.log(el.innerText);
+      router.push({
+        pathname: "/admin/search",
+        query: {
+          searchTerm: el.innerText.trim().replace("#", "hashtag"),
+        },
+      });
+    }
+  };
 
   return (
     <React.Fragment>
@@ -77,12 +107,7 @@ function management() {
               {feed?.tweets?.length !== 0 &&
                 feed?.tweets?.map((tweet, index) => {
                   return (
-                    <TwitterCard
-                      isEmotionShow
-                      key={tweet.id}
-                      tweet={tweet}
-                      feed={true}
-                    />
+                    <TwitterCard key={tweet.id} tweet={tweet} feed={true} />
                   );
                 })}
             </Col>
@@ -172,19 +197,125 @@ function management() {
                 </h4>
                 <Card className="card-frame">
                   <CardBody>
-                    <Badge
+                    <select
                       style={{
-                        marginBottom: "5px",
-                        cursor: "pointer",
+                        width: "100%",
+                        borderRadius: "5px",
+                        marginLeft: "5px",
+                        marginRight: "5px",
                       }}
-                      color="warning"
-                      className="badge-md"
+                      value={country}
+                      onChange={(e) => {
+                        setCountry(e.target.value);
+                      }}
                     >
-                      Coming Soon
-                    </Badge>
+                      <option disabled value="">
+                        Select Option
+                      </option>
+                      {[...countryList].map((country, index) => {
+                        return (
+                          <option key={index} value={country}>
+                            {country}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <div style={{ marginTop: 10 }}>
+                      {hashtags
+                        ?.filter((hashtag) => hashtag.tweet_count !== null)
+                        ?.map(({ name }, index) => {
+                          return (
+                            <Badge
+                              key={index}
+                              style={{
+                                marginBottom: "10px",
+                                marginLeft: "5px",
+                                marginRight: "5px",
+                                cursor: "pointer",
+                                textTransform: "none",
+                              }}
+                              color="info"
+                              className="badge-md"
+                              onClick={clickHandler}
+                            >
+                              {name}
+                            </Badge>
+                          );
+                        })}
+                      <div style={{ height: "100%", width: "100%" }}>
+                        {hashtags?.length !== 0 && (
+                          <BarChart
+                            width={400}
+                            height={160}
+                            data={hashtags.filter(
+                              (hashtag) => hashtag.tweet_count !== null
+                            )}
+                          >
+                            <Bar
+                              background
+                              isAnimationActive
+                              dataKey="tweet_count"
+                              fill="#8884d8"
+                            />
+                          </BarChart>
+                        )}
+                      </div>
+                    </div>
                   </CardBody>
                 </Card>
               </Col>
+
+              {country && (
+                <Col lg="12">
+                  <h4 className="text-black pt-4 pb-2 text-uppercase">
+                    Trending Topics
+                  </h4>
+                  <Card className="card-frame">
+                    <CardBody>
+                      <div style={{ marginTop: 10 }}>
+                        {topics
+                          ?.filter((topic) => topic.tweet_count !== null)
+                          ?.map(({ name }, index) => {
+                            return (
+                              <Badge
+                                key={index}
+                                style={{
+                                  marginBottom: "10px",
+                                  marginLeft: "5px",
+                                  marginRight: "5px",
+                                  cursor: "pointer",
+                                  textTransform: "none",
+                                }}
+                                color="info"
+                                className="badge-md"
+                              >
+                                {name}
+                              </Badge>
+                            );
+                          })}
+                        <div style={{ height: "100%", width: "100%" }}>
+                          {topics?.length !== 0 && (
+                            <BarChart
+                              width={400}
+                              height={160}
+                              data={topics.filter(
+                                (topic) => topic.tweet_count !== null
+                              )}
+                            >
+                              <Bar
+                                background
+                                isAnimationActive
+                                dataKey="tweet_count"
+                                fill="#8884d8"
+                              />
+                            </BarChart>
+                          )}
+                        </div>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </Col>
+              )}
             </Col>
           </Row>
         </Container>

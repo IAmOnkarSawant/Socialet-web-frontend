@@ -23,8 +23,9 @@ function AdminNavbar() {
               <NavbarBrand href="#pablo">
                 <img
                   width="160px"
+                  height="300px"
                   alt="..."
-                  src={require("assets/img/brand/socialet.png")}
+                  src={require("assets/img/brand/socialet.jpg")}
                 />
               </NavbarBrand>
             </span>

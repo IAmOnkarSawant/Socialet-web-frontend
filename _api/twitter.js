@@ -46,7 +46,7 @@ export function getTrendingHashtags(user_id, loc) {
 }
 
 // GET REQUEST -> GET TRENDING TOPICS
-export function getTopics(user_id, loc) {
+export function getTrendingTopics(user_id, loc) {
   return axios.get(
     `${TWITTER_ADMIN_URL}/trendy_topics/?user_id=${user_id}&loc=${loc}`
   );

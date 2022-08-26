@@ -10,13 +10,21 @@ import {
   Container,
   Media,
 } from "reactstrap";
+import { useRouter } from "next/router";
 
 function AdminNavbar({ brandText, user }) {
+  const router = useRouter();
   return (
     <>
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
         <Container fluid>
-          <Link href="/admin/dashboard">
+          <Link
+            href={
+              router.route === "/admin/dashboard"
+                ? "/topManagement/management"
+                : "/admin/dashboard"
+            }
+          >
             <a className="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block">
               {brandText}
             </a>
