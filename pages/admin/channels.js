@@ -13,7 +13,7 @@ import {
 } from "reactstrap";
 import { BsTwitter, BsThreeDotsVertical } from "react-icons/bs";
 import { useRouter } from "next/router";
-import { connectTwitterAuth } from "../../_api/channels";
+import { connectTwitterAuth, connectFacebookAuth } from "../../_api/channels";
 import { deleteSocialAccount, getSocialAccounts } from "../../_api/users";
 import { useSession } from "next-auth/react";
 import {
@@ -38,6 +38,14 @@ function Channels() {
     connectTwitterAuth().then(({ data }) =>
       window.location.replace(data.oauth_url)
     );
+  };
+
+  const connectFacebook = () => {
+    connectFacebookAuth().then(({ data }) => {
+      console.log(data);
+      // axios.get(data[0]).then(({data})=> console.log(data))
+      window.location.replace(data);
+    });
   };
 
   const handleDisconnect = (social_account_name = "twitter") => {
@@ -155,7 +163,11 @@ function Channels() {
                     {!isconnected && (
                       <Button
                         className="font-weight-bold px-3 mb-3 rounded-sm"
-                        onClick={connectTwitter}
+                        onClick={
+                          account === "twitter"
+                            ? connectTwitter
+                            : connectFacebook
+                        }
                         color="danger"
                         size="sm"
                         outline
