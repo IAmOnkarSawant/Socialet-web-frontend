@@ -40,7 +40,7 @@ function AnalysisCard({ data, ...props }) {
                 dataKey="value"
                 label
                 labelLine
-                isAnimationActive={false}
+                //  isAnimationActive={false}
               >
                 {dataUpdated.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index]} />
