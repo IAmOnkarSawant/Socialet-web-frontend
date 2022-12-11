@@ -244,20 +244,22 @@ function management() {
                         })}
                       <div style={{ height: "100%", width: "100%" }}>
                         {hashtags?.length !== 0 && (
-                          <BarChart
-                            width={400}
-                            height={160}
-                            data={hashtags.filter(
-                              (hashtag) => hashtag.tweet_count !== null
-                            )}
-                          >
-                            <Bar
-                              background
-                              isAnimationActive
-                              dataKey="tweet_count"
-                              fill="#8884d8"
-                            />
-                          </BarChart>
+                          <ResponsiveContainer width="100%" height={160}>
+                            <BarChart
+                              width={400}
+                              height={160}
+                              data={hashtags.filter(
+                                (hashtag) => hashtag.tweet_count !== null
+                              )}
+                            >
+                              <Bar
+                                background
+                                isAnimationActive
+                                dataKey="tweet_count"
+                                fill="#8884d8"
+                              />
+                            </BarChart>
+                          </ResponsiveContainer>
                         )}
                       </div>
                     </div>
@@ -295,20 +297,22 @@ function management() {
                           })}
                         <div style={{ height: "100%", width: "100%" }}>
                           {topics?.length !== 0 && (
-                            <BarChart
-                              width={400}
-                              height={160}
-                              data={topics.filter(
-                                (topic) => topic.tweet_count !== null
-                              )}
-                            >
-                              <Bar
-                                background
-                                isAnimationActive
-                                dataKey="tweet_count"
-                                fill="#8884d8"
-                              />
-                            </BarChart>
+                            <ResponsiveContainer width="100%" height={160}>
+                              <BarChart
+                                width={400}
+                                height={160}
+                                data={topics.filter(
+                                  (topic) => topic.tweet_count !== null
+                                )}
+                              >
+                                <Bar
+                                  background
+                                  isAnimationActive
+                                  dataKey="tweet_count"
+                                  fill="#8884d8"
+                                />
+                              </BarChart>
+                            </ResponsiveContainer>
                           )}
                         </div>
                       </div>
